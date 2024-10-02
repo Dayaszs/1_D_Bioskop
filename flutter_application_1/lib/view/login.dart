@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tubes/utilities/constant.dart';
-import 'package:tubes/data/user.dart';
-import 'package:tubes/component/formComponent.dart';
-import 'package:tubes/view/register.dart';
-import 'package:tubes/view/home.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/data/user.dart';
+import 'package:flutter_application_1/component/formComponent.dart';
+import 'package:flutter_application_1/view/register.dart';
+import 'package:flutter_application_1/view/home.dart';
 
 class LoginView extends StatefulWidget {
   final Map? data;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes/utilities/constant.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});

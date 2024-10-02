@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes/utilities/constant.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
 
 Padding inputForm(Function(String?) validasi,
     {required TextEditingController controller,
