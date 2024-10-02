@@ -12,8 +12,17 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+ Dhiaz-branch
     return MaterialApp(
       home: const StartPageView(),
+=======
+    return const MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text('Hello World! update'),
+        ),
+      ),
+  main
     );
   }
 }
