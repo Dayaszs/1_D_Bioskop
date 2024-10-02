@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+
+const SizedBox kSizeBox = SizedBox(
+  height: 20,
+  width: 5,
+  child: Divider(
+    color: Color.fromARGB(0, 22, 22, 22),
+    thickness: 1.5,
+  ),
+);
+
+const textStyle1 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontSize: 23,
+  color: lightColor,
+);
+
+const textStyle2 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontSize: 20,
+  color: lightColor,
+);
+
+const textStyle3 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontSize: 40,
+  color: lightColor,
+  fontWeight: FontWeight.bold,
+);
+
+const textStyle4 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontSize: 20,
+  color: darkColor,
+);
+
+const textStyle5 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontSize: 12,
+  color: lightColor,
+);
+
+const darkColor = Color.fromARGB(255, 22, 22, 22);
+const lightColor = Colors.amber;
