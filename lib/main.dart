@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/view/startPage.dart';
-import 'package:flutter_application_1/view/login.dart';
-import 'package:flutter_application_1/view/register.dart';
+import 'package:1_D_Bioskop/view/startPage.dart';
+import 'package:tubes/view/login.dart';
+import 'package:tubes/view/register.dart';
 
 void main() {
   runApp(const MainApp());

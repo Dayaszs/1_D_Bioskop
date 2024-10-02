@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tubes/component/formComponent.dart';
-import 'package:tubes/utilities/constant.dart';
-import 'package:tubes/view/login.dart';
+import 'package:flutter_application_1/component/formComponent.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/login.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});

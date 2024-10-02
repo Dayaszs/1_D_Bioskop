@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tubes/component/cardButton.dart';
-import 'package:tubes/utilities/constant.dart';
-import 'package:tubes/view/login.dart';
-import 'package:tubes/view/register.dart';
+import 'package:flutter_application_1/component/cardButton.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/login.dart';
+import 'package:flutter_application_1/view/register.dart';
 
 class StartPageView extends StatelessWidget {
   const StartPageView({super.key});
