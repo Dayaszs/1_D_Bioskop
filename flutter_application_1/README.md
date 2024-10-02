@@ -1,3 +1,2 @@
-# flutter_application_1
-
-A new Flutter project.
+# 1_D_Bioskop
+ PBP D Kelompok1
