@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/home.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -32,7 +33,7 @@ class _HomeViewState extends State<HomeView> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ShowProfile()), //ganti kelas profile
+          // MaterialPageRoute(builder: (context) => ShowProfile()), //ganti kelas profile
         );
         break;
     }
