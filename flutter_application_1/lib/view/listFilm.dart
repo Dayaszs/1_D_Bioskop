@@ -43,7 +43,7 @@ class NarrowLayout extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => Scaffold(
             appBar: AppBar(
-              title: const Text("Film Detail", style: TextStyle(color: Colors.white)), 
+              title: const Text("Film Detail", style: TextStyle(color: Colors.black)), 
               backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
             ),
             body: FilmDetail(film),
