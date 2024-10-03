@@ -3,7 +3,9 @@ import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/user.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/view/register.dart';
-import 'package:flutter_application_1/view/home.dart';
+// import 'package:flutter_application_1/view/home.dart';
+import 'package:flutter_application_1/view/startPage.dart';
+import 'package:flutter_application_1/view/homeView.dart';
 
 class LoginView extends StatefulWidget {
   final Map? data;
@@ -29,6 +31,16 @@ class _LoginViewState extends State<LoginView> {
         appBar: AppBar(
           title: const Text('Login'),
           backgroundColor: lightColor,
+          leading: IconButton(
+          icon: const Icon(Icons.arrow_back), // Ganti ikon tombol back
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const StartPageView()),
+            );// Aksi ketika tombol back ditekan
+          },
+        ),
         ),
         body: Center(
           child: Form(
