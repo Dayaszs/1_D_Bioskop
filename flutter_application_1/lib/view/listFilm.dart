@@ -5,25 +5,29 @@ class FilmListView extends StatefulWidget {
   const FilmListView({super.key});
 
   @override
-  State<FilmListView> createState() => ListNamaView();
+  State<FilmListView> createState() => _FilmListViewState();
 }
 
-class ListNamaView extends State<FilmListView> {
+class _FilmListViewState extends State<FilmListView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Daftar Film"),
+        title: const Text("Daftar Film", style: TextStyle(color: Colors.black)),
+        backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          // Pengecekan ukuran layout
-          if (constraints.maxWidth > 600) {
-            return const WideLayout();
-          } else {
-            return const NarrowLayout();
-          }
-        },
+      body: Container(
+        color: const Color.fromARGB(255, 22, 22, 22), 
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            // Pengecekan ukuran layout
+            if (constraints.maxWidth > 600) {
+              return const WideLayout();
+            } else {
+              return const NarrowLayout();
+            }
+          },
+        ),
       ),
     );
   }
@@ -38,7 +42,10 @@ class NarrowLayout extends StatelessWidget {
       onFilmTap: (film) => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              title: const Text("Film Detail", style: TextStyle(color: Colors.white)), 
+              backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
+            ),
             body: FilmDetail(film),
           ),
         ),
@@ -72,7 +79,12 @@ class _WideLayoutState extends State<WideLayout> {
         ),
         Expanded(
           flex: 3,
-          child: _film == null ? const Placeholder() : FilmDetail(_film!),
+          child: _film == null 
+              ? Center(
+                  child: Image.asset('images/logo1.png',
+                      width: 500, height: 500),
+                ) 
+              : FilmDetail(_film!),
         ),
       ],
     );
@@ -89,10 +101,16 @@ class FilmList extends StatelessWidget {
     return ListView(
       children: [
         for (var film in films)
-          ListTile(
-            leading: Image.network(film.picture),
-            title: Text(film.judul),
-            onTap: () => onFilmTap(film),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0), 
+            child: ListTile(
+              leading: Image.network(film.picture),
+              title: Text(
+                film.judul,
+                style: const TextStyle(color: Colors.white), 
+              ),
+              onTap: () => onFilmTap(film),
+            ),
           ),
       ],
     );
@@ -113,11 +131,38 @@ class FilmDetail extends StatelessWidget {
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    MouseRegion(
-                      onHover: (_) => {print("Hello World")},
-                      child: Text(film.judul),
+                    Image.network(film.picture, width: 200, height: 300), 
+                    const SizedBox(height: 10), 
+                    Text(
+                      film.judul,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, 
+                      ),
                     ),
-                    Text(film.genre),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Genre: ${film.genre}",
+                      style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Cast: ${film.aktor}",
+                      style: const TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Tanggal Rilis: ${film.tahun_rilis}",
+                      style: const TextStyle(fontSize: 16, color: Colors.white), 
+                    ),
+                    const SizedBox(height: 10), 
+                    Text(
+                      film.deskripsi,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 14, color: Colors.white), 
+                    ),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {},
                       child: const Text("Book Now!"),
@@ -127,14 +172,48 @@ class FilmDetail extends StatelessWidget {
               : Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    MouseRegion(
-                      onHover: (_) => {print("Hello World")},
-                      child: Text(film.judul),
-                    ),
-                    Text(film.deskripsi),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Book Now!"),
+                    Image.network(film.picture, width: 100, height: 150),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            film.judul,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Genre: ${film.genre}",
+                            style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.white),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Cast: ${film.aktor}",
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Tanggal Rilis: ${film.tahun_rilis}",
+                            style: const TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            film.deskripsi,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 12, color: Colors.white),
+                          ),
+                          const SizedBox(height: 10),
+                          ElevatedButton(
+                            onPressed: () {},
+                            child: const Text("Book Now!"),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

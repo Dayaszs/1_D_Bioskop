@@ -53,5 +53,35 @@ final List<Map<String, Object>> _films = [
     'aktor': 'Marlon Brando',
     'deskripsi': 'The story of the powerful Italian-American crime family of Don Vito Corleone.',
     'picture': 'https://m.media-amazon.com/images/M/MV5BYTJkNGQyZDgtZDQ0NC00MDM0LWEzZWQtYzUzZDEwMDljZWNjXkEyXkFqcGc@._V1_.jpg'
+  },
+  {
+    'id_film': 'F004',
+    'judul': 'The Shawshank Redemption',
+    'genre': 'Drama',
+    'tahun_rilis': '1994',
+    'sutradara': 'Frank Darabont',
+    'aktor': 'Tim Robbins',
+    'deskripsi': 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
+    'picture': 'https://upload.wikimedia.org/wikipedia/id/8/81/ShawshankRedemptionMoviePoster.jpg'
+  },
+  {
+    'id_film': 'F005',
+    'judul': 'The Dark Knight',
+    'genre': 'Action',
+    'tahun_rilis': '2008',
+    'sutradara': 'Christopher Nolan',
+    'aktor': 'Christian Bale',
+    'deskripsi': 'When the menace known as the Joker emerges from his mysterious past, he wreaks havoc and chaos on the people of Gotham.',
+    'picture': 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQabt5_iESscctssvn8VxDbvnV7i9C42UyLOCWkFdqwJQE0VZYeg2qcXEcYYLh8td8Zna3zA5Nrk7s7SDElRyhKYiIf2AwvJ7F3mKVis5c'
+  },
+  {
+    'id_film': 'F006',
+    'judul': 'Forrest Gump',
+    'genre': 'Drama',
+    'tahun_rilis': '1994',
+    'sutradara': 'Robert Zemeckis',
+    'aktor': 'Tom Hanks',
+    'deskripsi': 'The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal, and other historical events unfold through the perspective of an Alabama man with an IQ of 75.',
+    'picture': 'https://m.media-amazon.com/images/I/91++WV6FP4L._AC_UF894,1000_QL80_.jpg'
   }
 ];
