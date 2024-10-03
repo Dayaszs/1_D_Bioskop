@@ -4,6 +4,7 @@ import 'package:flutter_application_1/data/user.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/view/register.dart';
 import 'package:flutter_application_1/view/home.dart';
+import 'package:flutter_application_1/view/startPage.dart';
 
 class LoginView extends StatefulWidget {
   final Map? data;
@@ -29,6 +30,15 @@ class _LoginViewState extends State<LoginView> {
         appBar: AppBar(
           title: const Text('Login'),
           backgroundColor: lightColor,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back), // Ganti ikon tombol back
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const StartPageView()),
+              ); // Aksi ketika tombol back ditekan
+            },
+          ),
         ),
         body: Center(
           child: Form(
@@ -84,7 +94,8 @@ class _LoginViewState extends State<LoginView> {
                                   title: const Text('Password Salah'),
                                   content: TextButton(
                                       onPressed: () => {},
-                                      child: const Text('Silahkan coba login kembali!')),
+                                      child: const Text(
+                                          'Silahkan coba login kembali!')),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () =>
@@ -111,16 +122,16 @@ class _LoginViewState extends State<LoginView> {
                           style: textStyle4,
                         ))),
                 TextButton(
-                      onPressed: () {
-                        Map<String, dynamic> formData = {};
-                        formData['email'] = emailController.text;
-                        formData['password'] = passwordController.text;
-                        createAccount(context);
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text('Belum punya akun ?', style: textStyle5),
-                      )),
+                    onPressed: () {
+                      Map<String, dynamic> formData = {};
+                      formData['email'] = emailController.text;
+                      formData['password'] = passwordController.text;
+                      createAccount(context);
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text('Belum punya akun ?', style: textStyle5),
+                    )),
               ],
             ),
           ),
