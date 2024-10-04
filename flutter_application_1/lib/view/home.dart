@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/profile.dart';
 import 'package:flutter_application_1/view/listFilm.dart';
 
 class HomeView extends StatefulWidget {
-  final Map<String, dynamic> userData; // Add this to pass the user data
+  final Map<String, dynamic> userData;
 
-  const HomeView({super.key, required this.userData}); // Update constructor
+  const HomeView({super.key, required this.userData});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -25,34 +26,35 @@ class _HomeViewState extends State<HomeView> {
       case 1:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const FilmListView()), // Replace with actual list view
+          MaterialPageRoute(
+              builder: (context) => const FilmListView(userData: {},)),
         );
         break;
       case 2:
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ShowProfile(data: widget.userData), // Pass user data to ShowProfile
+            builder: (context) => ShowProfile(data: widget.userData),
           ),
         );
         break;
     }
   }
 
- @override
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-        backgroundColor: lightColor, // Warna latar belakang AppBar
-        title: Text(
-          'Atma Teater', // Judul di AppBar
-          style: textStyle6, // Styling teks judul
+          backgroundColor: lightColor,
+          title: Text(
+            'Atma Teater',
+            style: textStyle6,
+          ),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
         ),
-        centerTitle: true, // Membuat judul di tengah
-        automaticallyImplyLeading: false, // Menghilangkan tombol back // Menghilangkan tombol back
-      ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -65,21 +67,22 @@ class _HomeViewState extends State<HomeView> {
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText: "Search Film Here", // Teks hint
-                      prefixIcon: Icon(Icons.search), // Ikon search di sebelah kiri
+                      hintText: "Search Film Here",
+                      prefixIcon: Icon(Icons.search),
                       suffixIcon: IconButton(
-                        icon: Icon(Icons.clear), // Tombol untuk clear input
+                        icon: Icon(Icons.clear),
                         onPressed: () {
-                          _searchController.clear(); // Aksi untuk clear text input
+                          _searchController.clear();
                         },
                       ),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0), // Radius border
-                        borderSide: BorderSide.none, // Hilangkan garis border
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none,
                       ),
-                      filled: true, // Background terisi warna
-                      fillColor: Colors.grey[200], // Warna background search bar
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0), // Padding dalam search bar
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 20.0),
                     ),
                   ),
                 ),
@@ -95,6 +98,7 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
+
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -105,6 +109,7 @@ class _HomeViewState extends State<HomeView> {
                 ],
               ),
 
+              // Display three popular films
               Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,26 +118,32 @@ class _HomeViewState extends State<HomeView> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 100,
-                        height: 150,
-                        color: lightColor,
-                      ),
-                      Container(
-                        width: 100,
-                        height: 150,
-                        color: lightColor,
-                      ),
-                      Container(
-                        width: 100,
-                        height: 150,
-                        color: lightColor,
-                      ),
+                      for (var i = 0; i < 3; i++)
+                        Column(
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(films[i].picture),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              films[i].judul,
+                              style: textStyle2,
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                     ],
                   ),
-
                 ],
-              )
+              ),
             ],
           ),
         ),

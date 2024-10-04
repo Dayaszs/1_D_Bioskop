@@ -1,14 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/film.dart';
+import 'package:flutter_application_1/view/home.dart';
+import 'package:flutter_application_1/view/profile.dart';
 
 class FilmListView extends StatefulWidget {
-  const FilmListView({super.key});
+  final Map<String, dynamic> userData;
+  const FilmListView({super.key, required this.userData});
 
   @override
   State<FilmListView> createState() => _FilmListViewState();
 }
 
 class _FilmListViewState extends State<FilmListView> {
+  int _selectedIndex = 1;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeView(userData: widget.userData),
+          ),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ShowProfile(data: {},),
+          ),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +47,7 @@ class _FilmListViewState extends State<FilmListView> {
         backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
       ),
       body: Container(
-        color: const Color.fromARGB(255, 22, 22, 22), 
+        color: const Color.fromARGB(255, 22, 22, 22),
         child: LayoutBuilder(
           builder: (context, constraints) {
             // Pengecekan ukuran layout
@@ -28,6 +58,16 @@ class _FilmListViewState extends State<FilmListView> {
             }
           },
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
     );
   }

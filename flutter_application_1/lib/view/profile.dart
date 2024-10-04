@@ -10,10 +10,10 @@ class ShowProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         appBar: AppBar(
           title: const Text('Profile'),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
         ),
         body: Center(
           child: Column(
@@ -22,7 +22,7 @@ class ShowProfile extends StatelessWidget {
               // Circular profile picture with border
               CircleAvatar(
                 radius: 50,
-                backgroundColor: Colors.blueAccent,
+                backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
                 child: CircleAvatar(
                   radius: 48,
                   backgroundImage: data['profile_image'] != null 
@@ -37,6 +37,7 @@ class ShowProfile extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white
                 ),
               ),
               const SizedBox(height: 10),
@@ -44,7 +45,7 @@ class ShowProfile extends StatelessWidget {
                 data['email'], // Email dari registrasi
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.grey,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 20),
