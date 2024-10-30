@@ -102,7 +102,7 @@ class _HomeViewState extends State<HomeView> {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(top: 12.0, left: 12.0, bottom: 12.0),
-                    child: Text("Film Populer Saat Ini : ", style: textStyle2),
+                    child: Text("Now Playing", style: textStyle2),
                   ),
                 ],
               ),
@@ -119,7 +119,7 @@ class _HomeViewState extends State<HomeView> {
                           child: Column(
                             children: [
                               Container(
-                                width: 150,
+                                width: 125,
                                 height: 200,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
@@ -151,13 +151,15 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: lightColor,
+          backgroundColor: darkColor,
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
+            BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movie List'),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           ],
           currentIndex: _selectedIndex,
+          selectedItemColor: lightColor,
+          unselectedItemColor: Colors.white, 
           onTap: _onItemTapped,
         ),
       ),

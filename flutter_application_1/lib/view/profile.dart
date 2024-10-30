@@ -1,10 +1,53 @@
-import 'dart:io';
+import 'dart:io'; 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/home.dart';
+import 'package:flutter_application_1/view/listFilm.dart';
 
-class ShowProfile extends StatelessWidget {
+class ShowProfile extends StatefulWidget {
   final Map<String, dynamic> data;
 
   const ShowProfile({super.key, required this.data});
+
+  @override
+  _ShowProfileState createState() => _ShowProfileState();
+}
+
+class _ShowProfileState extends State<ShowProfile> {
+  int _selectedIndex = 2;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = 2;
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HomeView(userData: widget.data),
+          ),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FilmListView(userData: widget.data),
+          ),
+        );
+        break;
+      case 2:
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +67,15 @@ class ShowProfile extends StatelessWidget {
                 backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
                 child: CircleAvatar(
                   radius: 48,
-                  backgroundImage: (data['profile_image'] != null && 
-                                  File(data['profile_image']).existsSync())
-                      ? FileImage(File(data['profile_image']))
-                      : const AssetImage('assets/placeholder.png'),
-                  // Periksa dan gunakan placeholder jika tidak ada gambar
+                  backgroundImage: (widget.data['profile_image'] != null &&
+                          File(widget.data['profile_image']).existsSync())
+                      ? FileImage(File(widget.data['profile_image']))
+                      : const NetworkImage('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'),
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                data['username'] ?? 'Nama tidak tersedia',
+                widget.data['username'] ?? 'John Doe',
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -42,7 +84,7 @@ class ShowProfile extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                data['email'] ?? 'Email tidak tersedia',
+                widget.data['email'] ?? 'johndoe@gmail.com',
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.white,
@@ -50,7 +92,7 @@ class ShowProfile extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                data['nomor_telepon'] ?? 'Nomor telepon tidak tersedia',
+                widget.data['nomor_telepon'] ?? '08923126788',
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.grey,
@@ -58,6 +100,27 @@ class ShowProfile extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: darkColor,
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.movie),
+              label: 'Movie List',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: lightColor,
+          unselectedItemColor: Colors.white, 
+          onTap: _onItemTapped,
         ),
       ),
     );

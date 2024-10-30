@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/view/home.dart';
 import 'package:flutter_application_1/view/profile.dart';
@@ -61,13 +62,15 @@ class _FilmListViewState extends State<FilmListView> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
+        backgroundColor: darkColor,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'List'),
+          BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movie List'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
+        selectedItemColor: lightColor,
+        unselectedItemColor: Colors.white, 
         onTap: _onItemTapped,
       ),
     );
@@ -139,24 +142,64 @@ class FilmList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        for (var film in films)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0), 
-            child: ListTile(
-              leading: Image.network(film.picture),
-              title: Text(
-                film.judul,
-                style: const TextStyle(color: Colors.white), 
-              ),
-              onTap: () => onFilmTap(film),
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 10.0, // Spasi vertikal antara item
+        crossAxisSpacing: 10.0, // Spasi horizontal antara item
+        childAspectRatio: 0.7, // Rasio aspek untuk ukuran item
+      ),
+      itemCount: films.length,
+      itemBuilder: (context, index) {
+        final film = films[index];
+        return GestureDetector(
+          onTap: () => onFilmTap(film),
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Image.network(
+                    film.picture,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  film.judul,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: lightColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  film.genre,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
           ),
-      ],
+        );
+      },
     );
   }
 }
+
 
 class FilmDetail extends StatelessWidget {
   final Film film;
