@@ -83,7 +83,7 @@ class NarrowLayout extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => Scaffold(
             appBar: AppBar(
-              title: const Text("Film Detail", style: TextStyle(color: Colors.white)), 
+              title: const Text("Film Detail", style: TextStyle(color: Colors.black)), 
               backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
             ),
             body: FilmDetail(film),
@@ -166,97 +166,109 @@ class FilmDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (buildContext, boxConstraints) {
-        return Center(
-          child: boxConstraints.maxHeight > 200
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(film.picture, width: 200, height: 300), 
-                    const SizedBox(height: 10), 
-                    Text(
-                      film.judul,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white, 
+        return Container(
+          color: const Color.fromARGB(255, 22, 22, 22),
+          child: Center(
+            child: boxConstraints.maxHeight > 200
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(film.picture, width: 200, height: 300),
+                      const SizedBox(height: 10),
+                      Text(
+                        film.judul,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white, // Ubah warna teks menjadi putih
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Genre: ${film.genre}",
-                      style: const TextStyle(fontSize: 16, fontStyle: FontStyle.italic, color: Colors.white),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Cast: ${film.aktor}",
-                      style: const TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "Tanggal Rilis: ${film.tahun_rilis}",
-                      style: const TextStyle(fontSize: 16, color: Colors.white), 
-                    ),
-                    const SizedBox(height: 10), 
-                    Text(
-                      film.deskripsi,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 14, color: Colors.white), 
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: const Text("Book Now!"),
-                    ),
-                  ],
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Image.network(film.picture, width: 100, height: 150),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            film.judul,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                      const SizedBox(height: 8),
+                      Text(
+                        "Genre: ${film.genre}",
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontStyle: FontStyle.italic,
+                            color: Colors.white),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Cast: ${film.aktor}",
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Tanggal Rilis: ${film.tahun_rilis}",
+                        style: const TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        film.deskripsi,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(fontSize: 14, color: Colors.white),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {},
+                        child: const Text("Book Now!"),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Image.network(film.picture, width: 100, height: 150),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              film.judul,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "Genre: ${film.genre}",
-                            style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic, color: Colors.white),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "Cast: ${film.aktor}",
-                            style: const TextStyle(fontSize: 14, color: Colors.white),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            "Tanggal Rilis: ${film.tahun_rilis}",
-                            style: const TextStyle(fontSize: 14, color: Colors.white),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            film.deskripsi,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontSize: 12, color: Colors.white),
-                          ),
-                          const SizedBox(height: 10),
-                          ElevatedButton(
-                            onPressed: () {},
-                            child: const Text("Book Now!"),
-                          ),
-                        ],
+                            const SizedBox(height: 8),
+                            Text(
+                              "Genre: ${film.genre}",
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  fontStyle: FontStyle.italic,
+                                  color: Colors.white),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Cast: ${film.aktor}",
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "Tanggal Rilis: ${film.tahun_rilis}",
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              film.deskripsi,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.white),
+                            ),
+                            const SizedBox(height: 10),
+                            ElevatedButton(
+                              onPressed: () {},
+                              child: const Text("Book Now!"),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+          ),
         );
       },
     );

@@ -87,7 +87,6 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-
               SizedBox(
                 child: Padding(
                   padding: EdgeInsets.all(0.0),
@@ -98,7 +97,6 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ),
               ),
-
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -108,41 +106,46 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ],
               ),
-
-              // Display three popular films
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+              // Display popular films with horizontal scroll
+              SizedBox(
+                height: 230, // Adjusted height for card and text
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                     children: [
-                      for (var i = 0; i < 3; i++)
-                        Column(
-                          children: [
-                            Container(
-                              width: 100,
-                              height: 150,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(films[i].picture),
-                                  fit: BoxFit.cover,
+                      for (var i = 0; i < films.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: 150,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: NetworkImage(films[i].picture),
+                                    fit: BoxFit.cover,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              films[i].judul,
-                              style: textStyle2,
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                              const SizedBox(height: 5),
+                              SizedBox(
+                                width: 150,
+                                child: Text(
+                                  films[i].judul,
+                                  style: textStyle2,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                     ],
                   ),
-                ],
+                ),
               ),
             ],
           ),
