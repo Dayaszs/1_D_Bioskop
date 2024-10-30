@@ -40,5 +40,12 @@ const textStyle5 = TextStyle(
   color: lightColor,
 );
 
+const textStyle6 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontSize: 20,
+  color: darkColor,
+  fontWeight: FontWeight.bold,
+);
+
 const darkColor = Color.fromARGB(255, 22, 22, 22);
 const lightColor = Colors.amber;
