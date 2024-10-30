@@ -132,6 +132,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void loginSuccess(BuildContext context, Map<String, dynamic> userData) {
+    print("Navigating to Home with data: ${userData}");
     Navigator.push(
       context,
       MaterialPageRoute(

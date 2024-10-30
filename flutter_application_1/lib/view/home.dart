@@ -27,10 +27,11 @@ class _HomeViewState extends State<HomeView> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const FilmListView(userData: {},)),
+              builder: (context) => FilmListView(userData: widget.userData)),
         );
         break;
       case 2:
+        print("Navigating to Profile with data: ${widget.userData}");
         Navigator.push(
           context,
           MaterialPageRoute(
