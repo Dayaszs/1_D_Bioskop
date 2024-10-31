@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/home.dart';
 import 'package:flutter_application_1/view/listFilm.dart';
+import 'package:flutter_application_1/view/login.dart'; // Import halaman login
 
 class ShowProfile extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -47,6 +48,14 @@ class _ShowProfileState extends State<ShowProfile> {
       case 2:
         break;
     }
+  }
+
+  void _logout() {
+    // Arahkan ke halaman login
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginView()), // Ganti dengan halaman login Anda
+    );
   }
 
   @override
@@ -96,6 +105,26 @@ class _ShowProfileState extends State<ShowProfile> {
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _logout,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: lightColor, 
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  elevation: 5,
+                ).copyWith(elevation: ButtonStyleButton.allOrNull(5)),
+                child: const Text(
+                  'Logout',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],
