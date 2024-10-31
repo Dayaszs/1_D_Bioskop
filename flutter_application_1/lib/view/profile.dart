@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/home.dart';
 import 'package:flutter_application_1/view/listFilm.dart';
-import 'package:flutter_application_1/view/login.dart'; // Import halaman login
 
 class ShowProfile extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -15,49 +14,7 @@ class ShowProfile extends StatefulWidget {
 }
 
 class _ShowProfileState extends State<ShowProfile> {
-  int _selectedIndex = 2;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = 2;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeView(userData: widget.data),
-          ),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FilmListView(userData: widget.data),
-          ),
-        );
-        break;
-      case 2:
-        break;
-    }
-  }
-
-  void _logout() {
-    // Arahkan ke halaman login
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginView()), // Ganti dengan halaman login Anda
-    );
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -107,49 +64,8 @@ class _ShowProfileState extends State<ShowProfile> {
                   color: Colors.grey,
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _logout,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: lightColor, 
-                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  elevation: 5,
-                ).copyWith(elevation: ButtonStyleButton.allOrNull(5)),
-                child: const Text(
-                  'Logout',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
             ],
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: darkColor,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie),
-              label: 'Movie List',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: lightColor,
-          unselectedItemColor: Colors.white, 
-          onTap: _onItemTapped,
         ),
       ),
     );
