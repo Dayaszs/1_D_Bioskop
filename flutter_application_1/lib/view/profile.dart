@@ -14,41 +14,7 @@ class ShowProfile extends StatefulWidget {
 }
 
 class _ShowProfileState extends State<ShowProfile> {
-  int _selectedIndex = 2;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = 2;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeView(userData: widget.data),
-          ),
-        );
-        break;
-      case 1:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => FilmListView(userData: widget.data),
-          ),
-        );
-        break;
-      case 2:
-        break;
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -100,27 +66,6 @@ class _ShowProfileState extends State<ShowProfile> {
               ),
             ],
           ),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: darkColor,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie),
-              label: 'Movie List',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: lightColor,
-          unselectedItemColor: Colors.white, 
-          onTap: _onItemTapped,
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/profile.dart';
 import 'package:flutter_application_1/view/listFilm.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class HomeView extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -14,36 +15,49 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  int _selectedIndex = 0;
+  final PersistentTabController _controller = PersistentTabController(initialIndex: 0);
   final TextEditingController _searchController = TextEditingController();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => FilmListView(userData: widget.userData)),
-        );
-        break;
-      case 2:
-        print("Navigating to Profile with data: ${widget.userData}");
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ShowProfile(data: widget.userData),
-          ),
-        );
-        break;
-    }
+  List<Widget> _buildScreens() {
+    return [
+      _buildHomeScreen(),
+      Center(child: Text("Ticket Page", style: textStyle6)),
+      FilmListView(userData: widget.userData),
+      ShowProfile(data: widget.userData),
+       // NANTI INI GANTI TICKET PAGE YAAA
+    ];
   }
 
-  @override
-  Widget build(BuildContext context) {
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.home),
+        title: ("Home"),
+        activeColorPrimary: lightColor,
+        inactiveColorPrimary: Colors.white,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.confirmation_number),
+        title: ("Ticket"),
+        activeColorPrimary: lightColor,
+        inactiveColorPrimary: Colors.white,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.movie),
+        title: ("Movie"),
+        activeColorPrimary: lightColor,
+        inactiveColorPrimary: Colors.white,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.person),
+        title: ("Profile"),
+        activeColorPrimary: lightColor,
+        inactiveColorPrimary: Colors.white,
+      ),
+    ];
+  }
+
+  Widget _buildHomeScreen() {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -107,9 +121,8 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ],
               ),
-              // Display popular films with horizontal scroll
               SizedBox(
-                height: 230, // Adjusted height for card and text
+                height: 230,
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -151,18 +164,21 @@ class _HomeViewState extends State<HomeView> {
             ],
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: darkColor,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movie List'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: lightColor,
-          unselectedItemColor: Colors.white, 
-          onTap: _onItemTapped,
-        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      backgroundColor: darkColor,
+      navBarStyle: NavBarStyle.style6,
+      decoration: NavBarDecoration(
+        colorBehindNavBar: Colors.black,
       ),
     );
   }
