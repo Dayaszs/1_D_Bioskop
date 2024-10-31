@@ -14,32 +14,6 @@ class FilmListView extends StatefulWidget {
 }
 
 class _FilmListViewState extends State<FilmListView> {
-  int _selectedIndex = 1;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HomeView(userData: widget.userData),
-          ),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ShowProfile(data: {},),
-          ),
-        );
-        break;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,18 +34,6 @@ class _FilmListViewState extends State<FilmListView> {
             }
           },
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: darkColor,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movie List'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: lightColor,
-        unselectedItemColor: Colors.white, 
-        onTap: _onItemTapped,
       ),
     );
   }
