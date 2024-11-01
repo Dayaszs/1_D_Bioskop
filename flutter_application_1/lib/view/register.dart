@@ -5,6 +5,7 @@ import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/login.dart';
 import 'package:flutter_application_1/data/user.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -26,8 +27,13 @@ class _RegisterViewState extends State<RegisterView> {
   Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      final File image = File(pickedImage.path);
+      final String newPath =
+          '${directory.path}/${DateTime.now().millisecondsSinceEpoch}.jpg';
+      await image.copy(newPath);
       setState(() {
-        _profileImage = File(pickedImage.path);
+        _profileImage = File(newPath);
         _isImageErrorVisible = false;
       });
     }

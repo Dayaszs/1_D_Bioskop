@@ -17,6 +17,7 @@ class ShowProfile extends StatefulWidget {
 class _ShowProfileState extends State<ShowProfile> {
   @override
   Widget build(BuildContext context) {
+    print('Profile Image Path: ${widget.data['profile_image']}');
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -39,7 +40,8 @@ class _ShowProfileState extends State<ShowProfile> {
                             !kIsWeb &&
                             File(widget.data['profile_image']).existsSync())
                         ? FileImage(File(widget.data['profile_image']))
-                        : const NetworkImage('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
+                        : const NetworkImage(
+                                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
                             as ImageProvider,
                   ),
                 ),
@@ -88,7 +90,8 @@ class _ShowProfileState extends State<ShowProfile> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30, vertical: 12),
                   ),
                   child: const Text(
                     'Log Out',
@@ -103,7 +106,8 @@ class _ShowProfileState extends State<ShowProfile> {
     );
   }
 
-  Widget _buildProfileItem({required IconData icon, required String title, required String value}) {
+  Widget _buildProfileItem(
+      {required IconData icon, required String title, required String value}) {
     return Row(
       children: [
         Icon(icon, color: const Color.fromRGBO(255, 193, 7, 1)),
