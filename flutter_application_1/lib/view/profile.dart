@@ -1,130 +1,116 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart'; // Import kIsWeb untuk platform check
-import 'package:flutter_application_1/utilities/constant.dart';
-import 'package:flutter_application_1/view/home.dart';
-import 'package:flutter_application_1/view/listFilm.dart';
 
-class ShowProfile extends StatefulWidget {
+class ShowProfile extends StatelessWidget {
   final Map<String, dynamic> data;
 
-  const ShowProfile({super.key, required this.data});
+  const ShowProfile({Key? key, required this.data}) : super(key: key);
 
-  @override
-  _ShowProfileState createState() => _ShowProfileState();
-}
-
-class _ShowProfileState extends State<ShowProfile> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
         backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Text('Profile'),
-          backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
+        elevation: 0,
+        title: const Text(
+          'Profile',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white,),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  radius: 60,
-                  backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
-                  child: CircleAvatar(
-                    radius: 58,
-                    backgroundImage: (widget.data['profile_image'] != null &&
-                            !kIsWeb &&
-                            File(widget.data['profile_image']).existsSync())
-                        ? FileImage(File(widget.data['profile_image']))
-                        : const NetworkImage('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
-                            as ImageProvider,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  widget.data['username'] ?? 'John Doe',
-                  style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.data['email'] ?? 'johndoe@gmail.com',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70,
-                  ),
-                ),
-                const Divider(
-                  height: 40,
-                  thickness: 1,
-                  color: Colors.grey,
-                  indent: 20,
-                  endIndent: 20,
-                ),
-                _buildProfileItem(
-                  icon: Icons.phone,
-                  title: 'Phone',
-                  value: widget.data['nomor_telepon'] ?? '08923126788',
-                ),
-                const SizedBox(height: 20),
-                _buildProfileItem(
-                  icon: Icons.location_on,
-                  title: 'Location',
-                  value: widget.data['location'] ?? 'Indonesia',
-                ),
-                const SizedBox(height: 40),
-                ElevatedButton(
-                  onPressed: () {
-                    // Add action for edit profile
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                  ),
-                  child: const Text(
-                    'Log Out',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                ),
-              ],
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 20),
+            CircleAvatar(
+              radius: 58,
+              backgroundImage: (data['profile_image'] != null &&
+                      !kIsWeb &&
+                      File(data['profile_image']).existsSync())
+                  ? FileImage(File(data['profile_image']))
+                  : const NetworkImage('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
+                      as ImageProvider,
             ),
-          ),
+            const SizedBox(height: 16),
+            Text(
+              data['username'] ?? 'user1',
+              style: const TextStyle(
+                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+            ),
+            const SizedBox(height: 20),
+            buildInfoText('Phone Number :', data['nomor_telepon'] ?? 'No Phone Number'),
+            const SizedBox(height: 10),
+            buildInfoText('Email :', data['email'] ?? 'No Email'),
+            const SizedBox(height: 30),
+            buildOptionButton(context, Icons.confirmation_number, 'My ticket', () {
+              // Navigate to "My Ticket" page
+            }),
+            buildOptionButton(context, Icons.edit, 'Edit Profile', () {
+              // Navigate to "Edit Profile" page
+            }),
+            buildOptionButton(context, Icons.lock, 'Change password', () {
+              // Navigate to "Change Password" page
+            }),
+            const Spacer(),
+            buildLogoutButton(context),
+            const SizedBox(height: 30),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildProfileItem({required IconData icon, required String title, required String value}) {
-    return Row(
+  Widget buildInfoText(String title, String info) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, color: const Color.fromRGBO(255, 193, 7, 1)),
-        const SizedBox(width: 15),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                value,
-                style: const TextStyle(fontSize: 16, color: Colors.white),
-              ),
-            ],
-          ),
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, color: Colors.grey),
         ),
+        const SizedBox(height: 4),
+        Text(
+          info,
+          style: const TextStyle(fontSize: 16, color: Colors.white),
+        ),
+        const Divider(color: Colors.grey),
       ],
+    );
+  }
+
+  Widget buildOptionButton(
+      BuildContext context, IconData icon, String text, VoidCallback onPressed) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white),
+      title: Text(
+        text,
+        style: const TextStyle(fontSize: 16, color: Colors.white),
+      ),
+      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+      onTap: onPressed,
+    );
+  }
+
+  Widget buildLogoutButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: Colors.red),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+        ),
+        onPressed: () {
+          Navigator.pushNamed(context, '/login'); // Navigate to login page
+        },
+        child: const Text(
+          'Log Out',
+          style: TextStyle(color: Colors.red, fontSize: 16),
+        ),
+      ),
     );
   }
 }
