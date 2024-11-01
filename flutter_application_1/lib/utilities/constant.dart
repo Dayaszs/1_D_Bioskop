@@ -10,34 +10,41 @@ const SizedBox kSizeBox = SizedBox(
 );
 
 const textStyle1 = TextStyle(
-  fontFamily: 'Source Sans Pro',
+  fontFamily: 'Poppins',
   fontSize: 23,
   color: lightColor,
 );
 
 const textStyle2 = TextStyle(
-  fontFamily: 'Source Sans Pro',
+  fontFamily: 'Poppins',
   fontSize: 20,
   color: lightColor,
 );
 
 const textStyle3 = TextStyle(
-  fontFamily: 'Source Sans Pro',
+  fontFamily: 'Poppins',
   fontSize: 40,
   color: lightColor,
   fontWeight: FontWeight.bold,
 );
 
 const textStyle4 = TextStyle(
-  fontFamily: 'Source Sans Pro',
+  fontFamily: 'Poppins',
   fontSize: 20,
   color: darkColor,
 );
 
 const textStyle5 = TextStyle(
-  fontFamily: 'Source Sans Pro',
+  fontFamily: 'Poppins',
   fontSize: 12,
   color: lightColor,
+);
+
+const textStyle6 = TextStyle(
+  fontFamily: 'Poppins',
+  fontSize: 20,
+  color: darkColor,
+  fontWeight: FontWeight.bold,
 );
 
 const darkColor = Color.fromARGB(255, 22, 22, 22);

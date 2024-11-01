@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/login.dart';
+import 'package:flutter_application_1/data/user.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RegisterView extends StatefulWidget {
