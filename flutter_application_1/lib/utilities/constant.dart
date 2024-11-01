@@ -47,5 +47,13 @@ const textStyle6 = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
+const textStyle7 = TextStyle(
+  fontFamily: 'Poppins',
+  fontSize: 20,
+  color: whiteColor,
+  fontWeight: FontWeight.bold,
+);
+
 const darkColor = Color.fromARGB(255, 22, 22, 22);
 const lightColor = Colors.amber;
+const whiteColor = Colors.white;
