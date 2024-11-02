@@ -83,5 +83,25 @@ final List<Map<String, Object>> _films = [
     'aktor': 'Tom Hanks',
     'deskripsi': 'The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal, and other historical events unfold through the perspective of an Alabama man with an IQ of 75.',
     'picture': 'https://m.media-amazon.com/images/I/91++WV6FP4L._AC_UF894,1000_QL80_.jpg'
-  }
+  },
+  {
+    'id_film': 'F007',
+    'judul': 'The Grand Budapest Hotel',
+    'genre': 'Comedy, Drama',
+    'tahun_rilis': '2014',
+    'sutradara': 'Wes Anderson',
+    'aktor': 'Ralph Fiennes',
+    'deskripsi': 'A writer encounters the owner of an aging high-class hotel, who tells him of his early years serving as a lobby boy in the hotel\'s glorious years under an exceptional concierge.',
+    'picture': 'https://upload.wikimedia.org/wikipedia/id/a/a4/Grand_Budapest_Hotel_Movie_Poster.jpg'
+  },
+  {
+    'id_film': 'F008',
+    'judul': 'Parasite',
+    'genre': 'Thriller, Drama',
+    'tahun_rilis': '2019',
+    'sutradara': 'Bong Joon Ho',
+    'aktor': 'Song Kang-ho, Lee Sun-kyun',
+    'deskripsi': 'Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.',
+    'picture': 'https://m.media-amazon.com/images/I/81cYnCyFCYL._AC_UF1000,1000_QL80_.jpg'
+  },
 ];

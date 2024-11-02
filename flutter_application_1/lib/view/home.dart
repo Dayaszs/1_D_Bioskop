@@ -21,36 +21,35 @@ class _HomeViewState extends State<HomeView> {
   List<Widget> _buildScreens() {
     return [
       _buildHomeScreen(),
-      Center(child: Text("Ticket Page", style: textStyle6)),
+      const Center(child: Text("Ticket Page", style: textStyle6)),
       FilmListView(userData: widget.userData),
       ShowProfile(data: widget.userData),
-       // NANTI INI GANTI TICKET PAGE YAAA
     ];
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
-        title: ("Home"),
+        icon: const Icon(Icons.home),
+        title: "Home",
         activeColorPrimary: lightColor,
         inactiveColorPrimary: Colors.white,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.confirmation_number),
-        title: ("Ticket"),
+        icon: const Icon(Icons.confirmation_number),
+        title: "Ticket",
         activeColorPrimary: lightColor,
         inactiveColorPrimary: Colors.white,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.movie),
-        title: ("Movie"),
+        icon: const Icon(Icons.movie),
+        title: "Movie",
         activeColorPrimary: lightColor,
         inactiveColorPrimary: Colors.white,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(Icons.person),
-        title: ("Profile"),
+        icon: const Icon(Icons.person),
+        title: "Profile",
         activeColorPrimary: lightColor,
         inactiveColorPrimary: Colors.white,
       ),
@@ -62,107 +61,115 @@ class _HomeViewState extends State<HomeView> {
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          backgroundColor: lightColor,
-          title: Text(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              color: lightColor,
+            ),
+          ),
+          title: const Text(
             'Atma Teater',
             style: textStyle6,
           ),
           centerTitle: true,
           automaticallyImplyLeading: false,
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                width: 370,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: "Search Film Here",
-                      prefixIcon: Icon(Icons.search),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 20.0),
-                    ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 15.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: "Search Film Here",
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear, color: Colors.grey),
+                    onPressed: () {
+                      _searchController.clear();
+                    },
                   ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                 ),
               ),
-              SizedBox(
-                child: Padding(
-                  padding: EdgeInsets.all(0.0),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 200,
-                    color: lightColor,
-                  ),
-                ),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 12.0, left: 12.0, bottom: 12.0),
-                    child: Text("Now Playing", style: textStyle2),
+            ),
+            Container(
+              margin: const EdgeInsets.all(15.0),
+              width: MediaQuery.of(context).size.width * 0.9,
+              height: 200,
+              decoration: BoxDecoration(
+                color: lightColor,
+                borderRadius: BorderRadius.circular(15),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: Offset(0, 5),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 230,
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      for (var i = 0; i < films.length; i++)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 125,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                    image: NetworkImage(films[i].picture),
-                                    fit: BoxFit.cover,
+              child: const Center(child: Text("Featured Movie", style: textStyle2)),
+            ),
+            const Padding(
+              padding: EdgeInsets.only(left: 20.0, top: 10.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text("Now Playing", style: textStyle2),
+              ),
+            ),
+            Expanded( // Menggunakan Expanded agar konten dapat digulir
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (var i = 0; i < films.length; i++)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 140,
+                              height: 210,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(films[i].picture),
+                                  fit: BoxFit.cover,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.3),
+                                    blurRadius: 8,
+                                    offset: Offset(0, 4),
                                   ),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+                                ],
                               ),
-                              const SizedBox(height: 5),
-                              SizedBox(
-                                width: 150,
-                                child: Text(
-                                  films[i].judul,
-                                  style: textStyle2,
-                                  textAlign: TextAlign.center,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                            ),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: 140,
+                              child: Text(
+                                films[i].judul,
+                                style: textStyle5.copyWith(color: Colors.white),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

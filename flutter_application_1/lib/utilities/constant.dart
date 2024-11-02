@@ -36,7 +36,7 @@ const textStyle4 = TextStyle(
 
 const textStyle5 = TextStyle(
   fontFamily: 'Poppins',
-  fontSize: 12,
+  fontSize: 15,
   color: lightColor,
 );
 
