@@ -38,21 +38,21 @@ class _RegisterViewState extends State<RegisterView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Pilih sumber gambar'),
+          title: const Text('Pilih sumber gambar'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: Icon(Icons.camera),
-                title: Text('Kamera'),
+                leading: const Icon(Icons.camera),
+                title: const Text('Kamera'),
                 onTap: () {
                   Navigator.of(context).pop();
                   _pickImage(ImageSource.camera);
                 },
               ),
               ListTile(
-                leading: Icon(Icons.photo_album),
-                title: Text('Galeri'),
+                leading: const Icon(Icons.photo_album),
+                title: const Text('Galeri'),
                 onTap: () {
                   Navigator.of(context).pop();
                   _pickImage(ImageSource.gallery);
@@ -80,22 +80,22 @@ class _RegisterViewState extends State<RegisterView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Register", style: textStyle3),
+                const Text("Register", style: textStyle3),
                 GestureDetector(
                   onTap: _showImageSourceDialog,
                   child: CircleAvatar(
                     radius: 50,
                     backgroundImage: _profileImage != null
                         ? FileImage(_profileImage!)
-                        : AssetImage('assets/placeholder.png') as ImageProvider,
+                        : const AssetImage('assets/placeholder.png') as ImageProvider,
                     child: _profileImage == null
-                        ? Icon(Icons.camera_alt, size: 50, color: Colors.grey)
+                        ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
                         : null,
                   ),
                 ),
                 if (_isImageErrorVisible)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8.0),
                     child: Text(
                       "Profile Pic Wajib Diisi!",
                       style: TextStyle(color: Colors.red, fontSize: 12),
@@ -177,7 +177,7 @@ class _RegisterViewState extends State<RegisterView> {
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightColor,
-                      minimumSize: Size(350, 50),
+                      minimumSize: const Size(350, 50),
                     ),
                     child: const Text('Register', style: textStyle4),
                   ),

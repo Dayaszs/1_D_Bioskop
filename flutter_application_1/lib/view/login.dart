@@ -58,7 +58,7 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Login", style: textStyle3),
+                const Text("Login", style: textStyle3),
                 inputForm(
                   (p0) {
                     if (p0 == null || p0.isEmpty) {
@@ -132,7 +132,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void loginSuccess(BuildContext context, Map<String, dynamic> userData) {
-    print("Navigating to Home with data: ${userData}");
+    print("Navigating to Home with data: $userData");
     Navigator.push(
       context,
       MaterialPageRoute(

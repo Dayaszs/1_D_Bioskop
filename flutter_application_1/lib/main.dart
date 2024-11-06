@@ -12,8 +12,8 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const StartPageView(),
+    return const MaterialApp(
+      home: StartPageView(),
     );
   }
 }

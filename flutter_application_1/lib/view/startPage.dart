@@ -15,12 +15,12 @@ class StartPageView extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
+            SizedBox(
               width: 250,
               height: 250,
               child: Image.asset('images/logo1.png'),
             ),
-            Text("Selamat datang, silahkan : ", style: textStyle1),
+            const Text("Selamat datang, silahkan : ", style: textStyle1),
             CardButton(
               icon: Icons.app_registration_sharp,
               text: 'Register',
@@ -32,7 +32,7 @@ class StartPageView extends StatelessWidget {
                 );
               },
             ),
-            Text("Atau", style: textStyle2),
+            const Text("Atau", style: textStyle2),
             CardButton(
               icon: Icons.login,
               text: 'Login',
