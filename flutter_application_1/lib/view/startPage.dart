@@ -18,7 +18,7 @@ class StartPageView extends StatelessWidget {
             SizedBox(
               width: 250,
               height: 250,
-              child: Image.asset('images/logo1.png'),
+              child: Image.asset('images/loadLogo.png'),
             ),
             const Text("Selamat datang, silahkan : ", style: textStyle1),
             CardButton(
@@ -27,8 +27,7 @@ class StartPageView extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const RegisterView()),
+                  MaterialPageRoute(builder: (context) => const RegisterView()),
                 );
               },
             ),
@@ -39,8 +38,7 @@ class StartPageView extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => const LoginView()),
+                  MaterialPageRoute(builder: (context) => const LoginView()),
                 );
               },
             ),
