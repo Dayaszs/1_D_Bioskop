@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/startPage.dart';
+import 'package:flutter_application_1/view/editProfile.dart';
+import 'package:flutter_application_1/view/changePassword.dart';
 
 class ShowProfile extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -14,11 +18,14 @@ class ShowProfile extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         elevation: 0,
-        title: const Text(
-          'Profile',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white,),
-        ),
         centerTitle: true,
+        title: Text(
+          'Profile',
+          style: TextStyle(
+            color: lightColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -47,13 +54,23 @@ class ShowProfile extends StatelessWidget {
             buildInfoText('Email :', data['email'] ?? 'No Email'),
             const SizedBox(height: 30),
             buildOptionButton(context, Icons.confirmation_number, 'My ticket', () {
-              // Navigate to "My Ticket" page
+              Navigator.pushNamed(context, '/view/myTicket.dart');   // Navigate to "My Ticket" page
             }),
             buildOptionButton(context, Icons.edit, 'Edit Profile', () {
-              // Navigate to "Edit Profile" page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditProfileView(data: data), // Updated constructor parameter
+                ),
+              );
             }),
             buildOptionButton(context, Icons.lock, 'Change password', () {
-              // Navigate to "Change Password" page
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChangePasswordView(formData: data), // Assuming ChangePasswordView needs formData
+                ),
+              );
             }),
             const Spacer(),
             buildLogoutButton(context),
@@ -104,13 +121,14 @@ class ShowProfile extends StatelessWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
         onPressed: () {
-          Navigator.pushNamed(context, '/login'); // Navigate to login page
+          Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil('/start', (route) => false);
         },
         child: const Text(
           'Log Out',
-          style: TextStyle(color: Colors.red, fontSize: 16),
+          style: TextStyle(fontSize: 16, color: Colors.red),
         ),
       ),
     );
   }
+
 }

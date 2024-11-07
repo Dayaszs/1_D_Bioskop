@@ -163,8 +163,7 @@ class _RegisterViewState extends State<RegisterView> {
                           formData['username'] = usernameController.text;
                           formData['password'] = passwordController.text;
                           formData['email'] = emailController.text;
-                          formData['nomor_telepon'] =
-                              nomorTeleponController.text;
+                          formData['nomor_telepon'] = nomorTeleponController.text;
                           formData['profile_image'] = _profileImage!.path;
                           Navigator.push(
                             context,
