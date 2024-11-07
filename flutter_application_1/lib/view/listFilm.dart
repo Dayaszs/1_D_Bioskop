@@ -239,7 +239,7 @@ class FilmDetail extends StatelessWidget {
           children: [
             // Gambar film dengan efek bayangan dan border
             Container(
-              height: 388,
+              height: 390,
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
