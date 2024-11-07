@@ -100,8 +100,9 @@ class NarrowLayout extends StatelessWidget {
         MaterialPageRoute(
           builder: (context) => Scaffold(
             appBar: AppBar(
-              title: const Text("Film Detail", style: TextStyle(color: darkColor)),
-              backgroundColor: const Color.fromRGBO(255, 193, 7, 1),
+              title: const Text("Film Detail", style: TextStyle(color: whiteColor)),
+              backgroundColor: darkColor,
+              centerTitle: true,
             ),
             body: SafeArea(
               child: SingleChildScrollView(
@@ -230,40 +231,63 @@ class FilmDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final imageHeight = size.height * 0.45; // Responsive image height
+    
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.05,
+          vertical: 16.0,
+        ),
         color: const Color(0xFF161616),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Gambar film dengan efek bayangan dan border
-            Container(
-              height: 390,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.6),
-                    blurRadius: 15,
-                    spreadRadius: 5,
-                  ),
-                ],
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(15),
-                child: AspectRatio(
-                  aspectRatio: 2 / 3,
-                  child: Image.network(
-                    film.picture,
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    height: MediaQuery.of(context).size.width * 0.75,
-                    fit: BoxFit.cover,
+            // Hero image section
+            Hero(
+              tag: film.judul,
+              child: Container(
+                height: imageHeight,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.6),
+                      blurRadius: 15,
+                      spreadRadius: 5,
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        film.horizontal_picture,
+                        fit: BoxFit.cover,
+                      ),
+                      // Gradient overlay
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withOpacity(0.7),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            // Teks judul dengan gradient
+            const SizedBox(height: 24),
+            
+            // Title with gradient
             ShaderMask(
               shaderCallback: (Rect bounds) {
                 return LinearGradient(
@@ -273,74 +297,171 @@ class FilmDetail extends StatelessWidget {
               },
               child: Text(
                 film.judul,
-                style: const TextStyle(
-                  fontSize: 28,
+                style: TextStyle(
+                  fontSize: size.width * 0.07,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 12),
-            // Detail film dengan ikon
-            _buildFilmDetail("Genre", film.genre),
-            _buildFilmDetail("Cast", film.aktor),
-            _buildFilmDetail("Release Date", film.tahun_rilis),
             const SizedBox(height: 20),
-            // Deskripsi film
-            Text(
-              film.deskripsi,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, color: Colors.white70),
+            
+            // Film details card
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: Column(
+                children: [
+                  _buildFilmDetail(
+                    context, 
+                    "Genre", 
+                    film.genre, 
+                    Icons.movie_filter,
+                  ),
+                  _buildDivider(),
+                  _buildFilmDetail(
+                    context, 
+                    "Cast", 
+                    film.aktor, 
+                    Icons.person,
+                  ),
+                  _buildDivider(),
+                  _buildFilmDetail(
+                    context, 
+                    "Release Date", 
+                    film.tahun_rilis, 
+                    Icons.calendar_today,
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            // Tombol Book Now
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFCC434),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            const SizedBox(height: 24),
+            
+            // Description
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Synopsis",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    film.deskripsi,
+                    style: const TextStyle(
+                      fontSize: 16, 
+                      color: Colors.white70,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            
+            // Book Now button
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 32),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFCC434),
+                  foregroundColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  elevation: 8,
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 12),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const SelectSeat()),
-                );
-              },
-              child: const Text(
-                "Book Now!",
-                style: TextStyle(fontSize: 18, color: Colors.black),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SelectSeat()),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.local_activity, size: 24),
+                    const SizedBox(width: 8),
+                    Text(
+                      "Book Now!",
+                      style: TextStyle(
+                        fontSize: size.width * 0.045,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFilmDetail(String label, String value) {
+  Widget _buildFilmDetail(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+  ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "$label: ",
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-          Flexible(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 16, color: Colors.white70),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              textAlign: TextAlign.center,
+          Icon(icon, color: Colors.orange, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDivider() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
+      child: Divider(color: Colors.white24, height: 1),
     );
   }
 }
