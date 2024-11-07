@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/view/loading.dart';
 import 'package:flutter_application_1/view/startPage.dart';
 import 'package:flutter_application_1/view/login.dart';
 import 'package:flutter_application_1/view/register.dart';
@@ -13,8 +14,9 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/start',
+      initialRoute: '/loading',
       routes: {
+        '/loading': (context) => const LoadingView(),
         '/start': (context) => const StartPageView(),
         '/login': (context) => const LoginView(),
         '/register': (context) => const RegisterView(),
