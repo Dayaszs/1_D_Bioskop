@@ -13,7 +13,12 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const StartPageView(),
+      initialRoute: '/start',
+      routes: {
+        '/start': (context) => const StartPageView(),
+        '/login': (context) => const LoginView(),
+        '/register': (context) => const RegisterView(),
+      },
     );
   }
 }
