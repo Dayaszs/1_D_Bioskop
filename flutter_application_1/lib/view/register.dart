@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/login.dart';
-import 'package:flutter_application_1/data/user.dart';
 import 'package:image_picker/image_picker.dart';
 
 class RegisterView extends StatefulWidget {
@@ -74,114 +73,118 @@ class _RegisterViewState extends State<RegisterView> {
           title: const Text('Register'),
           backgroundColor: lightColor,
         ),
-        body: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Register", style: textStyle3),
-                GestureDetector(
-                  onTap: _showImageSourceDialog,
-                  child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: _profileImage != null
-                        ? FileImage(_profileImage!)
-                        : const AssetImage('assets/placeholder.png') as ImageProvider,
-                    child: _profileImage == null
-                        ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
-                        : null,
-                  ),
-                ),
-                if (_isImageErrorVisible)
-                  const Padding(
-                    padding: EdgeInsets.only(top: 8.0),
-                    child: Text(
-                      "Profile Pic Wajib Diisi!",
-                      style: TextStyle(color: Colors.red, fontSize: 12),
+        resizeToAvoidBottomInset: true,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Register", style: textStyle3),
+                  GestureDetector(
+                    onTap: _showImageSourceDialog,
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundImage: _profileImage != null
+                          ? FileImage(_profileImage!)
+                          : const AssetImage('assets/placeholder.png') as ImageProvider,
+                      child: _profileImage == null
+                          ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
+                          : null,
                     ),
                   ),
-                const SizedBox(height: 10),
-                inputForm((p0) {
-                  if (p0 == null || p0.isEmpty) {
-                    return 'Username tidak boleh kosong!';
-                  }
-                  return null;
-                },
-                    controller: usernameController,
-                    hintTxt: "username",
-                    helperTxt: "Username",
-                    iconData: Icons.person),
-                inputForm((p0) {
-                  if (p0 == null || p0.isEmpty) {
-                    return 'Password tidak boleh kosong!';
-                  }
-                  if (p0.length < 8) {
-                    return 'Password minimal 8 digit';
-                  }
-                  return null;
-                },
-                    controller: passwordController,
-                    hintTxt: "********",
-                    helperTxt: "Password",
-                    iconData: Icons.password,
-                    password: true),
-                inputForm((p0) {
-                  if (p0 == null || p0.isEmpty) {
-                    return 'Email tidak boleh kosong!';
-                  }
-                  if (!p0.contains('@')) {
-                    return 'Email harus menggunakan @';
-                  }
-                  return null;
-                },
-                    controller: emailController,
-                    hintTxt: "user@gmail.com",
-                    helperTxt: "Email",
-                    iconData: Icons.mail),
-                inputForm((p0) {
-                  if (p0 == null || p0.isEmpty) {
-                    return 'Nomor telepon tidak boleh kosong!';
-                  }
-                  return null;
-                },
-                    controller: nomorTeleponController,
-                    hintTxt: "XXXXXXXXXXXX",
-                    helperTxt: "Phone Number",
-                    iconData: Icons.phone),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        if (_profileImage == null) {
-                          setState(() {
-                            _isImageErrorVisible = true;
-                          });
-                        } else {
-                          Map<String, dynamic> formData = {};
-                          formData['username'] = usernameController.text;
-                          formData['password'] = passwordController.text;
-                          formData['email'] = emailController.text;
-                          formData['nomor_telepon'] = nomorTeleponController.text;
-                          formData['profile_image'] = _profileImage!.path;
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => LoginView(data: formData),
-                            ),
-                          );
+                  if (_isImageErrorVisible)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        "Profile Pic Wajib Diisi!",
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                  const SizedBox(height: 10),
+                  inputForm((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Username tidak boleh kosong!';
+                    }
+                    return null;
+                  },
+                      controller: usernameController,
+                      hintTxt: "username",
+                      helperTxt: "Username",
+                      iconData: Icons.person),
+                  inputForm((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Password tidak boleh kosong!';
+                    }
+                    if (p0.length < 8) {
+                      return 'Password minimal 8 digit';
+                    }
+                    return null;
+                  },
+                      controller: passwordController,
+                      hintTxt: "********",
+                      helperTxt: "Password",
+                      iconData: Icons.password,
+                      password: true),
+                  inputForm((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Email tidak boleh kosong!';
+                    }
+                    if (!p0.contains('@')) {
+                      return 'Email harus menggunakan @';
+                    }
+                    return null;
+                  },
+                      controller: emailController,
+                      hintTxt: "user@gmail.com",
+                      helperTxt: "Email",
+                      iconData: Icons.mail),
+                  inputForm((p0) {
+                    if (p0 == null || p0.isEmpty) {
+                      return 'Nomor telepon tidak boleh kosong!';
+                    }
+                    return null;
+                  },
+                      controller: nomorTeleponController,
+                      hintTxt: "XXXXXXXXXXXX",
+                      helperTxt: "Phone Number",
+                      iconData: Icons.phone),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, top: 10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          if (_profileImage == null) {
+                            setState(() {
+                              _isImageErrorVisible = true;
+                            });
+                          } else {
+                            Map<String, dynamic> formData = {};
+                            formData['username'] = usernameController.text;
+                            formData['password'] = passwordController.text;
+                            formData['email'] = emailController.text;
+                            formData['nomor_telepon'] = nomorTeleponController.text;
+                            formData['profile_image'] = _profileImage!.path;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => LoginView(data: formData),
+                              ),
+                            );
+                          }
                         }
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: lightColor,
-                      minimumSize: const Size(350, 50),
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: lightColor,
+                        minimumSize: const Size(350, 50),
+                      ),
+                      child: const Text('Register', style: textStyle4),
                     ),
-                    child: const Text('Register', style: textStyle4),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
