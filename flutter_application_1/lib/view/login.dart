@@ -38,12 +38,19 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: darkColor,
+        backgroundColor: Colors.black,
         appBar: AppBar(
-          title: const Text('Login'),
-          backgroundColor: lightColor,
+          title: const Text(
+            'Login',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: Colors.black,
+          centerTitle: true,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
               Navigator.push(
                 context,
@@ -52,78 +59,146 @@ class _LoginViewState extends State<LoginView> {
             },
           ),
         ),
-        body: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Login", style: textStyle3),
-                inputForm(
-                  (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return 'Email tidak boleh kosong!';
-                    }
-                    if (!p0.contains('@')) {
-                      return 'Email harus menggunakan @';
-                    }
-                    return null;
-                  },
-                  controller: emailController,
-                  hintTxt: "user@gmail.com",
-                  helperTxt: "Email",
-                  iconData: Icons.mail,
-                ),
-                inputForm(
-                  (p0) {
-                    if (p0 == null || p0.isEmpty) {
-                      return 'Password tidak boleh kosong!';
-                    }
-                    if (p0.length < 8) {
-                      return 'Password minimal 8 digit';
-                    }
-                    return null;
-                  },
-                  controller: passwordController,
-                  hintTxt: "********",
-                  helperTxt: "Password",
-                  iconData: Icons.password,
-                  password: true,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 10),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        if (dataForm != null &&
-                            dataForm!['email'] == emailController.text &&
-                            dataForm!['password'] == passwordController.text) {
-                          loginSuccess(context, dataForm!);
-                        } else {
-                          showLoginError(context);
+        body: SingleChildScrollView(
+          child: Center(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 90),
+                  SizedBox(
+                    width: 500,
+                    height: 200,
+                    child:
+                        Image.asset('images/loadLogo.png', fit: BoxFit.contain),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: TextFormField(
+                      controller: emailController,
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.person, color: Colors.white),
+                        hintText: "user@gmail.com",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        border: InputBorder.none,
+                      ),
+                      validator: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return 'Email tidak boleh kosong!';
                         }
-                      }
+                        if (!p0.contains('@')) {
+                          return 'Email harus menggunakan @';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: TextFormField(
+                      style: const TextStyle(color: Colors.white),
+                      controller: passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.password, color: Colors.white),
+                        hintText: "********",
+                        hintStyle: TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        border: InputBorder.none,
+                      ),
+                      validator: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return 'Password tidak boleh kosong!';
+                        }
+                        if (p0.length < 8) {
+                          return 'Password minimal 8 karakter';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, top: 20, right: 20),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          if (dataForm != null &&
+                              dataForm!['email'] == emailController.text &&
+                              dataForm!['password'] ==
+                                  passwordController.text) {
+                            loginSuccess(context, dataForm!);
+                          } else {
+                            showLoginError(context);
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFFFCC434),
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(84),
+                        ),
+                      ),
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      createAccount(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: lightColor,
-                      minimumSize: const Size(350, 50),
-                    ),
-                    child: const Text(
-                      'Login',
-                      style: textStyle4,
+                    child: const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "Haven't got account? ",
+                          style: TextStyle(
+                            color: Color(0xCCFFFFFF),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: 'Register here',
+                              style: TextStyle(
+                                color: Color(0xCCFFF500),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    createAccount(context);
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text('Belum punya akun ?', style: textStyle5),
+                  const Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+                    child: Text(
+                      'By signing in or signing up, you agree to our Terms of Service and Privacy Policy',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -132,7 +207,6 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void loginSuccess(BuildContext context, Map<String, dynamic> userData) {
-    print("Navigating to Home with data: $userData");
     Navigator.push(
       context,
       MaterialPageRoute(
