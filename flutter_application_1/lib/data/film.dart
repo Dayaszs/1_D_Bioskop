@@ -72,6 +72,7 @@ final List<Map<String, Object>> _films = [
     'horizontal_picture': 'https://img.englishcinemakyiv.com/BVZBaq6fsTow7KZmdNWUFoEOT1GThWYfAprhqMDZEi4/resize:fill:800:450:1:0/gravity:sm/aHR0cHM6Ly9leHBhdGNpbmVtYXByb2QuYmxvYi5jb3JlLndpbmRvd3MubmV0L2ltYWdlcy9lMTA1YjhlNi1hOTcyLTQxMmMtYmRiMy0yZmJkYWE1NDA2OWYuanBn.jpg',
     'ratings': 4.8,
     'review': 'A mind-bending thriller with stunning visuals and a complex plot.',
+    'trailer': ''
   },
   {
     'id_film': 'F003',
@@ -85,6 +86,7 @@ final List<Map<String, Object>> _films = [
     'horizontal_picture': 'https://cdn.europosters.eu/image/750/962.jpg',
     'ratings': 4.8,
     'review': 'A mind-bending thriller with stunning visuals and a complex plot.',
+    'trailer': ''
   },
   {
     'id_film': 'F004',
@@ -98,6 +100,7 @@ final List<Map<String, Object>> _films = [
     'horizontal_picture': 'https://m.media-amazon.com/images/I/51whqgtGA4L._AC_UF1000,1000_QL80_.jpg',
     'ratings': 4.8,
     'review': 'A mind-bending thriller with stunning visuals and a complex plot.',
+    'trailer': ''
   },
   {
     'id_film': 'F005',
@@ -111,6 +114,7 @@ final List<Map<String, Object>> _films = [
     'horizontal_picture': 'https://rukminim2.flixcart.com/image/850/1000/jbfe7ww0-1/poster/g/k/c/medium-ashd-wall-poster-batman-the-dark-knight-bat-signal-original-imaet2nugm94hvyj.jpeg?q=20&crop=false',
     'ratings': 4.8,
     'review': 'A mind-bending thriller with stunning visuals and a complex plot.',
+    'trailer': ''
   },
   {
     'id_film': 'F006',
@@ -124,6 +128,7 @@ final List<Map<String, Object>> _films = [
     'horizontal_picture': 'https://www.gemakeadilan.com/storage/public/posts/images/o2Cw26lTlwGhn4gXDpC9b4SXlHNGHSuPUD3tqYOf.jpg',
     'ratings': 4.8,
     'review': 'A mind-bending thriller with stunning visuals and a complex plot.',
+    'trailer': ''
   },
   {
     'id_film': 'F007',
@@ -137,6 +142,7 @@ final List<Map<String, Object>> _films = [
     'horizontal_picture': 'https://m.media-amazon.com/images/I/71JiBJhmqFL._AC_UF1000,1000_QL80_.jpg',
     'ratings': 4.8,
     'review': 'A mind-bending thriller with stunning visuals and a complex plot.',
+    'trailer': ''
   },
   {
     'id_film': 'F008',
@@ -150,5 +156,6 @@ final List<Map<String, Object>> _films = [
     'horizontal_picture': 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRIe6fStcXDp9LGWEWihgvJ63CsSLKq0g_BWg&s',
     'ratings': 4.8,
     'review': 'A mind-bending thriller with stunning visuals and a complex plot.',
+    'trailer': ''
   },
 ];
