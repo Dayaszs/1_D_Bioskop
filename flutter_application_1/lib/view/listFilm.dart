@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/view/selectSeat.dart';
+import 'package:flutter_application_1/view/selectCinema.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FilmListView extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -50,7 +52,6 @@ class _FilmListViewState extends State<FilmListView> {
 
   Widget _buildFilterButton(String label) {
     bool isSelected = _filter == label;
-
     return MouseRegion(
       onEnter: (_) => setState(() => isSelected = true),
       onExit: (_) => setState(() => isSelected = false),
@@ -103,6 +104,12 @@ class NarrowLayout extends StatelessWidget {
               title: const Text("Film Detail", style: TextStyle(color: whiteColor)),
               backgroundColor: darkColor,
               centerTitle: true,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
             body: SafeArea(
               child: SingleChildScrollView(
@@ -115,7 +122,6 @@ class NarrowLayout extends StatelessWidget {
     );
   }
 }
-
 
 class WideLayout extends StatefulWidget {
   const WideLayout({super.key});
@@ -135,15 +141,15 @@ class _WideLayoutState extends State<WideLayout> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(
-          width: 300,
+        Flexible(
+          flex: 1,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: FilmList(onFilmTap: _onFilmSelected),
           ),
         ),
         Expanded(
-          flex: 3,
+          flex: 2,
           child: _selectedFilm == null
               ? Center(child: Image.asset('images/logo1.png', width: 500, height: 500))
               : FilmDetail(_selectedFilm!),
@@ -161,8 +167,8 @@ class FilmList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
         mainAxisSpacing: 10.0,
         crossAxisSpacing: 10.0,
         childAspectRatio: 0.6,
@@ -232,7 +238,7 @@ class FilmDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final imageHeight = size.height * 0.45; // Responsive image height
+    final imageHeight = size.height * 0.45;
     
     return SingleChildScrollView(
       child: Container(
@@ -245,10 +251,11 @@ class FilmDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Hero image section
-            Hero(
+          Hero(
               tag: film.judul,
               child: Container(
-                height: imageHeight,
+                width: MediaQuery.of(context).size.width,
+                height: 200,
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
@@ -259,7 +266,7 @@ class FilmDetail extends StatelessWidget {
                   ],
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(0),
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
@@ -280,13 +287,57 @@ class FilmDetail extends StatelessWidget {
                           ),
                         ),
                       ),
+                      // Semi-transparent button in the bottom-right corner
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: GestureDetector(
+                          onTap: () async {
+                            // Check if trailer link exists and is valid
+                            if (film.trailer != null && film.trailer.isNotEmpty) {
+                              final Uri url = Uri.parse(film.trailer);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
+                              } else {
+                                print("Cannot launch trailer URL");
+                              }
+                            } else {
+                              print("No trailer available for this film");
+                            }
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.play_arrow,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  "Watch Trailer",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(height: 24),
-            
+            const SizedBox(height: 16),
+
             // Title with gradient
             ShaderMask(
               shaderCallback: (Rect bounds) {
@@ -305,42 +356,7 @@ class FilmDetail extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 20),
-            
-            // Film details card
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.black26,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white10),
-              ),
-              child: Column(
-                children: [
-                  _buildFilmDetail(
-                    context, 
-                    "Genre", 
-                    film.genre, 
-                    Icons.movie_filter,
-                  ),
-                  _buildDivider(),
-                  _buildFilmDetail(
-                    context, 
-                    "Cast", 
-                    film.aktor, 
-                    Icons.person,
-                  ),
-                  _buildDivider(),
-                  _buildFilmDetail(
-                    context, 
-                    "Release Date", 
-                    film.tahun_rilis, 
-                    Icons.calendar_today,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             
             // Description
             Container(
@@ -374,8 +390,107 @@ class FilmDetail extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
-            
+            const SizedBox(height: 16),
+
+            // Film details card
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: Column(
+                children: [
+                  _buildFilmDetail(
+                    context, 
+                    "Genre", 
+                    film.genre, 
+                    Icons.movie_filter,
+                  ),
+                  _buildDivider(),
+                  _buildFilmDetail(
+                    context, 
+                    "Cast", 
+                    film.aktor, 
+                    Icons.person,
+                  ),
+                  _buildDivider(),
+                  _buildFilmDetail(
+                    context, 
+                    "Release Date", 
+                    film.tahun_rilis, 
+                    Icons.calendar_today,
+                  ),
+                  _buildDivider(),
+                  _buildFilmDetail(
+                    context, 
+                    "Director", 
+                    film.sutradara, 
+                    Icons.camera,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+            // Container Review dan Ratings
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black26,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white10),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center, // Center the content horizontally
+                children: [
+                  const Text(
+                    "Ratings & Reviews",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Star rating icons centered
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // Center the stars horizontally
+                    children: List.generate(5, (index) {
+                      return Icon(
+                        Icons.star,
+                        color: index < (film.ratings ?? 0) ? Colors.amber : Colors.grey,
+                        size: 30,  // Increase the size of the star icons
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  // Display numerical rating below the stars
+                  Text(
+                    '${film.ratings?.toStringAsFixed(1) ?? "0.0"} / 5',  // Format the rating to 1 decimal place
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  // Center the review text
+                  Text(
+                    '"${film.review ?? "No reviews available."}"',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                      fontStyle: FontStyle.italic,
+                      height: 1.5,
+                    ),
+                    textAlign: TextAlign.center, // Center align the text
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+
             // Book Now button
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 32),
@@ -392,7 +507,7 @@ class FilmDetail extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const SelectSeat()),
+                    MaterialPageRoute(builder: (_) => const SelectCinema()),
                   );
                 },
                 child: Row(
