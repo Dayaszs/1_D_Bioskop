@@ -79,13 +79,20 @@ class _LoginViewState extends State<LoginView> {
                     child: TextFormField(
                       controller: emailController,
                       style: const TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
+                     decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person, color: Colors.white),
                         hintText: "user@gmail.com",
                         hintStyle: TextStyle(color: Colors.grey),
                         filled: true,
                         fillColor: Colors.transparent,
-                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white54), // Warna border saat tidak aktif
+                          borderRadius: BorderRadius.circular(8.0), // Radius sudut border
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: lightColor), // Warna border saat input aktif
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       validator: (p0) {
                         if (p0 == null || p0.isEmpty) {
@@ -99,8 +106,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: TextFormField(
                       style: const TextStyle(color: Colors.white),
                       controller: passwordController,
@@ -111,7 +117,14 @@ class _LoginViewState extends State<LoginView> {
                         hintStyle: TextStyle(color: Colors.grey),
                         filled: true,
                         fillColor: Colors.transparent,
-                        border: InputBorder.none,
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white54), // Warna border saat tidak aktif
+                          borderRadius: BorderRadius.circular(8.0), // Radius sudut border
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: lightColor), // Warna border saat input aktif
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
                       validator: (p0) {
                         if (p0 == null || p0.isEmpty) {
