@@ -88,7 +88,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         title: Text(
           'Change Password',
           style: TextStyle(
-            color: lightColor,
+            color: whiteColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -127,7 +127,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _showOldPassword ? Icons.visibility : Icons.visibility_off,
-                      color: lightColor,
+                      color: whiteColor,
                     ),
                     onPressed: _toggleOldPasswordVisibility,
                   ),
@@ -156,7 +156,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _showNewPassword ? Icons.visibility : Icons.visibility_off,
-                      color: lightColor,
+                      color: whiteColor,
                     ),
                     onPressed: _toggleNewPasswordVisibility,
                   ),
@@ -185,7 +185,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   suffixIcon: IconButton(
                     icon: Icon(
                       _showConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                      color: lightColor,
+                      color: whiteColor,
                     ),
                     onPressed: _toggleConfirmPasswordVisibility,
                   ),
