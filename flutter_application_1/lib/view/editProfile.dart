@@ -77,7 +77,7 @@ class _EditProfileViewState extends State<EditProfileView> {
         title: Text(
           'Edit Profile',
           style: TextStyle(
-            color: lightColor,
+            color: whiteColor,
             fontWeight: FontWeight.bold,
           ),
         ),

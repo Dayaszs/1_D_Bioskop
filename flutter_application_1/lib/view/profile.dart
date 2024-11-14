@@ -22,6 +22,7 @@ class ShowProfile extends StatelessWidget {
         title: Text(
           'Profile',
           style: TextStyle(
+            fontSize: 20,
             color: lightColor,
             fontWeight: FontWeight.bold,
           ),
