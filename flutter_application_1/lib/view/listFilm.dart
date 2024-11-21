@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/view/selectSeat.dart';
+import 'package:flutter_application_1/view/listReview.dart';
 import 'package:flutter_application_1/view/selectCinema.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class FilmListView extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -311,22 +313,46 @@ class FilmDetail extends StatelessWidget {
                         bottom: 8,
                         right: 8,
                         child: GestureDetector(
-                          onTap: () async {
-                            // Check if trailer link exists and is valid
-                            if (film.trailer != null &&
-                                film.trailer.isNotEmpty) {
-                              final Uri url = Uri.parse(film.trailer);
-                              if (await canLaunchUrl(url)) {
-                                await launchUrl(url);
+                          onTap: () {
+                            if (film.trailer != null && film.trailer.isNotEmpty) {
+                              // Extract the YouTube video ID from the URL
+                              final String? videoId = YoutubePlayer.convertUrlToId(film.trailer);
+                              if (videoId != null) {
+                                // Show a dialog with YouTube player
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return Dialog(
+                                      backgroundColor: Colors.black,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: AspectRatio(
+                                        aspectRatio: 16 / 9,
+                                        child: YoutubePlayer(
+                                          controller: YoutubePlayerController(
+                                            initialVideoId: videoId,
+                                            flags: const YoutubePlayerFlags(
+                                              autoPlay: true,
+                                              mute: false,
+                                            ),
+                                          ),
+                                          showVideoProgressIndicator: true,
+                                          progressIndicatorColor: Colors.red,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
                               } else {
-                                print("Cannot launch trailer URL");
+                                print("Invalid YouTube URL");
                               }
                             } else {
                               print("No trailer available for this film");
                             }
                           },
                           child: Container(
-                            padding: EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(8),
@@ -334,12 +360,12 @@ class FilmDetail extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.play_arrow,
                                   color: Colors.white,
                                 ),
-                                SizedBox(width: 4),
-                                Text(
+                                const SizedBox(width: 4),
+                                const Text(
                                   "Watch Trailer",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -454,63 +480,64 @@ class FilmDetail extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             // Container Review dan Ratings
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.black26,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.white10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment
-                    .center, // Center the content horizontally
-                children: [
-                  const Text(
-                    "Ratings & Reviews",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+ GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => RatingsAndReviewsView(film: film)),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.black26,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.white10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Ratings & Reviews",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Star rating icons centered
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .center, // Center the stars horizontally
-                    children: List.generate(5, (index) {
-                      return Icon(
-                        Icons.star,
-                        color: index < (film.ratings ?? 0)
-                            ? Colors.amber
-                            : Colors.grey,
-                        size: 30, // Increase the size of the star icons
-                      );
-                    }),
-                  ),
-                  const SizedBox(height: 8),
-                  // Display numerical rating below the stars
-                  Text(
-                    '${film.ratings?.toStringAsFixed(1) ?? "0.0"} / 5', // Format the rating to 1 decimal place
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white70,
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(5, (index) {
+                        return Icon(
+                          Icons.star,
+                          color: index < (film.ratings ?? 0) ? Colors.amber : Colors.grey,
+                          size: 30,
+                        );
+                      }),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Center the review text
-                  Text(
-                    '"${film.review ?? "No reviews available."}"',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white70,
-                      fontStyle: FontStyle.italic,
-                      height: 1.5,
+                    const SizedBox(height: 8),
+                    Text(
+                      '${film.ratings?.toStringAsFixed(1) ?? "0.0"} / 5',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white70,
+                      ),
                     ),
-                    textAlign: TextAlign.center, // Center align the text
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    Text(
+                      '"${film.review ?? "No reviews available."}"',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.white70,
+                        fontStyle: FontStyle.italic,
+                        height: 1.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 24),
