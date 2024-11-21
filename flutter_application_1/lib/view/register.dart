@@ -63,6 +63,25 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+  DateTime? _selectedDate;
+  TextEditingController tanggalLahirController = TextEditingController();
+
+  void _pickDate() async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        _selectedDate = pickedDate;
+        tanggalLahirController.text =
+            "${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year}";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -219,6 +238,38 @@ class _RegisterViewState extends State<RegisterView> {
                         }
                         return null;
                       },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    child: TextFormField(
+                      controller: tanggalLahirController,
+                      readOnly: true, // supaya gaisa isi manual
+                      style: const TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.calendar_today,
+                            color: Colors.white),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.calendar_month,
+                              color: Colors.white),
+                          onPressed: _pickDate,
+                        ),
+                        hintText: "Tanggal Lahir",
+                        hintStyle: const TextStyle(color: Colors.grey),
+                        filled: true,
+                        fillColor: Colors.transparent,
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Tanggal lahir is required!';
+                        }
+                        return null;
+                      },
+                      onTap: _pickDate,
                     ),
                   ),
                   Padding(
