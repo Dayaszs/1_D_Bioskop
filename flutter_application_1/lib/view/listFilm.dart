@@ -17,6 +17,10 @@ class FilmListView extends StatefulWidget {
 class _FilmListViewState extends State<FilmListView> {
   String _filter = 'Now Playing';
 
+  List<Film> get _filteredFilms {
+    return _filter == 'Now Playing' ? films : comingSoonFilms;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,14 +61,18 @@ class _FilmListViewState extends State<FilmListView> {
       onExit: (_) => setState(() => isSelected = false),
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFFCC434) : Colors.black.withOpacity(0.5),
+          color: isSelected
+              ? const Color(0xFFFCC434)
+              : Colors.black.withOpacity(0.5),
           borderRadius: BorderRadius.circular(8),
         ),
         child: TextButton(
           onPressed: () => setState(() => _filter = label),
           style: TextButton.styleFrom(
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
-            backgroundColor: isSelected ? const Color(0xFFFCC434) : Colors.black.withOpacity(0.5),
+            backgroundColor: isSelected
+                ? const Color(0xFFFCC434)
+                : Colors.black.withOpacity(0.5),
           ),
           child: Text(
             label,
@@ -84,7 +92,9 @@ class _FilmListViewState extends State<FilmListView> {
       color: const Color.fromARGB(255, 22, 22, 22),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          return constraints.maxWidth > 600 ? const WideLayout() : const NarrowLayout();
+          return constraints.maxWidth > 600
+              ? WideLayout(films: _filteredFilms)
+              : NarrowLayout(films: _filteredFilms);
         },
       ),
     );
@@ -92,16 +102,20 @@ class _FilmListViewState extends State<FilmListView> {
 }
 
 class NarrowLayout extends StatelessWidget {
-  const NarrowLayout({super.key});
+  final List<Film> films;
+
+  const NarrowLayout({super.key, required this.films});
 
   @override
   Widget build(BuildContext context) {
     return FilmList(
+      films: films,
       onFilmTap: (film) => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => Scaffold(
             appBar: AppBar(
-              title: const Text("Film Detail", style: TextStyle(color: whiteColor)),
+              title: const Text("Film Detail",
+                  style: TextStyle(color: whiteColor)),
               backgroundColor: darkColor,
               centerTitle: true,
               leading: IconButton(
@@ -124,7 +138,9 @@ class NarrowLayout extends StatelessWidget {
 }
 
 class WideLayout extends StatefulWidget {
-  const WideLayout({super.key});
+  final List<Film> films;
+
+  const WideLayout({super.key, required this.films});
 
   @override
   _WideLayoutState createState() => _WideLayoutState();
@@ -145,13 +161,15 @@ class _WideLayoutState extends State<WideLayout> {
           flex: 1,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: FilmList(onFilmTap: _onFilmSelected),
+            child: FilmList(films: widget.films, onFilmTap: _onFilmSelected),
           ),
         ),
         Expanded(
           flex: 2,
           child: _selectedFilm == null
-              ? Center(child: Image.asset('images/logo1.png', width: 500, height: 500))
+              ? Center(
+                  child:
+                      Image.asset('images/logo1.png', width: 500, height: 500))
               : FilmDetail(_selectedFilm!),
         ),
       ],
@@ -160,9 +178,10 @@ class _WideLayoutState extends State<WideLayout> {
 }
 
 class FilmList extends StatelessWidget {
+  final List<Film> films;
   final void Function(Film) onFilmTap;
 
-  const FilmList({super.key, required this.onFilmTap});
+  const FilmList({super.key, required this.films, required this.onFilmTap});
 
   @override
   Widget build(BuildContext context) {
@@ -239,7 +258,7 @@ class FilmDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final imageHeight = size.height * 0.45;
-    
+
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -251,7 +270,7 @@ class FilmDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Hero image section
-          Hero(
+            Hero(
               tag: film.judul,
               child: Container(
                 width: MediaQuery.of(context).size.width,
@@ -294,7 +313,8 @@ class FilmDetail extends StatelessWidget {
                         child: GestureDetector(
                           onTap: () async {
                             // Check if trailer link exists and is valid
-                            if (film.trailer != null && film.trailer.isNotEmpty) {
+                            if (film.trailer != null &&
+                                film.trailer.isNotEmpty) {
                               final Uri url = Uri.parse(film.trailer);
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
@@ -357,7 +377,7 @@ class FilmDetail extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Description
             Container(
               padding: const EdgeInsets.all(16),
@@ -381,7 +401,7 @@ class FilmDetail extends StatelessWidget {
                   Text(
                     film.deskripsi,
                     style: const TextStyle(
-                      fontSize: 16, 
+                      fontSize: 16,
                       color: Colors.white70,
                       height: 1.5,
                     ),
@@ -403,30 +423,30 @@ class FilmDetail extends StatelessWidget {
               child: Column(
                 children: [
                   _buildFilmDetail(
-                    context, 
-                    "Genre", 
-                    film.genre, 
+                    context,
+                    "Genre",
+                    film.genre,
                     Icons.movie_filter,
                   ),
                   _buildDivider(),
                   _buildFilmDetail(
-                    context, 
-                    "Cast", 
-                    film.aktor, 
+                    context,
+                    "Cast",
+                    film.aktor,
                     Icons.person,
                   ),
                   _buildDivider(),
                   _buildFilmDetail(
-                    context, 
-                    "Release Date", 
-                    film.tahun_rilis, 
+                    context,
+                    "Release Date",
+                    film.tahun_rilis,
                     Icons.calendar_today,
                   ),
                   _buildDivider(),
                   _buildFilmDetail(
-                    context, 
-                    "Director", 
-                    film.sutradara, 
+                    context,
+                    "Director",
+                    film.sutradara,
                     Icons.camera,
                   ),
                 ],
@@ -442,7 +462,8 @@ class FilmDetail extends StatelessWidget {
                 border: Border.all(color: Colors.white10),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center, // Center the content horizontally
+                crossAxisAlignment: CrossAxisAlignment
+                    .center, // Center the content horizontally
                 children: [
                   const Text(
                     "Ratings & Reviews",
@@ -455,19 +476,22 @@ class FilmDetail extends StatelessWidget {
                   const SizedBox(height: 8),
                   // Star rating icons centered
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center, // Center the stars horizontally
+                    mainAxisAlignment: MainAxisAlignment
+                        .center, // Center the stars horizontally
                     children: List.generate(5, (index) {
                       return Icon(
                         Icons.star,
-                        color: index < (film.ratings ?? 0) ? Colors.amber : Colors.grey,
-                        size: 30,  // Increase the size of the star icons
+                        color: index < (film.ratings ?? 0)
+                            ? Colors.amber
+                            : Colors.grey,
+                        size: 30, // Increase the size of the star icons
                       );
                     }),
                   ),
                   const SizedBox(height: 8),
                   // Display numerical rating below the stars
                   Text(
-                    '${film.ratings?.toStringAsFixed(1) ?? "0.0"} / 5',  // Format the rating to 1 decimal place
+                    '${film.ratings?.toStringAsFixed(1) ?? "0.0"} / 5', // Format the rating to 1 decimal place
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
