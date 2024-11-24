@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/view/selectSeat.dart';
-import 'package:flutter_application_1/view/listReview.dart';
 import 'package:flutter_application_1/view/selectCinema.dart';
+import 'package:flutter_application_1/view/listReview.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class FilmListView extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -313,46 +312,22 @@ class FilmDetail extends StatelessWidget {
                         bottom: 8,
                         right: 8,
                         child: GestureDetector(
-                          onTap: () {
-                            if (film.trailer != null && film.trailer.isNotEmpty) {
-                              // Extract the YouTube video ID from the URL
-                              final String? videoId = YoutubePlayer.convertUrlToId(film.trailer);
-                              if (videoId != null) {
-                                // Show a dialog with YouTube player
-                                showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return Dialog(
-                                      backgroundColor: Colors.black,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: AspectRatio(
-                                        aspectRatio: 16 / 9,
-                                        child: YoutubePlayer(
-                                          controller: YoutubePlayerController(
-                                            initialVideoId: videoId,
-                                            flags: const YoutubePlayerFlags(
-                                              autoPlay: true,
-                                              mute: false,
-                                            ),
-                                          ),
-                                          showVideoProgressIndicator: true,
-                                          progressIndicatorColor: Colors.red,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                );
+                          onTap: () async {
+                            // Check if trailer link exists and is valid
+                            if (film.trailer != null &&
+                                film.trailer.isNotEmpty) {
+                              final Uri url = Uri.parse(film.trailer);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url);
                               } else {
-                                print("Invalid YouTube URL");
+                                print("Cannot launch trailer URL");
                               }
                             } else {
                               print("No trailer available for this film");
                             }
                           },
                           child: Container(
-                            padding: const EdgeInsets.all(8),
+                            padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(8),
@@ -360,12 +335,12 @@ class FilmDetail extends StatelessWidget {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.play_arrow,
                                   color: Colors.white,
                                 ),
-                                const SizedBox(width: 4),
-                                const Text(
+                                SizedBox(width: 4),
+                                Text(
                                   "Watch Trailer",
                                   style: TextStyle(
                                     color: Colors.white,
@@ -480,7 +455,7 @@ class FilmDetail extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             // Container Review dan Ratings
- GestureDetector(
+            GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
@@ -511,7 +486,7 @@ class FilmDetail extends StatelessWidget {
                       children: List.generate(5, (index) {
                         return Icon(
                           Icons.star,
-                          color: index < (film.ratings ?? 0) ? Colors.amber : Colors.grey,
+                          color: index < ((film.ratings ?? 0).ceil()) ? Colors.amber : Colors.grey,
                           size: 30,
                         );
                       }),
@@ -541,7 +516,6 @@ class FilmDetail extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-
             // Book Now button
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 32),
