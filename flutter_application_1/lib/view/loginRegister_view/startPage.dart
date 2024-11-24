@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/view/login.dart';
-import 'package:flutter_application_1/view/register.dart';
+import 'package:flutter_application_1/view/loginRegister_view/login.dart';
+import 'package:flutter_application_1/view/loginRegister_view/register.dart';
 
 class StartPageView extends StatelessWidget {
   const StartPageView({super.key});
