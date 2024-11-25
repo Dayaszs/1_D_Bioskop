@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_application_1/view/profile.dart';
+import 'package:flutter_application_1/view/profile_view/profile.dart';
 
 class EditProfileView extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -45,7 +45,8 @@ class _EditProfileViewState extends State<EditProfileView> {
               children: [
                 ListTile(
                   leading: const Icon(Icons.camera_alt, color: Colors.white),
-                  title: const Text('Take a picture', style: TextStyle(color: Colors.white)),
+                  title: const Text('Take a picture',
+                      style: TextStyle(color: Colors.white)),
                   onTap: () {
                     Navigator.of(context).pop();
                     _pickImage(ImageSource.camera);
@@ -53,7 +54,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                 ),
                 ListTile(
                   leading: const Icon(Icons.photo_library, color: Colors.white),
-                  title: const Text('Choose from gallery', style: TextStyle(color: Colors.white)),
+                  title: const Text('Choose from gallery',
+                      style: TextStyle(color: Colors.white)),
                   onTap: () {
                     Navigator.of(context).pop();
                     _pickImage(ImageSource.gallery);
@@ -112,7 +114,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                             !kIsWeb &&
                             File(data['profile_image']).existsSync())
                         ? FileImage(File(data['profile_image']))
-                        : const NetworkImage('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
+                        : const NetworkImage(
+                                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
                             as ImageProvider,
                   ),
                   const SizedBox(height: 2),
@@ -159,7 +162,8 @@ class _EditProfileViewState extends State<EditProfileView> {
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: lightColor,
-                padding: const EdgeInsets.symmetric(horizontal: 120, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 120, vertical: 14),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30),
                 ),
@@ -172,7 +176,8 @@ class _EditProfileViewState extends State<EditProfileView> {
                   ),
                 );
               },
-              child: const Text('Save Changes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              child: const Text('Save Changes',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
           ],
         ),

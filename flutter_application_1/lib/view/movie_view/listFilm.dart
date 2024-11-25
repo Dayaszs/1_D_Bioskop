@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/film.dart';
-import 'package:flutter_application_1/view/selectSeat.dart';
-import 'package:flutter_application_1/view/selectCinema.dart';
-import 'package:flutter_application_1/view/listReview.dart';
+import 'package:flutter_application_1/view/movie_view/selectSeat.dart';
+import 'package:flutter_application_1/view/movie_view/selectCinema.dart';
+import 'package:flutter_application_1/view/ratings_view/listReview.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FilmListView extends StatefulWidget {
@@ -459,7 +459,8 @@ class FilmDetail extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => RatingsAndReviewsView(film: film)),
+                  MaterialPageRoute(
+                      builder: (_) => RatingsAndReviewsView(film: film)),
                 );
               },
               child: Container(
@@ -486,7 +487,9 @@ class FilmDetail extends StatelessWidget {
                       children: List.generate(5, (index) {
                         return Icon(
                           Icons.star,
-                          color: index < ((film.ratings ?? 0).ceil()) ? Colors.amber : Colors.grey,
+                          color: index < ((film.ratings ?? 0).ceil())
+                              ? Colors.amber
+                              : Colors.grey,
                           size: 30,
                         );
                       }),

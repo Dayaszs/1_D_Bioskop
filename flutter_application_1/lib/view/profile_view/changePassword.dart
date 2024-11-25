@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
-import 'package:flutter_application_1/view/profile.dart';
+import 'package:flutter_application_1/view/profile_view/changePassword.dart';
+import 'package:flutter_application_1/view/profile_view/profile.dart';
 
 class ChangePasswordView extends StatefulWidget {
   final Map<String, dynamic> formData;
@@ -126,7 +127,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   labelStyle: TextStyle(color: Colors.white),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _showOldPassword ? Icons.visibility : Icons.visibility_off,
+                      _showOldPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: whiteColor,
                     ),
                     onPressed: _toggleOldPasswordVisibility,
@@ -155,7 +158,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   labelStyle: TextStyle(color: Colors.white),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _showNewPassword ? Icons.visibility : Icons.visibility_off,
+                      _showNewPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: whiteColor,
                     ),
                     onPressed: _toggleNewPasswordVisibility,
@@ -184,7 +189,9 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   labelStyle: TextStyle(color: Colors.white),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _showConfirmPassword ? Icons.visibility : Icons.visibility_off,
+                      _showConfirmPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: whiteColor,
                     ),
                     onPressed: _toggleConfirmPasswordVisibility,
@@ -212,7 +219,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 120),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 120),
                   ),
                   onPressed: _saveChanges,
                   child: _isLoading

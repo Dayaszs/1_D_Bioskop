@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
-import 'package:flutter_application_1/view/register.dart';
-import 'package:flutter_application_1/view/home.dart';
-import 'package:flutter_application_1/view/startPage.dart';
+import 'package:flutter_application_1/view/loginRegister_view/register.dart';
+import 'package:flutter_application_1/view/home_view/home.dart';
+import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
 
 class LoginView extends StatefulWidget {
   final Map<String, dynamic>? data;
@@ -79,18 +79,23 @@ class _LoginViewState extends State<LoginView> {
                     child: TextFormField(
                       controller: emailController,
                       style: const TextStyle(color: Colors.white),
-                     decoration: InputDecoration(
+                      decoration: InputDecoration(
                         prefixIcon: Icon(Icons.person, color: Colors.white),
                         hintText: "user@gmail.com",
                         hintStyle: TextStyle(color: Colors.grey),
                         filled: true,
                         fillColor: Colors.transparent,
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white54), // Warna border saat tidak aktif
-                          borderRadius: BorderRadius.circular(8.0), // Radius sudut border
+                          borderSide: BorderSide(
+                              color: Colors
+                                  .white54), // Warna border saat tidak aktif
+                          borderRadius:
+                              BorderRadius.circular(8.0), // Radius sudut border
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: lightColor), // Warna border saat input aktif
+                          borderSide: BorderSide(
+                              color:
+                                  lightColor), // Warna border saat input aktif
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),
@@ -106,7 +111,8 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: TextFormField(
                       style: const TextStyle(color: Colors.white),
                       controller: passwordController,
@@ -118,11 +124,16 @@ class _LoginViewState extends State<LoginView> {
                         filled: true,
                         fillColor: Colors.transparent,
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white54), // Warna border saat tidak aktif
-                          borderRadius: BorderRadius.circular(8.0), // Radius sudut border
+                          borderSide: BorderSide(
+                              color: Colors
+                                  .white54), // Warna border saat tidak aktif
+                          borderRadius:
+                              BorderRadius.circular(8.0), // Radius sudut border
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: lightColor), // Warna border saat input aktif
+                          borderSide: BorderSide(
+                              color:
+                                  lightColor), // Warna border saat input aktif
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                       ),

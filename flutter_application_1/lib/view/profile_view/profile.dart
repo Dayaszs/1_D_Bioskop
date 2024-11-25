@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
-import 'package:flutter_application_1/view/startPage.dart';
-import 'package:flutter_application_1/view/editProfile.dart';
-import 'package:flutter_application_1/view/changePassword.dart';
+import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
+import 'package:flutter_application_1/view/profile_view/editProfile.dart';
+import 'package:flutter_application_1/view/profile_view/changePassword.dart';
 
 class ShowProfile extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -40,28 +40,35 @@ class ShowProfile extends StatelessWidget {
                       !kIsWeb &&
                       File(data['profile_image']).existsSync())
                   ? FileImage(File(data['profile_image']))
-                  : const NetworkImage('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
+                  : const NetworkImage(
+                          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
                       as ImageProvider,
             ),
             const SizedBox(height: 16),
             Text(
               data['username'] ?? 'user1',
               style: const TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
             const SizedBox(height: 20),
-            buildInfoText('Phone Number :', data['nomor_telepon'] ?? 'No Phone Number'),
+            buildInfoText(
+                'Phone Number :', data['nomor_telepon'] ?? 'No Phone Number'),
             const SizedBox(height: 10),
             buildInfoText('Email :', data['email'] ?? 'No Email'),
             const SizedBox(height: 30),
-            buildOptionButton(context, Icons.confirmation_number, 'My ticket', () {
-              Navigator.pushNamed(context, '/view/myTicket.dart');   // Navigate to "My Ticket" page
+            buildOptionButton(context, Icons.confirmation_number, 'My ticket',
+                () {
+              Navigator.pushNamed(context,
+                  '/view/myTicket.dart'); // Navigate to "My Ticket" page
             }),
             buildOptionButton(context, Icons.edit, 'Edit Profile', () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditProfileView(data: data), // Updated constructor parameter
+                  builder: (context) => EditProfileView(
+                      data: data), // Updated constructor parameter
                 ),
               );
             }),
@@ -69,7 +76,9 @@ class ShowProfile extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ChangePasswordView(formData: data), // Assuming ChangePasswordView needs formData
+                  builder: (context) => ChangePasswordView(
+                      formData:
+                          data), // Assuming ChangePasswordView needs formData
                 ),
               );
             }),
@@ -100,15 +109,16 @@ class ShowProfile extends StatelessWidget {
     );
   }
 
-  Widget buildOptionButton(
-      BuildContext context, IconData icon, String text, VoidCallback onPressed) {
+  Widget buildOptionButton(BuildContext context, IconData icon, String text,
+      VoidCallback onPressed) {
     return ListTile(
       leading: Icon(icon, color: Colors.white),
       title: Text(
         text,
         style: const TextStyle(fontSize: 16, color: Colors.white),
       ),
-      trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+      trailing:
+          const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
       onTap: onPressed,
     );
   }
@@ -119,10 +129,12 @@ class ShowProfile extends StatelessWidget {
       child: OutlinedButton(
         style: OutlinedButton.styleFrom(
           side: const BorderSide(color: Colors.red),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
         ),
         onPressed: () {
-          Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil('/start', (route) => false);
+          Navigator.of(context, rootNavigator: true)
+              .pushNamedAndRemoveUntil('/start', (route) => false);
         },
         child: const Text(
           'Log Out',
@@ -131,5 +143,4 @@ class ShowProfile extends StatelessWidget {
       ),
     );
   }
-
 }
