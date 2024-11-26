@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/penayangan.dart';
+import 'package:flutter_application_1/view/movie_view/payment.dart';
 
 class SelectSeat extends StatefulWidget {
   const SelectSeat({super.key});
@@ -253,16 +254,16 @@ class _SelectSeatState extends State<SelectSeat> {
                                           alignment: Alignment.center,
                                           padding: EdgeInsets.all(12),
                                           decoration: BoxDecoration(
-                                            color: const Color.fromARGB(255, 81, 81, 81),
+                                            color: const Color.fromARGB(
+                                                255, 81, 81, 81),
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(100)),
                                           ),
-                                          child: Text("${index+1}",
+                                          child: Text("${index + 1}",
                                               style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold
-                                              )),
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold)),
                                         )
                                       ],
                                     ),
@@ -286,11 +287,12 @@ class _SelectSeatState extends State<SelectSeat> {
                                     padding: EdgeInsets.symmetric(
                                         vertical: 8, horizontal: 20),
                                     decoration: BoxDecoration(
-                                      color: const Color.fromARGB(255, 44, 44, 44),
+                                      color:
+                                          const Color.fromARGB(255, 44, 44, 44),
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(30)),
                                     ),
-                                    child: Text("${index+7}:00",
+                                    child: Text("${index + 7}:00",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -339,7 +341,14 @@ class _SelectSeatState extends State<SelectSeat> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const Payment(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.amber,
                       padding: const EdgeInsets.symmetric(

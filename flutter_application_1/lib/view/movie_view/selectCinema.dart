@@ -157,7 +157,12 @@ class _SelectCinemaState extends State<SelectCinema> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
                 onPressed: () {
-                  SelectSeat();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SelectSeat(),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,

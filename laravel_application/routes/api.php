@@ -10,10 +10,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware('auth:api')->group(function () {
-    Route::get('/films', [FilmController::class, 'index']);
-});
-
+Route::get('/films', [FilmController::class, 'index']);
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/menu', [MenuController::class, 'index']);

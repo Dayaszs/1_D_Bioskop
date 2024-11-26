@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/view/movie_view/listFilm.dart';
 
 class PaymentSuccess extends StatefulWidget {
   const PaymentSuccess({super.key});
@@ -23,12 +24,15 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.check_circle_sharp, color: Colors.amber, size: 150),
-                SizedBox(height: 20),
-                Text("Payment Successful!", style: TextStyle(
-                  color: Colors.amber,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                ),)
+                const SizedBox(height: 20),
+                const Text(
+                  "Payment Successful!",
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
               ],
             ),
           ),
@@ -40,7 +44,19 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
               height: 60,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FilmListView(
+                        userData: {
+                          "name": "John Doe", // Contoh data user
+                          "email": "john.doe@example.com",
+                        },
+                      ),
+                    ),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
                   padding:
