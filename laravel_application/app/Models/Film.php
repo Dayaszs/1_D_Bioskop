@@ -21,7 +21,9 @@ class Film extends Model
         'deskripsi',
         'poster_1',
         'poster_2',
-        'trailer'
+        'trailer',
+        'rating',
+        'status',
     ];
 
     // public function penayangans()

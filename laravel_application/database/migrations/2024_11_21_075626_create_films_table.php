@@ -21,8 +21,9 @@ return new class extends Migration
             $table->string("deskripsi");
             $table->string("poster_1");
             $table->string("poster_2");
-            $table->double("rating");
             $table->string("trailer");
+            $table->double("rating");
+            $table->string("status");
             $table->timestamps();
         });
     }
