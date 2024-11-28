@@ -9,11 +9,29 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   String _currentLocation = "---";
+  bool _showPermissionPrompt = true; // State variable to control permission prompt visibility
 
   @override
   void initState() {
     super.initState();
-    _checkLocationPermission();
+    _checkInitialPermission();
+  }
+
+  // Check initial permission status to decide whether to show the prompt
+  Future<void> _checkInitialPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      setState(() {
+        _showPermissionPrompt = false;
+      });
+      await _getCurrentLocation();
+    } else if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      setState(() {
+        _showPermissionPrompt = true;
+      });
+    }
   }
 
   Future<void> _checkLocationPermission() async {
@@ -49,9 +67,36 @@ class _LocationPageState extends State<LocationPage> {
     }
 
     // If permissions are granted, get current location
-    Position position = await Geolocator.getCurrentPosition();
+    await _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+      setState(() {
+        _currentLocation =
+            "Lat: ${position.latitude}, Lon: ${position.longitude}";
+      });
+    } catch (e) {
+      setState(() {
+        _currentLocation = "Failed to get location: $e";
+      });
+    }
+  }
+
+  void _handleAllow() async {
+    await _checkLocationPermission();
     setState(() {
-      _currentLocation = "Lat: ${position.latitude}, Lon: ${position.longitude}";
+      _showPermissionPrompt = false;
+    });
+  }
+
+  void _handleDeny() {
+    setState(() {
+      _currentLocation = "---";
+      _showPermissionPrompt = false;
     });
   }
 
@@ -93,33 +138,57 @@ class _LocationPageState extends State<LocationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[900],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.location_on, color: Colors.blueAccent, size: 24),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      'Location Is Not Detected\nTurn on your location access to get your current location',
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
+            // Conditional rendering of permission prompt
+            if (_showPermissionPrompt)
+              Container(
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.location_on,
+                            color: Colors.blueAccent, size: 24),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Location Is Not Detected\nTurn on your location access to get your current location',
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 14),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  TextButton(
-                    onPressed: _checkLocationPermission,
-                    child: Text(
-                      'Allow',
-                      style: TextStyle(color: Colors.yellow),
+                    SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: _handleDeny,
+                          child: Text(
+                            'Deny',
+                            style: TextStyle(color: Colors.redAccent),
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        TextButton(
+                          onPressed: _handleAllow,
+                          child: Text(
+                            'Allow',
+                            style: TextStyle(color: Colors.yellow),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 20),
+            if (_showPermissionPrompt) SizedBox(height: 20),
+            // Display current location
             Text(
               'Your Current Location:',
               style: TextStyle(color: Colors.grey, fontSize: 16),
@@ -130,6 +199,7 @@ class _LocationPageState extends State<LocationPage> {
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
             Divider(color: Colors.grey),
+            // List of cities
             Expanded(
               child: ListView(
                 children: [
@@ -157,7 +227,8 @@ class _LocationPageState extends State<LocationPage> {
         cityName,
         style: TextStyle(color: Colors.white, fontSize: 16),
       ),
-      trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+      trailing:
+          Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
       onTap: () {
         // Handle city selection
       },
