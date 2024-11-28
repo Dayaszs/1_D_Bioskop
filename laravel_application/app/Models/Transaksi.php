@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Review extends Model
+class Transaksi extends Model
 {
     use HasFactory;
 
-    protected $table = 'reviews';
-    protected $primaryKey = 'id_review';
+    protected $table = 'transaksis';
+    protected $primaryKey = 'id_transaksi';
     protected $fillable = [
         'id_tiket',
-        'rating',
-        'komentar',
+        'metode_pembayaran',
+        'nominal_pembayaran',
     ];
 
     public function tiket()

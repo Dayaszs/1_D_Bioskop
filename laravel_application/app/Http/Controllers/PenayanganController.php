@@ -22,9 +22,9 @@ class PenayanganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_film' => 'required|exists:films,id',
-            'id_sesi' => 'required|exists:sesis,id',
-            'id_studio' => 'required|exists:studios,id',
+            'id_film' => 'required|exists:films,id_film',
+            'id_sesi' => 'required|exists:sesis,id_sesi',
+            'id_studio' => 'required|exists:studios,id_studio',
             'nomor_kursi_tersedia' => 'required|integer|min:0',
             'nomor_kursi_terpakai' => 'required|integer|min:0',
             'harga_tiket' => 'required|numeric|min:0',

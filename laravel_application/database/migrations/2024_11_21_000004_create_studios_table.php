@@ -12,8 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('studios', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_studio');
+            $table->unsignedBigInteger('id_bioskop'); // Pastikan tipe datanya cocok
+            $table->string('nama_studio');
+            $table->integer('kapasitas');
+            $table->text('nomor_kursi_tersedia')->nullable();
             $table->timestamps();
+        
+            $table->foreign('id_bioskop')->references('id_bioskop')->on('bioskops')->onDelete('cascade');
         });
     }
 

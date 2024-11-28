@@ -26,8 +26,8 @@ class Film extends Model
         'status',
     ];
 
-    // public function penayangans()
-    // {
-    //     return $this->hasMany(Penayangan::class, 'id_film', 'id_film');
-    // }
+    public function penayangans()
+    {
+        return $this->hasMany(Penayangan::class, 'id_film');
+    }
 }
