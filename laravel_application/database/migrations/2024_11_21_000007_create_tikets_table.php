@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_user')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('id_penayangan')->constrained('penayangans')->onDelete('cascade');
             $table->string('nomor_kursi');
+            $table->string('status');
             $table->timestamps();
 
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');

@@ -2,23 +2,22 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SesiTayang extends Model
 {
-    use HasFactory;
-
-    protected $table = 'sesi_tayangs';
+    protected $table = 'sesi_tayangs'; 
     protected $primaryKey = 'id_sesi';
+    public $incrementing = true; 
+    protected $keyType = 'int'; // Tipe data primary key
 
     protected $fillable = [
         'jam_mulai',
-        'jam_selesai'
+        'jam_selesai',
     ];
 
-    public function penayangans()
-    {
-        return $this->hasMany(Penayangan::class, 'id_sesi');
-    }
+    public function sesi()
+{
+    return $this->belongsTo(SesiTayang::class, 'id_sesi', 'id_sesi'); // Gunakan model dan kolom yang benar
+}
 }

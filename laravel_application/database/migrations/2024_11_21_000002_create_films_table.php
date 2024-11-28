@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string("sutradara");
             $table->string("aktor");
             $table->string("deskripsi");
-            $table->string("poster_1");
-            $table->string("poster_2");
+            $table->string("poster_1")->nullable();
+            $table->string("poster_2")->nullable();;
             $table->string("trailer");
             $table->double("rating");
             $table->string("status");

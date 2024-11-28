@@ -9,7 +9,7 @@ class Bioskop extends Model
 {
     use HasFactory;
 
-    protected $table = 'bioskop';
+    protected $table = 'bioskops';
     protected $primaryKey = 'id_bioskop';
 
     protected $fillable = [

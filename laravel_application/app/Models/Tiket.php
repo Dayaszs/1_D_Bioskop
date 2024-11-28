@@ -15,6 +15,7 @@ class Tiket extends Model
         'id_user',
         'id_penayangan',
         'nomor_kursi',
+        'status'
     ];
 
     public function user()
