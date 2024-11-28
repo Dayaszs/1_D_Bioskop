@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/movie_view/paymentSuccess.dart';
 
 class Payment extends StatefulWidget {
   const Payment({super.key});
@@ -464,7 +465,14 @@ class _PaymentState extends State<Payment> {
             height: 60,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PaymentSuccess(),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.amber,
                 padding:

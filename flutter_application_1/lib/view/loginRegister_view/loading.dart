@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter_application_1/view/startPage.dart';
+import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
 
 class LoadingView extends StatefulWidget {
   const LoadingView({super.key});

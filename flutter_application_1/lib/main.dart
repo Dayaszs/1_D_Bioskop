@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/view/loading.dart';
-import 'package:flutter_application_1/view/startPage.dart';
-import 'package:flutter_application_1/view/login.dart';
-import 'package:flutter_application_1/view/register.dart';
+import 'package:flutter_application_1/view/loginRegister_view/loading.dart';
+import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
+import 'package:flutter_application_1/view/loginRegister_view/login.dart';
+import 'package:flutter_application_1/view/loginRegister_view/register.dart';
 
 void main() {
   runApp(const MainApp());

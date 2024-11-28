@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/cinema.dart';
-import 'package:flutter_application_1/view/selectSeat.dart';
+import 'package:flutter_application_1/view/movie_view/selectSeat.dart';
 
 class SelectCinema extends StatefulWidget {
   const SelectCinema({super.key});
@@ -65,20 +65,27 @@ class _SelectCinemaState extends State<SelectCinema> {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Atma Cinema Pakuwon Jogja", style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),),
-                            Text("4,55km | Kab. Sleman, Daerah Istimewa Yogyakarta", style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white,
-                            ),)
+                            Text(
+                              "Atma Cinema Pakuwon Jogja",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "4,55km | Kab. Sleman, Daerah Istimewa Yogyakarta",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -111,20 +118,27 @@ class _SelectCinemaState extends State<SelectCinema> {
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                        padding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Atma Cinema Amplaz", style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),),
-                            Text("9,32km | Kab. Sleman, Daerah Istimewa Yogyakarta", style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.white,
-                            ),)
+                            Text(
+                              "Atma Cinema Amplaz",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              "9,32km | Kab. Sleman, Daerah Istimewa Yogyakarta",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.normal,
+                                color: Colors.white,
+                              ),
+                            )
                           ],
                         ),
                       ),
@@ -142,26 +156,31 @@ class _SelectCinemaState extends State<SelectCinema> {
               height: 60,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: ElevatedButton(
-                    onPressed: () {
-                      SelectSeat();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SelectSeat(),
                     ),
-                    child: const Text(
-                      'Continue',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
                   ),
+                ),
+                child: const Text(
+                  'Continue',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             ),
           ),
         ),

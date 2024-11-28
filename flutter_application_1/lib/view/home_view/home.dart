@@ -3,10 +3,11 @@ import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/data/fnb.dart';
 import 'package:flutter_application_1/data/tiket.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
-import 'package:flutter_application_1/view/listFnB.dart';
-import 'package:flutter_application_1/view/profile.dart';
-import 'package:flutter_application_1/view/listFilm.dart';
-import 'package:flutter_application_1/view/location.dart'; // Import your location page here
+import 'package:flutter_application_1/view/home_view/home.dart';
+import 'package:flutter_application_1/view/home_view/listFnB.dart';
+import 'package:flutter_application_1/view/profile_view/profile.dart';
+import 'package:flutter_application_1/view/movie_view/listFilm.dart';
+import 'package:flutter_application_1/view/home_view/location.dart'; // Import your location page here
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class HomeView extends StatefulWidget {
@@ -19,7 +20,8 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final PersistentTabController _controller = PersistentTabController(initialIndex: 0);
+  final PersistentTabController _controller =
+      PersistentTabController(initialIndex: 0);
   final TextEditingController _searchController = TextEditingController();
 
   List<Widget> _buildScreens() {
@@ -131,7 +133,8 @@ class _HomeViewState extends State<HomeView> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LocationPage(), // Navigate to your location page
+                            builder: (context) =>
+                                LocationPage(), // Navigate to your location page
                           ),
                         );
                       },
@@ -145,7 +148,8 @@ class _HomeViewState extends State<HomeView> {
                           ),
                           Spacer(),
                           IconButton(
-                            icon: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                            icon: Icon(Icons.keyboard_arrow_down,
+                                color: Colors.white),
                             onPressed: () {
                               Navigator.push(
                                 context,
@@ -175,7 +179,8 @@ class _HomeViewState extends State<HomeView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0, left: 4.0, bottom: 18.0),
+                      padding:
+                          EdgeInsets.only(top: 8.0, left: 4.0, bottom: 18.0),
                       child: Text(
                         "Now Playing",
                         style: textStyle2.copyWith(
@@ -186,13 +191,15 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
+                      padding:
+                          EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => FilmListView(userData: widget.userData),
+                              builder: (context) =>
+                                  FilmListView(userData: widget.userData),
                             ),
                           );
                         },
@@ -203,7 +210,8 @@ class _HomeViewState extends State<HomeView> {
                           children: [
                             Text("More", style: TextStyle(color: lightColor)),
                             SizedBox(width: 4),
-                            Icon(Icons.arrow_forward_ios, color: lightColor, size: 16),
+                            Icon(Icons.arrow_forward_ios,
+                                color: lightColor, size: 16),
                           ],
                         ),
                       ),
@@ -218,7 +226,8 @@ class _HomeViewState extends State<HomeView> {
                       children: [
                         for (var i = 0; i < films.length; i++)
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Column(
                               children: [
                                 Container(
@@ -236,11 +245,13 @@ class _HomeViewState extends State<HomeView> {
                                 SizedBox(
                                   width: 150,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       Text(
                                         films[i].judul,
-                                        style: textStyle2.copyWith(fontSize: 16),
+                                        style:
+                                            textStyle2.copyWith(fontSize: 16),
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -256,9 +267,11 @@ class _HomeViewState extends State<HomeView> {
                                       ),
                                       const SizedBox(height: 4),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Icon(Icons.star, color: Colors.yellow, size: 16),
+                                          Icon(Icons.star,
+                                              color: Colors.yellow, size: 16),
                                           Text(
                                             films[i].ratings.toString(),
                                             style: textStyle2.copyWith(
@@ -282,19 +295,20 @@ class _HomeViewState extends State<HomeView> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 12.0, left: 4.0, bottom: 18.0),
+                      padding:
+                          EdgeInsets.only(top: 12.0, left: 4.0, bottom: 18.0),
                       child: Text(
                         "Food and Beverage",
                         style: textStyle2.copyWith(
                           fontSize: 24,
-                         
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
+                      padding:
+                          EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
@@ -311,7 +325,8 @@ class _HomeViewState extends State<HomeView> {
                           children: [
                             Text("More", style: TextStyle(color: lightColor)),
                             SizedBox(width: 4),
-                            Icon(Icons.arrow_forward_ios, color: lightColor, size: 16),
+                            Icon(Icons.arrow_forward_ios,
+                                color: lightColor, size: 16),
                           ],
                         ),
                       ),
@@ -326,7 +341,8 @@ class _HomeViewState extends State<HomeView> {
                       children: [
                         for (var i = 0; i < fnbs.length; i++)
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Column(
                               children: [
                                 Container(
