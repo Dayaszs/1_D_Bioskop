@@ -9,7 +9,7 @@ class SesiTayang extends Model
 {
     use HasFactory;
 
-    protected $table = 'sesis';
+    protected $table = 'sesi_tayangs';
     protected $primaryKey = 'id_sesi';
 
     protected $fillable = [
@@ -17,8 +17,8 @@ class SesiTayang extends Model
         'jam_selesai'
     ];
 
-    // public function penayangans()
-    // {
-    //     return $this->hasMany(Penayangan::class, 'id_sesi', 'id_sesi');
-    // }
+    public function penayangans()
+    {
+        return $this->hasMany(Penayangan::class, 'id_sesi');
+    }
 }

@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('tikets', function (Blueprint $table) {
             $table->id('id_tiket');
-            $table->foreignId('id_user');
-            $table->foreignId('id_penayangan');
+            $table->unsignedBigInteger('id_user')->constrained('users')->onDelete('cascade');
+            $table->unsignedBigInteger('id_penayangan')->constrained('penayangans')->onDelete('cascade');
             $table->string('nomor_kursi');
             $table->timestamps();
+
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            $table->foreign('id_penayangan')->references('id_penayangan')->on('penayangans')->onDelete('cascade');
         });
     }
 

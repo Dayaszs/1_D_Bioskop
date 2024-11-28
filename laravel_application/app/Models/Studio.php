@@ -13,12 +13,19 @@ class Studio extends Model
     protected $primaryKey = 'id_studio';
 
     protected $fillable = [
+        'id_bioskop',
         'nama_studio',
-        'kapasitas'
+        'kapasitas',
+        'nomor_kursi_tersedia',
     ];
 
-    // public function penayangans()
-    // {
-    //     return $this->hasMany(Penayangan::class, 'id_studio', 'id_studio');
-    // }
+    public function bioskop()
+    {
+        return $this->belongsTo(Bioskop::class, 'id_bioskop');
+    }
+
+    public function penayangans()
+    {
+        return $this->hasMany(Penayangan::class, 'id_studio');
+    }
 }

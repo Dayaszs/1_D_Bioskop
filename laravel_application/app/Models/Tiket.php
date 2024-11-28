@@ -11,20 +11,29 @@ class Tiket extends Model
 
     protected $table = 'tikets';
     protected $primaryKey = 'id_tiket';
-
     protected $fillable = [
         'id_user',
         'id_penayangan',
-        'nomor_kursi'
+        'nomor_kursi',
     ];
 
-    // public function penayangan()
-    // {
-    //     return $this->belongsTo(Penayangan::class, 'id_penayangan', 'id_penayangan');
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
 
-    // public function review()
-    // {
-    //     return $this->hasOne(Review::class, 'id_tiket', 'id_tiket');
-    // }
+    public function penayangan()
+    {
+        return $this->belongsTo(Penayangan::class, 'id_penayangan');
+    }
+
+    public function transaksi()
+    {
+        return $this->hasOne(Transaksi::class, 'id_tiket');
+    }
+
+    public function review()
+    {
+        return $this->hasOne(Review::class, 'id_tiket');
+    }
 }
