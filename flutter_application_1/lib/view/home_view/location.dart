@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
 
 class LocationPage extends StatefulWidget {
@@ -9,25 +11,21 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   String _currentLocation = "---";
-  bool _showPermissionPrompt = true; // State variable to control permission prompt visibility
-  
+  bool _showPermissionPrompt = true;
+
   @override
   void initState() {
     super.initState();
-    _checkInitialPermission();
   }
 
-  // Check initial permission status to decide whether to show the prompt
   Future<void> _checkInitialPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.always ||
-        permission == LocationPermission.whileInUse) {
+    if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
       setState(() {
         _showPermissionPrompt = false;
       });
       await _getCurrentLocation();
-    } else if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
+    } else if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
       setState(() {
         _showPermissionPrompt = true;
       });
@@ -38,7 +36,6 @@ class _LocationPageState extends State<LocationPage> {
     bool serviceEnabled;
     LocationPermission permission;
 
-    // Check if location services are enabled
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       setState(() {
@@ -47,7 +44,6 @@ class _LocationPageState extends State<LocationPage> {
       return;
     }
 
-    // Check for permissions
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -66,22 +62,43 @@ class _LocationPageState extends State<LocationPage> {
       return;
     }
 
-    // If permissions are granted, get current location
     await _getCurrentLocation();
   }
 
+  // Get current location and use Nominatim API to get the address
   Future<void> _getCurrentLocation() async {
     try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-      setState(() {
-        _currentLocation =
-            "Lat: ${position.latitude}, Lon: ${position.longitude}";
-      });
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      await _getAddressFromCoordinates(position.latitude, position.longitude);
     } catch (e) {
       setState(() {
         _currentLocation = "Failed to get location: $e";
+      });
+    }
+  }
+
+  // Call Nominatim API to get the address based on coordinates
+  Future<void> _getAddressFromCoordinates(double latitude, double longitude) async {
+    final url = 'https://nominatim.openstreetmap.org/reverse?lat=$latitude&lon=$longitude&format=json';
+    
+    try {
+      final response = await http.get(Uri.parse(url), headers: {
+        'User-Agent': 'YourAppName/1.0 (your-email@example.com)',  // Update with your app info
+      });
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          _currentLocation = data['display_name'] ?? 'Address not found';
+        });
+      } else {
+        setState(() {
+          _currentLocation = 'Failed to get address';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _currentLocation = 'Error: $e';
       });
     }
   }
@@ -138,7 +155,6 @@ class _LocationPageState extends State<LocationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            // Conditional rendering of permission prompt
             if (_showPermissionPrompt)
               Container(
                 padding: EdgeInsets.all(16),
@@ -151,14 +167,12 @@ class _LocationPageState extends State<LocationPage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.location_on,
-                            color: Colors.blueAccent, size: 24),
+                        Icon(Icons.location_on, color: Colors.blueAccent, size: 24),
                         SizedBox(width: 12),
                         Expanded(
                           child: Text(
                             'Location Is Not Detected\nTurn on your location access to get your current location',
-                            style:
-                                TextStyle(color: Colors.grey, fontSize: 14),
+                            style: TextStyle(color: Colors.grey, fontSize: 14),
                           ),
                         ),
                       ],
@@ -188,7 +202,6 @@ class _LocationPageState extends State<LocationPage> {
                 ),
               ),
             if (_showPermissionPrompt) SizedBox(height: 20),
-            // Display current location
             Text(
               'Your Current Location:',
               style: TextStyle(color: Colors.grey, fontSize: 16),
@@ -199,7 +212,6 @@ class _LocationPageState extends State<LocationPage> {
               style: TextStyle(color: Colors.white, fontSize: 16),
             ),
             Divider(color: Colors.grey),
-            // List of cities
             Expanded(
               child: ListView(
                 children: [
@@ -227,8 +239,7 @@ class _LocationPageState extends State<LocationPage> {
         cityName,
         style: TextStyle(color: Colors.white, fontSize: 16),
       ),
-      trailing:
-          Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
+      trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
       onTap: () {
         // Handle city selection
       },
