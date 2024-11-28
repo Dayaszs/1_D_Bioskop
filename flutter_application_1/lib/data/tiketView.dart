@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_application_1/data/film.dart';
+import 'package:flutter_application_1/data/ticket.dart';  // Import the ticket.dart file
 
 class TicketView extends StatefulWidget {
   const TicketView({super.key});
@@ -29,9 +29,9 @@ class _TicketViewState extends State<TicketView> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ListView.builder(
-          itemCount: films.length,
+          itemCount: tickets.length,  // Change films to tickets
           itemBuilder: (context, index) {
-            final film = films[index];
+            final ticket = tickets[index];  // Use ticket data instead of film
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Container(
@@ -48,7 +48,7 @@ class _TicketViewState extends State<TicketView> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.network(
-                          film.picture,
+                          ticket.picture,  // Use ticket.picture instead of film.picture
                           width: 100,
                           height: 150,
                           fit: BoxFit.cover,
@@ -63,7 +63,7 @@ class _TicketViewState extends State<TicketView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             AutoSizeText(
-                              film.judul,
+                              ticket.judul,  // Use ticket.judul instead of film.judul
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -84,7 +84,7 @@ class _TicketViewState extends State<TicketView> {
                                 const SizedBox(width: 4),
                                 Flexible(
                                   child: AutoSizeText(
-                                    film.genre,
+                                    ticket.genre,  // Use ticket.genre instead of film.genre
                                     style: const TextStyle(color: Colors.white),
                                     maxLines: 1,
                                     minFontSize: 12,
@@ -139,12 +139,12 @@ class _TicketViewState extends State<TicketView> {
                                 horizontal: 8,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.green,
+                                color: ticket.status == 'Completed' ? Colors.green : Colors.grey, // Conditional color based on status
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const AutoSizeText(
-                                'Completed',
-                                style: TextStyle(
+                              child: AutoSizeText(
+                                ticket.status,  // Use ticket.status instead of hardcoded 'Completed'
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
