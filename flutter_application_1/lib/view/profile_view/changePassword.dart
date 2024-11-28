@@ -47,37 +47,43 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         _isLoading = true;
         _errorMessage = null;
       });
-      if (_oldPasswordController.text == 'your_old_password') {
-        if (_newPasswordController.text == _confirmPasswordController.text) {
-          await Future.delayed(Duration(seconds: 2));
-          setState(() {
-            _isLoading = false;
-          });
-          Map<String, dynamic> data = {
-            'username': widget.formData['username'],
-            'nomor_telepon': widget.formData['nomor_telepon'],
-            'email': widget.formData['email'],
-            'profile_image': widget.formData['profile_image'],
-          };
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => ShowProfile(data: data),
-            ),
-          );
-        } else {
-          setState(() {
-            _isLoading = false;
-            _errorMessage = 'Passwords do not match!';
-          });
-        }
-      } else {
+
+      final registeredPassword = widget.formData['password'];
+
+      // Periksa apakah password lama cocok dengan yang terdaftar
+      if (_oldPasswordController.text != registeredPassword) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Wrong Password!';
+          _errorMessage = 'Old password does not match our records!';
         });
+        return;
       }
+
+      // Periksa apakah password baru dan konfirmasi cocok
+      if (_newPasswordController.text != _confirmPasswordController.text) {
+        setState(() {
+          _isLoading = false;
+          _errorMessage = 'New password and confirmation do not match!';
+        });
+        return;
+      }
+
+      await Future.delayed(Duration(seconds: 2));
+
+      setState(() {
+        widget.formData['password'] = _newPasswordController.text;
+        _isLoading = false;
+      });
+
+      // Navigasi kembali ke halaman profil
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => ShowProfile(data: widget.formData),
+        ),
+      );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {

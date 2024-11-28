@@ -23,7 +23,14 @@ class _HomeViewState extends State<HomeView> {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final TextEditingController _searchController = TextEditingController();
+  String location = "No location detected"; // Lokasi default
 
+  // Fungsi untuk menangani ketika lokasi dipilih
+  void _updateLocation(String newLocation) {
+    setState(() {
+      location = newLocation;
+    });
+  }
   List<Widget> _buildScreens() {
     return [
       _buildHomeScreen(),
@@ -130,20 +137,24 @@ class _HomeViewState extends State<HomeView> {
                     const SizedBox(height: 2),
                     InkWell(
                       onTap: () {
+                        // Pindah ke halaman lokasi
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                LocationPage(), // Navigate to your location page
+                            builder: (context) => LocationPage(),
                           ),
-                        );
+                        ).then((value) {
+                          if (value != null) {
+                            _updateLocation(value); // Perbarui lokasi jika ada
+                          }
+                        });
                       },
                       child: Row(
                         children: [
                           Icon(Icons.location_on, color: Colors.white),
                           SizedBox(width: 10),
                           Text(
-                            "Yogyakarta",
+                            location,
                             style: TextStyle(color: Colors.white),
                           ),
                           Spacer(),
@@ -156,7 +167,11 @@ class _HomeViewState extends State<HomeView> {
                                 MaterialPageRoute(
                                   builder: (context) => LocationPage(),
                                 ),
-                              );
+                              ).then((value) {
+                                if (value != null) {
+                                  _updateLocation(value); // Perbarui lokasi jika ada
+                                }
+                              });
                             },
                           ),
                         ],
