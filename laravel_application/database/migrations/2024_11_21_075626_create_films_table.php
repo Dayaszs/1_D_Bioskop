@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string("sutradara");
             $table->string("aktor");
             $table->string("deskripsi");
-            $table->string("poster");
+            $table->string("poster_1");
+            $table->string("poster_2");
+            $table->string("trailer");
             $table->timestamps();
         });
     }

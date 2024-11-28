@@ -11,6 +11,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/films', [FilmController::class, 'index']);
+Route::get('/films/{id}', [FilmController::class, 'show']);
+
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 Route::get('/menu', [MenuController::class, 'index']);

@@ -19,7 +19,9 @@ class Film extends Model
         'sutradara',
         'aktor',
         'deskripsi',
-        'poster'
+        'poster_1',
+        'poster_2',
+        'trailer'
     ];
 
     // public function penayangans()
