@@ -23,9 +23,21 @@ class _HomeViewState extends State<HomeView> {
   final PersistentTabController _controller =
       PersistentTabController(initialIndex: 0);
   final TextEditingController _searchController = TextEditingController();
-  String location = "No location detected"; // Lokasi default
+  String location = "No location detected";
 
-  // Fungsi untuk menangani ketika lokasi dipilih
+  final PageController _pageController = PageController(viewportFraction: 0.8);
+
+  double currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        currentPage = _pageController.page!;
+      });
+    });
+  }
   void _updateLocation(String newLocation) {
     setState(() {
       location = newLocation;
@@ -74,7 +86,7 @@ class _HomeViewState extends State<HomeView> {
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(200),
+          preferredSize: Size.fromHeight(220),
           child: AppBar(
             backgroundColor: Colors.transparent,
             flexibleSpace: Container(
@@ -137,7 +149,6 @@ class _HomeViewState extends State<HomeView> {
                     const SizedBox(height: 2),
                     InkWell(
                       onTap: () {
-                        // Pindah ke halaman lokasi
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -145,7 +156,7 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ).then((value) {
                           if (value != null) {
-                            _updateLocation(value); // Perbarui lokasi jika ada
+                            _updateLocation(value);
                           }
                         });
                       },
@@ -169,7 +180,7 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                               ).then((value) {
                                 if (value != null) {
-                                  _updateLocation(value); // Perbarui lokasi jika ada
+                                  _updateLocation(value);
                                 }
                               });
                             },
@@ -234,15 +245,29 @@ class _HomeViewState extends State<HomeView> {
                   ],
                 ),
                 SizedBox(
-                  height: 290,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (var i = 0; i < films.length; i++)
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                  height: 300,
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemBuilder: (context, index) {
+                      // Ambil data film secara siklus
+                      final film = films[index % films.length];
+                      double scale = 1.0;
+
+                      // Animasi skala berdasarkan posisi halaman
+                      if (_pageController.hasClients) {
+                        scale = (_pageController.page! - index).abs() < 1
+                            ? 1 - (_pageController.page! - index).abs() * 0.3
+                            : 0.7;
+                      }
+
+                      return Transform.scale(
+                        scale: scale,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Aksi saat item di-klik
+                            },
                             child: Column(
                               children: [
                                 Container(
@@ -250,7 +275,7 @@ class _HomeViewState extends State<HomeView> {
                                   height: 225,
                                   decoration: BoxDecoration(
                                     image: DecorationImage(
-                                      image: NetworkImage(films[i].picture),
+                                      image: NetworkImage(film.picture),
                                       fit: BoxFit.cover,
                                     ),
                                     borderRadius: BorderRadius.circular(10),
@@ -260,20 +285,18 @@ class _HomeViewState extends State<HomeView> {
                                 SizedBox(
                                   width: 150,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        films[i].judul,
-                                        style:
-                                            textStyle2.copyWith(fontSize: 16),
+                                        film.judul,
+                                        style: textStyle2.copyWith(fontSize: 16),
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        "${films[i].durasi} • ${films[i].genre}",
+                                        "${film.durasi}min • ${film.genre}",
                                         style: textStyle2.copyWith(
                                           fontSize: 12,
                                           color: Colors.white70,
@@ -282,13 +305,11 @@ class _HomeViewState extends State<HomeView> {
                                       ),
                                       const SizedBox(height: 4),
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          Icon(Icons.star,
-                                              color: Colors.yellow, size: 16),
+                                          Icon(Icons.star, color: Colors.yellow, size: 16),
                                           Text(
-                                            films[i].ratings.toString(),
+                                            film.ratings.toString(),
                                             style: textStyle2.copyWith(
                                               fontSize: 12,
                                               color: Colors.white,
@@ -302,16 +323,19 @@ class _HomeViewState extends State<HomeView> {
                               ],
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                      );
+                    },
                   ),
                 ),
+
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding:
-                          EdgeInsets.only(top: 12.0, left: 4.0, bottom: 18.0),
+                          EdgeInsets.only(top: 25.0, left: 4.0, bottom: 18.0),
                       child: Text(
                         "Food and Beverage",
                         style: textStyle2.copyWith(
@@ -323,7 +347,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
+                          EdgeInsets.only(top: 25.0, right: 4.0, bottom: 18.0),
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
