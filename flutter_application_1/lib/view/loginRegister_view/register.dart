@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_application_1/view/loginRegister_view/login.dart';
+import 'package:flutter_application_1/utilities/constant.dart'; // If you have any constants for your API
+import 'package:flutter_application_1/client/UserClient.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Import the UserClient class
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -17,10 +19,13 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController nomorTeleponController = TextEditingController();
+  TextEditingController tanggalLahirController = TextEditingController();
 
   File? _profileImage;
   bool _isImageErrorVisible = false;
+  DateTime? _selectedDate;
 
+  // Function to pick an image for the profile picture
   Future<void> _pickImage(ImageSource source) async {
     final pickedImage = await ImagePicker().pickImage(source: source);
     if (pickedImage != null) {
@@ -31,6 +36,7 @@ class _RegisterViewState extends State<RegisterView> {
     }
   }
 
+  // Function to show the dialog for selecting an image source
   void _showImageSourceDialog() {
     showDialog(
       context: context,
@@ -63,9 +69,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  DateTime? _selectedDate;
-  TextEditingController tanggalLahirController = TextEditingController();
-
+  // Function to pick the date of birth
   void _pickDate() async {
     DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -77,8 +81,65 @@ class _RegisterViewState extends State<RegisterView> {
       setState(() {
         _selectedDate = pickedDate;
         tanggalLahirController.text =
-            "${_selectedDate!.day}-${_selectedDate!.month}-${_selectedDate!.year}";
+            "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
       });
+    }
+  }
+
+  // Function to call the register API through UserClient
+  Future<void> _register() async {
+    if (_formKey.currentState!.validate()) {
+      if (_profileImage == null) {
+        setState(() {
+          _isImageErrorVisible = true;
+        });
+        return;
+      }
+
+      // Call the UserClient's register function
+      try {
+        var userClient = UserClient();
+        var response = await userClient.register(
+          username: usernameController.text,
+          email: emailController.text,
+          password: passwordController.text,
+          phoneNumber: nomorTeleponController.text,
+          birthDate: tanggalLahirController.text,
+          profilePicture: _profileImage!,
+        );
+
+        // Handle successful registration
+        if (response.containsKey('token')) {
+          String token = response['token'];
+          // You can store the token and user data here (e.g., using SharedPreferences)
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('auth_token', token);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) =>
+                    const LoginView()), // Navigate to the Login screen
+          );
+        } else {
+          // Handle error response
+          throw Exception('Failed to register');
+        }
+      } catch (e) {
+        // Handle any errors during registration
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text('Registration Failed'),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
     }
   }
 
@@ -137,6 +198,7 @@ class _RegisterViewState extends State<RegisterView> {
                       ),
                     ),
                   const SizedBox(height: 20),
+                  // Username Field
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
@@ -145,7 +207,7 @@ class _RegisterViewState extends State<RegisterView> {
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.person, color: Colors.white),
-                        hintText: "username",
+                        hintText: "Username",
                         hintStyle: TextStyle(color: Colors.grey),
                         filled: true,
                         fillColor: Colors.transparent,
@@ -161,6 +223,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
+                  // Password Field
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
@@ -189,6 +252,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
+                  // Email Field
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
@@ -216,6 +280,7 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
+                  // Phone Number Field
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
@@ -224,7 +289,7 @@ class _RegisterViewState extends State<RegisterView> {
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         prefixIcon: Icon(Icons.phone, color: Colors.white),
-                        hintText: "phone number",
+                        hintText: "Phone Number",
                         hintStyle: TextStyle(color: Colors.grey),
                         filled: true,
                         fillColor: Colors.transparent,
@@ -240,65 +305,39 @@ class _RegisterViewState extends State<RegisterView> {
                       },
                     ),
                   ),
+                  // Date of Birth Field
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 20, vertical: 10),
                     child: TextFormField(
                       controller: tanggalLahirController,
-                      readOnly: true, // supaya gaisa isi manual
                       style: const TextStyle(color: Colors.white),
+                      readOnly: true,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.calendar_today,
                             color: Colors.white),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_month,
-                              color: Colors.white),
-                          onPressed: _pickDate,
-                        ),
-                        hintText: "Tanggal Lahir",
+                        hintText: "Select your birthdate",
                         hintStyle: const TextStyle(color: Colors.grey),
                         filled: true,
                         fillColor: Colors.transparent,
                         border: const OutlineInputBorder(
                           borderSide: BorderSide.none,
                         ),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.arrow_drop_down),
+                          color: Colors.white,
+                          onPressed: _pickDate,
+                        ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Tanggal lahir is required!';
-                        }
-                        return null;
-                      },
-                      onTap: _pickDate,
                     ),
                   ),
+                  const SizedBox(height: 20),
+                  // Register Button
                   Padding(
                     padding:
                         const EdgeInsets.only(left: 20, top: 20, right: 20),
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          if (_profileImage == null) {
-                            setState(() {
-                              _isImageErrorVisible = true;
-                            });
-                          } else {
-                            Map<String, dynamic> formData = {
-                              'username': usernameController.text,
-                              'password': passwordController.text,
-                              'email': emailController.text,
-                              'nomor_telepon': nomorTeleponController.text,
-                              'profile_image': _profileImage!.path,
-                            };
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => LoginView(data: formData),
-                              ),
-                            );
-                          }
-                        }
-                      },
+                      onPressed: _register, // Trigger the register function
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFCC434),
                         minimumSize: const Size(double.infinity, 50),
