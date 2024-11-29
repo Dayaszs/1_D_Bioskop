@@ -2,33 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 
-class RatingsAndReviewsView extends StatelessWidget {
+class RatingsAndReviewsView extends StatefulWidget {
   final Film film;
 
   const RatingsAndReviewsView({super.key, required this.film});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController _reviewController = TextEditingController();
+  _RatingsAndReviewsViewState createState() => _RatingsAndReviewsViewState();
+}
 
+class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
+  final TextEditingController _reviewController = TextEditingController();
+  double _userRating = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the user rating with the current rating if available
+    _userRating = 0.0;
+  }
+
+  // Function to create the star widgets based on rating
+  List<Widget> _buildStarRating(double rating) {
+    List<Widget> stars = [];
+    for (int i = 0; i < 5; i++) {
+      Icon icon;
+      if (rating >= i + 1) {
+        icon = Icon(Icons.star, color: lightColor, size: 30);
+      } else if (rating > i && rating < i + 1) {
+        icon = Icon(Icons.star_half, color: lightColor, size: 30);
+      } else {
+        icon = Icon(Icons.star_border, color: lightColor, size: 30);
+      }
+
+      // Make the star icon interactive using GestureDetector
+      stars.add(GestureDetector(
+        onTap: () {
+          setState(() {
+            _userRating = i + 1.0; // Update the rating on tap
+          });
+        },
+        child: icon,
+      ));
+    }
+    return stars;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final String username = "Kevin Tanamas";
     final String userProfileImage = "https://www.example.com/profile.jpg";
     final double userRating = 4.5;
-
-    // Function to create the star widgets based on rating
-    List<Widget> _buildStarRating(double rating) {
-      List<Widget> stars = [];
-      for (int i = 0; i < 5; i++) {
-        if (rating >= i + 1) {
-          stars.add(Icon(Icons.star, color: lightColor, size: 30));
-        } else if (rating > i && rating < i + 1) {
-          stars.add(Icon(Icons.star_half, color: lightColor, size: 30));
-        } else {
-          stars.add(Icon(Icons.star_border, color: lightColor, size: 30));
-        }
-      }
-      return stars;
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -46,7 +70,7 @@ class RatingsAndReviewsView extends StatelessWidget {
                   children: [
                     // Film title
                     Text(
-                      film.judul,
+                      widget.film.judul,
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -59,11 +83,11 @@ class RatingsAndReviewsView extends StatelessWidget {
                     // Film rating (stars) - dynamic stars
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: _buildStarRating(film.ratings ?? 0),
+                      children: _buildStarRating(_userRating),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      "${film.ratings?.toStringAsFixed(1) ?? "0.0"} / 5.0",
+                      "${_userRating.toStringAsFixed(1)} / 5.0",
                       style: const TextStyle(color: Colors.white, fontSize: 16),
                     ),
                     const SizedBox(height: 24),
@@ -133,7 +157,7 @@ class RatingsAndReviewsView extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    film.review ?? "No review yet.",
+                                    widget.film.review ?? "No review yet.",
                                     style: const TextStyle(color: Colors.white),
                                     maxLines: null, // Allows the text to wrap
                                     overflow: TextOverflow.visible, // Ensures the text is not truncated

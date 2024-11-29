@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/data/fnb.dart';
-import 'package:flutter_application_1/data/tiket.dart';
+import 'package:flutter_application_1/view/ticket_view/ticketView.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/home_view/home.dart';
 import 'package:flutter_application_1/view/home_view/listFnB.dart';
