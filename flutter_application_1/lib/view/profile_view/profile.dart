@@ -11,6 +11,13 @@ class ShowProfile extends StatelessWidget {
 
   const ShowProfile({Key? key, required this.data}) : super(key: key);
 
+  // Simulate fetching the profile picture URL asynchronously
+  Future<String> fetchProfilePicture() async {
+    await Future.delayed(
+        const Duration(seconds: 2)); // Simulating network delay
+    return 'http://10.0.2.2:8000/storage/' + data['profile_picture'];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,15 +41,37 @@ class ShowProfile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 58,
-              backgroundImage: (data['profile_image'] != null &&
-                      !kIsWeb &&
-                      File(data['profile_image']).existsSync())
-                  ? FileImage(File(data['profile_image']))
-                  : const NetworkImage(
-                          'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
-                      as ImageProvider,
+            FutureBuilder<String>(
+              future: fetchProfilePicture(), // Fetch the profile picture URL
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // Show a placeholder while waiting
+                  return const CircleAvatar(
+                    radius: 58,
+                    backgroundColor: Colors.grey, // Placeholder color
+                  );
+                } else if (snapshot.hasError) {
+                  // Show an error icon if there was an issue
+                  return const CircleAvatar(
+                    radius: 58,
+                    backgroundColor: Colors.grey,
+                    child: Icon(Icons.error, color: Colors.white),
+                  );
+                } else if (snapshot.hasData) {
+                  // Show the profile picture once it's loaded
+                  return CircleAvatar(
+                    radius: 58,
+                    backgroundImage: NetworkImage(snapshot.data!),
+                  );
+                } else {
+                  // Show an error icon if no data is available
+                  return const CircleAvatar(
+                    radius: 58,
+                    backgroundColor: Colors.grey,
+                    child: Icon(Icons.error, color: Colors.white),
+                  );
+                }
+              },
             ),
             const SizedBox(height: 16),
             Text(
@@ -82,6 +111,11 @@ class ShowProfile extends StatelessWidget {
                 ),
               );
             }),
+            Text('${data.toString()}',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                )),
             const Spacer(),
             buildLogoutButton(context),
             const SizedBox(height: 30),

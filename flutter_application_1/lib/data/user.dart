@@ -26,18 +26,18 @@ class User {
       email: json["email"],
       nomor_telepon: json["nomor_telepon"],
       tanggal_lahir: json["tanggal_lahir"],
-      foto_profil: json["foto_profil"]);
+      foto_profil: json["profile_picture"]);
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
-    "id" : id_user,
-    "username" : username,
-    "password" : password,
-    "email" : email,
-    "nomor_telepon" : nomor_telepon,
-    "tanggal_lahir" : tanggal_lahir,
-    "foto_profil" : foto_profil,
-  };
+        "id": id_user,
+        "username": username,
+        "password": password,
+        "email": email,
+        "nomor_telepon": nomor_telepon,
+        "tanggal_lahir": tanggal_lahir,
+        "foto_profil": foto_profil,
+      };
 }
 
 // final List<User> users = _users
