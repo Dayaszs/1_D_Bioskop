@@ -136,7 +136,7 @@ class _SelectCinemaState extends State<SelectCinema> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),
@@ -144,7 +144,7 @@ class _SelectCinemaState extends State<SelectCinema> {
                 child: const Text(
                   'Continue',
                   style: TextStyle(
-                    fontSize: 19,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),

@@ -60,7 +60,7 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.amber,
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(24),
                   ),

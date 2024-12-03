@@ -42,8 +42,7 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   // This function simulates fetching the profile picture URL
   Future<String> fetchProfilePicture() async {
-    await Future.delayed(
-        const Duration(seconds: 2)); // Simulating network delay
+    // await Future.delayed(const Duration(seconds: 2)); // Simulating network delay
     return 'http://10.0.2.2:8000/storage/' + data['profile_picture'];
   }
 
