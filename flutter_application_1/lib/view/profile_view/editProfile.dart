@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
+import 'package:flutter_application_1/client/UserClient.dart';
 
 class EditProfileView extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -16,24 +16,38 @@ class EditProfileView extends StatefulWidget {
 
 class _EditProfileViewState extends State<EditProfileView> {
   late Map<String, dynamic> data;
-  File? _imageFile;
+  late TextEditingController usernameController;
+  late TextEditingController emailController;
+  late TextEditingController phoneController;
+  File? _imageFile; // We will use this to store the profile image temporarily
 
   @override
   void initState() {
     super.initState();
     data = Map<String, dynamic>.from(widget.data);
+    usernameController = TextEditingController(text: data['username']);
+    emailController = TextEditingController(text: data['email']);
+    phoneController = TextEditingController(text: data['nomor_telepon']);
   }
 
+  // This function will pick an image from the camera or gallery
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
-        data['profile_image'] = _imageFile?.path;
       });
     }
   }
 
+  // This function simulates fetching the profile picture URL
+  Future<String> fetchProfilePicture() async {
+    await Future.delayed(
+        const Duration(seconds: 2)); // Simulating network delay
+    return 'http://10.0.2.2:8000/storage/' + data['profile_picture'];
+  }
+
+  // Show options for choosing a photo from camera or gallery
   void _showImagePickerOptions() {
     showModalBottomSheet(
       context: context,
@@ -67,6 +81,52 @@ class _EditProfileViewState extends State<EditProfileView> {
         );
       },
     );
+  }
+
+  // This function will handle saving the changes (including updating the profile)
+  Future<void> _saveChanges() async {
+    try {
+      // Create an instance of UserClient
+      UserClient userClient = UserClient();
+
+      // Get values from controllers, use empty strings if null
+      String username =
+          usernameController.text.isEmpty ? '' : usernameController.text;
+      String email = emailController.text.isEmpty ? '' : emailController.text;
+      String phoneNumber =
+          phoneController.text.isEmpty ? '' : phoneController.text;
+
+      // Call the updateUser method
+      var response = await userClient.updateUser(
+        id: data['id'], // Make sure to pass the user ID
+        username: username,
+        email: email,
+        phoneNumber: phoneNumber,
+        profilePicture: _imageFile!, // Send the picked profile image (if any)
+      );
+
+      // Navigate to the profile view with updated data
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ShowProfile(data: response['user']),
+        ),
+      );
+    } catch (e) {
+      // Handle the error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update profile: $e')),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    // Clean up controllers when the widget is disposed
+    usernameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -108,15 +168,33 @@ class _EditProfileViewState extends State<EditProfileView> {
             Center(
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 58,
-                    backgroundImage: (data['profile_image'] != null &&
-                            !kIsWeb &&
-                            File(data['profile_image']).existsSync())
-                        ? FileImage(File(data['profile_image']))
-                        : const NetworkImage(
-                                'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png')
-                            as ImageProvider,
+                  FutureBuilder<String>(
+                    future: fetchProfilePicture(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircleAvatar(
+                          radius: 58,
+                          backgroundColor: Colors.grey,
+                        );
+                      } else if (snapshot.hasError) {
+                        return const CircleAvatar(
+                          radius: 58,
+                          backgroundColor: Colors.grey,
+                          child: Icon(Icons.error, color: Colors.white),
+                        );
+                      } else if (snapshot.hasData) {
+                        return CircleAvatar(
+                          radius: 58,
+                          backgroundImage: NetworkImage(snapshot.data!),
+                        );
+                      } else {
+                        return const CircleAvatar(
+                          radius: 58,
+                          backgroundColor: Colors.grey,
+                          child: Icon(Icons.error, color: Colors.white),
+                        );
+                      }
+                    },
                   ),
                   const SizedBox(height: 2),
                   TextButton.icon(
@@ -134,27 +212,24 @@ class _EditProfileViewState extends State<EditProfileView> {
             SizedBox(
               width: 320,
               child: _buildTextField(
+                controller: usernameController,
                 label: 'Username',
-                initialValue: data['username'] ?? '',
-                onChanged: (value) => data['username'] = value,
               ),
             ),
             const SizedBox(height: 12),
             SizedBox(
               width: 320,
               child: _buildTextField(
+                controller: emailController,
                 label: 'Email',
-                initialValue: data['email'] ?? '',
-                onChanged: (value) => data['email'] = value,
               ),
             ),
             const SizedBox(height: 12),
             SizedBox(
               width: 320,
               child: _buildTextField(
+                controller: phoneController,
                 label: 'Phone Number',
-                initialValue: data['nomor_telepon'] ?? '',
-                onChanged: (value) => data['nomor_telepon'] = value,
               ),
             ),
             const SizedBox(height: 40),
@@ -168,14 +243,7 @@ class _EditProfileViewState extends State<EditProfileView> {
                   borderRadius: BorderRadius.circular(30),
                 ),
               ),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShowProfile(data: data),
-                  ),
-                );
-              },
+              onPressed: _saveChanges,
               child: const Text('Save Changes',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
@@ -186,16 +254,12 @@ class _EditProfileViewState extends State<EditProfileView> {
   }
 
   Widget _buildTextField({
+    required TextEditingController controller,
     required String label,
-    required String initialValue,
-    required ValueChanged<String> onChanged,
   }) {
-    final controller = TextEditingController(text: initialValue);
-    controller.selection = TextSelection.fromPosition(
-      TextPosition(offset: controller.text.length),
-    );
-
     return TextField(
+      controller: controller,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: const TextStyle(color: Colors.grey),
@@ -206,9 +270,6 @@ class _EditProfileViewState extends State<EditProfileView> {
           borderSide: BorderSide(color: lightColor),
         ),
       ),
-      style: const TextStyle(color: Colors.white),
-      onChanged: onChanged,
-      controller: controller,
     );
   }
 }

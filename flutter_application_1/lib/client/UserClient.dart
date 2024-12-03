@@ -25,8 +25,7 @@ class UserClient {
   //   }
   // }
 
-  Future<Map<String, dynamic>> login(
-      String email, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       // Mengirim data login
       var response = await http.post(
@@ -107,6 +106,58 @@ class UserClient {
 
       return {
         'user': data["user"],
+        'token': token,
+      };
+    } catch (e) {
+      return Future.error(e.toString());
+    }
+  }
+
+  Future<Map<String, dynamic>> updateUser({
+    required String id,
+    required String username,
+    required String email,
+    required String phoneNumber,
+    required File profilePicture, // Profile picture is optional
+  }) async {
+    try {
+      var uri = Uri.http(url, '/api/user/update/$id');
+
+      var request = http.MultipartRequest('POST', uri)
+        ..fields['username'] = username
+        ..fields['email'] = email
+        ..fields['nomor_telepon'] = phoneNumber;
+
+      // Adding profile picture if it exists
+      if (profilePicture != null) {
+        var pic = await http.MultipartFile.fromPath(
+          'profile_picture',
+          profilePicture.path,
+        );
+        request.files.add(pic);
+      }
+
+      var response = await request.send();
+
+      // Checking the status code of the response
+      if (response.statusCode != 200) {
+        var responseData = await response.stream.bytesToString();
+        throw Exception(
+            'Failed to update user. Status code: ${response.statusCode}, body: $responseData');
+      }
+
+      // Decode response
+      var responseData = await response.stream.bytesToString();
+      var data = json.decode(responseData);
+
+      // Store updated user data and token if needed
+      String token = data['token'];
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('username', data['user']['username']);
+      await prefs.setString('auth_token', token);
+
+      return {
+        'user': data['user'],
         'token': token,
       };
     } catch (e) {
