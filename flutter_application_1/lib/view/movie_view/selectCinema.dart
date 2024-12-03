@@ -13,6 +13,21 @@ class SelectCinema extends StatefulWidget {
 }
 
 class _SelectCinemaState extends State<SelectCinema> {
+  List<Map<String, String>> cinema = [
+    {
+      'nama': 'Atma Cinema Pakuwon Jogja',
+      'jarak': '4,55',
+      'alamat': 'Kab. Sleman, Daerah Istimewa Yogyakarta',
+    },
+    {
+      'nama': 'Atma Cinema Amplaz',
+      'jarak': '9,32',
+      'alamat': 'Kab. Sleman, Daerah Istimewa Yogyakarta',
+    },
+  ];
+
+  int selectedCinema = 0;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,114 +52,68 @@ class _SelectCinemaState extends State<SelectCinema> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(151, 118, 7, 0.479),
-                        border: Border(
-                          top: BorderSide(
-                            color: Colors.amber, // Warna border
-                            width: 1.0, // Ketebalan border
-                          ),
-                          bottom: BorderSide(
-                            color: Colors.amber, // Warna border
-                            width: 1.0, // Ketebalan border
-                          ),
-                          right: BorderSide(
-                            color: Colors.amber, // Warna border
-                            width: 1.0, // Ketebalan border
-                          ),
-                          left: BorderSide(
-                            color: Colors.amber, // Warna border
-                            width: 1.0, // Ketebalan border
-                          ),
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Atma Cinema Pakuwon Jogja",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                children: List.generate(cinema.length, (index) {
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedCinema = index;
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: (selectedCinema==index ? Color.fromRGBO(151, 118, 7, 0.479) :  Color.fromRGBO(31, 31, 31, 1)),
+                          border: Border(
+                            top: BorderSide(
+                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              width: 1.0, // Ketebalan border
                             ),
-                            Text(
-                              "4,55km | Kab. Sleman, Daerah Istimewa Yogyakarta",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white,
+                            bottom: BorderSide(
+                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              width: 1.0, // Ketebalan border
+                            ),
+                            right: BorderSide(
+                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              width: 1.0, // Ketebalan border
+                            ),
+                            left: BorderSide(
+                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              width: 1.0, // Ketebalan border
+                            ),
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${cinema[index]["nama"]}',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
-                            )
-                          ],
+                              Text(
+                                '${cinema[index]["jarak"]}km | ${cinema[index]["alamat"]}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(31, 31, 31, 1),
-                        // border: Border(
-                        //   top: BorderSide(
-                        //     color: Colors.amber, // Warna border
-                        //     width: 0.0, // Ketebalan border
-                        //   ),
-                        //   bottom: BorderSide(
-                        //     color: Colors.amber, // Warna border
-                        //     width: 0.0, // Ketebalan border
-                        //   ),
-                        //   right: BorderSide(
-                        //     color: Colors.amber, // Warna border
-                        //     width: 0.0, // Ketebalan border
-                        //   ),
-                        //   left: BorderSide(
-                        //     color: Colors.amber, // Warna border
-                        //     width: 0.0, // Ketebalan border
-                        //   ),
-                        // ),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Atma Cinema Amplaz",
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              "9,32km | Kab. Sleman, Daerah Istimewa Yogyakarta",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.normal,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  );
+                }),
               ),
             ),
           ),
@@ -175,7 +144,7 @@ class _SelectCinemaState extends State<SelectCinema> {
                 child: const Text(
                   'Continue',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 19,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),

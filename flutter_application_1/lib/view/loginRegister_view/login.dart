@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/UserClient.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/view/loginRegister_view/register.dart';
 import 'package:flutter_application_1/view/home_view/home.dart';
 import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
-  final Map<String, dynamic>? data;
-  const LoginView({super.key, this.data});
+  const LoginView({super.key});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -24,7 +25,6 @@ class _LoginViewState extends State<LoginView> {
     super.initState();
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    dataForm = widget.data;
   }
 
   @override
@@ -154,14 +154,7 @@ class _LoginViewState extends State<LoginView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          if (dataForm != null &&
-                              dataForm!['email'] == emailController.text &&
-                              dataForm!['password'] ==
-                                  passwordController.text) {
-                            loginSuccess(context, dataForm!);
-                          } else {
-                            showLoginError(context);
-                          }
+                          _login();
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -231,7 +224,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void loginSuccess(BuildContext context, Map<String, dynamic> userData) {
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (_) => HomeView(userData: userData),
@@ -262,5 +255,33 @@ class _LoginViewState extends State<LoginView> {
         builder: (_) => const RegisterView(),
       ),
     );
+  }
+
+  Future<void> _login() async {
+    try {
+      var userClient = UserClient();
+      var response =
+          await userClient.login(emailController.text, passwordController.text);
+      if (response.containsKey("token")) {
+        String token = response['token'];
+
+        Map<String, dynamic> user =
+            response['user']; // Data user yang diambil dari API
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('auth_token', token);
+
+        // Navigasi ke HomeView dengan data user
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => HomeView(userData: user)),
+        );
+      } else {
+        showLoginError(context); // Menampilkan error jika token tidak ada
+      }
+    } catch (e) {
+      print("Login Error: $e");
+      showLoginError(context); // Menampilkan error jika terjadi exception
+    }
   }
 }

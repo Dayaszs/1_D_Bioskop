@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'package:intl/intl.dart';
+import 'package:timezone/standalone.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
@@ -13,6 +16,39 @@ class SelectSeat extends StatefulWidget {
 }
 
 class _SelectSeatState extends State<SelectSeat> {
+
+  List<String> statusSeat = [
+    'reserved', 'reserved', 'available', 'available', 'available',
+    'available', 'available', 'reserved', 'available', 'available',
+    'reserved', 'available', 'available', 'reserved', 'available',
+    'available', 'available', 'reserved', 'available', 'available',
+    'available', 'available', 'reserved', 'reserved', 'available',
+    'reserved', 'available', 'reserved', 'available', 'reserved',
+    'available', 'available', 'available', 'reserved', 'available',
+    'available', 'reserved', 'available', 'reserved', 'available',
+    'reserved', 'reserved', 'available', 'available', 'reserved',
+    'reserved', 'reserved', 'available', 'reserved', 'reserved',
+    'reserved', 'reserved', 'reserved', 'reserved', 'available',
+    'available', 'available', 'available', 'reserved', 'reserved',
+    'reserved', 'available', 'available', 'available', 'available',
+    'available', 'reserved', 'reserved', 'available', 'reserved',
+    'reserved', 'reserved', 'reserved', 'reserved', 'reserved',
+    'available', 'available', 'reserved', 'reserved', 'available',
+    'reserved', 'available', 'available', 'available', 'reserved',
+    'available', 'available', 'reserved', 'reserved', 'reserved',
+    'reserved', 'reserved', 'available', 'available', 'reserved',
+    'reserved', 'reserved', 'available', 'reserved', 'available'
+  ];
+
+  int price = 50000;
+  final formatter = NumberFormat('#,###');
+
+  DateTime selectedDate = DateTime.now();
+  DateTime selectedTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0);
+
+  int selectedIndexDate = 0;
+  int selectedIndexTime = 0;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -91,21 +127,37 @@ class _SelectSeatState extends State<SelectSeat> {
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
                                 children: List.generate(50, (index) {
-                                  return Container(
-                                    alignment: Alignment.center,
-                                    width: 13,
-                                    height: 13,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromARGB(255, 55, 55, 55),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        // Jika kursi available, ubah menjadi selected
+                                        if (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'available') {
+                                          statusSeat[(10*(index ~/ 5) + (index % 5))] = 'selected';
+                                        } else if (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'selected') {
+                                          // Jika kursi selected, ubah kembali ke available
+                                          statusSeat[(10*(index ~/ 5) + (index % 5))] = 'available';
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 13,
+                                      height: 13,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'available' ? (Color.fromARGB(255, 55, 55, 55)) : (
+                                              statusSeat[(10*(index ~/ 5) + (index % 5))] == 'reserved' ? Color.fromRGBO(243, 198, 49, 0.604) : Colors.amber
+                                            )),
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(5)),
+                                      ),
+                                      child: Text('${String.fromCharCode(65+(index ~/ 5))}${(index%5) + 1}',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'available' ? Colors.white : Colors.black),
+                                          )),
                                     ),
-                                    child: Text('A${index + 1}',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                        )),
                                   );
                                 }),
                               ),
@@ -118,21 +170,37 @@ class _SelectSeatState extends State<SelectSeat> {
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
                                 children: List.generate(50, (index) {
-                                  return Container(
-                                    alignment: Alignment.center,
-                                    width: 13,
-                                    height: 13,
-                                    decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromARGB(255, 55, 55, 55),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        // Jika kursi available, ubah menjadi selected
+                                        if (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'available') {
+                                          statusSeat[(10*(index ~/ 5) + (index % 5))+5] = 'selected';
+                                        } else if (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'selected') {
+                                          // Jika kursi selected, ubah kembali ke available
+                                          statusSeat[(10*(index ~/ 5) + (index % 5))+5] = 'available';
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 13,
+                                      height: 13,
+                                      decoration: BoxDecoration(
+                                        color:
+                                            (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'available' ? (Color.fromARGB(255, 55, 55, 55)) : (
+                                              statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'reserved' ? Color.fromRGBO(243, 198, 49, 0.604) : Colors.amber
+                                            )),
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(5)),
+                                      ),
+                                      child: Text('${String.fromCharCode(65+(index ~/ 5))}${(index%5) + 6}',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'available' ? Colors.white : Colors.black),
+                                          )),
                                     ),
-                                    child: Text('B${index + 1}',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                        )),
                                   );
                                 }),
                               ),
@@ -225,47 +293,52 @@ class _SelectSeatState extends State<SelectSeat> {
                             children: List.generate(14, (index) {
                               return Row(
                                 children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.only(
-                                        top: 10, left: 3, right: 3, bottom: 3),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromARGB(255, 44, 44, 44),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(30)),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text("Oct",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                            )),
-                                        SizedBox(height: 15),
-                                        Container(
-                                          width: 50,
-                                          height: 50,
-                                          alignment: Alignment.center,
-                                          padding: EdgeInsets.all(12),
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                255, 81, 81, 81),
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(100)),
-                                          ),
-                                          child: Text("${index + 1}",
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedIndexDate = index;
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.only(
+                                          top: 10, left: 3, right: 3, bottom: 3),
+                                      decoration: BoxDecoration(
+                                        color: (selectedIndexDate == index ? Colors.amber : Color.fromARGB(255, 44, 44, 44)),
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(30)),
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text("${DateFormat('MMM').format(selectedDate.add(Duration(days:index)))}",
                                               style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold)),
-                                        )
-                                      ],
+                                                color: (selectedIndexDate == index ? Colors.black : Colors.white),
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                              )),
+                                          SizedBox(height: 15),
+                                          Container(
+                                            width: 50,
+                                            height: 50,
+                                            alignment: Alignment.center,
+                                            padding: EdgeInsets.all(12),
+                                            decoration: BoxDecoration(
+                                              color: (selectedIndexDate == index ? const Color.fromARGB(255, 32, 30, 30) : Color.fromARGB(255, 81, 81, 81)),
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(100)),
+                                            ),
+                                            child: Text("${DateFormat('dd').format(DateTime.now().add(Duration(days:index)))}",
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold)),
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
                                   SizedBox(width: 10)
@@ -282,21 +355,28 @@ class _SelectSeatState extends State<SelectSeat> {
                             children: List.generate(8, (index) {
                               return Row(
                                 children: [
-                                  Container(
-                                    alignment: Alignment.center,
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 20),
-                                    decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromARGB(255, 44, 44, 44),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(30)),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedIndexTime = index;
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 20),
+                                      decoration: BoxDecoration(
+                                        color: (selectedIndexTime == index ? Colors.amber : Color.fromARGB(255, 44, 44, 44)),
+                                        borderRadius:
+                                            BorderRadius.all(Radius.circular(30)),
+                                      ),
+                                      child: Text("${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: (index*2))))} - ${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: 2 + (index*2))))}",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: (selectedIndexTime == index ? Colors.black : Colors.white),
+                                            fontSize: 12,
+                                          )),
                                     ),
-                                    child: Text("${index + 7}:00",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                        )),
                                   ),
                                   SizedBox(width: 8),
                                 ],
@@ -333,7 +413,7 @@ class _SelectSeatState extends State<SelectSeat> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Total: \nRp. 0,00',
+                    'Total: \nRp. ${formatter.format(statusSeat.where((seat) => seat == 'selected').length * price)}.00',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -341,16 +421,18 @@ class _SelectSeatState extends State<SelectSeat> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Payment(),
-                        ),
-                      );
-                    },
+                    onPressed: statusSeat.where((seat) => seat == 'selected').length > 0
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Payment(),
+                          ),
+                        );
+                      }
+                    : () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber,
+                      backgroundColor: (statusSeat.where((seat) => seat == 'selected').length > 0 ? Colors.amber : Colors.grey),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 32, vertical: 18),
                       shape: RoundedRectangleBorder(

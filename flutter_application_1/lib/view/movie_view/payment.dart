@@ -14,6 +14,36 @@ class Payment extends StatefulWidget {
 class _PaymentState extends State<Payment> {
   TextEditingController DiscountCodeController = TextEditingController();
 
+  List<Map<String, String>> payment = [
+    {
+      "image": "images/gopay.png",
+      "name": "Gopay",
+      "details": "",
+    },
+    {
+      "image": "images/dana.png",
+      "name": "Dana",
+      "details": "",
+    },
+    {
+      "image": "images/shopeepay.png",
+      "name": "Shopee Pay",
+      "details": "",
+    },
+    {
+      "image": "images/atm.png",
+      "name": "ATM",
+      "details": "",
+    },
+    {
+      "image": "images/visa.png",
+      "name": "International Payments",
+      "details": "(Visa, Master, JCB, Amex)",
+    },
+  ];
+
+  int selectedPayment = 0;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -257,172 +287,93 @@ class _PaymentState extends State<Payment> {
                             fontWeight: FontWeight.bold,
                             fontSize: 20)),
                     SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 51, 51, 51),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'images/gopay.png',
-                                  width: 100,
-                                  height: 50,
+                    Column(
+                      children: List.generate(payment.length, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedPayment = index;
+                            });
+                          },
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: (selectedPayment==index ? Color.fromRGBO(151, 118, 7, 0.479) : const Color.fromARGB(255, 51, 51, 51)),
+                                    border: Border(
+                                      top: BorderSide(
+                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        width: 1.0, // Ketebalan border
+                                      ),
+                                      bottom: BorderSide(
+                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        width: 1.0, // Ketebalan border
+                                      ),
+                                      right: BorderSide(
+                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        width: 1.0, // Ketebalan border
+                                      ),
+                                      left: BorderSide(
+                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        width: 1.0, // Ketebalan border
+                                      ),
+                                    ),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(10))),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 10, horizontal: 6),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Image.asset(
+                                            '${payment[index]["image"]}',
+                                            width: 100,
+                                            height: 50,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              if(payment[index]["details"] != "") ...[
+                                                Text('${payment[index]["name"]}',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                    )),
+                                                Text('${payment[index]["details"]}',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10,
+                                                    ))
+                                              ] else ...[
+                                                Text('${payment[index]["name"]}',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                ))
+                                              ]
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                      Icon(Icons.navigate_next, color: Colors.white)
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(width: 10),
-                                Text("Gopay",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ))
-                              ],
-                            ),
-                            Icon(Icons.navigate_next, color: Colors.white)
-                          ],
-                        ),
-                      ),
+                              ),
+                              SizedBox(height: 10),
+                            ],
+                          ),
+                        );
+                      }),
                     ),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 51, 51, 51),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'images/dana.png',
-                                  width: 100,
-                                  height: 50,
-                                ),
-                                SizedBox(width: 10),
-                                Text("Dana",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ))
-                              ],
-                            ),
-                            Icon(Icons.navigate_next, color: Colors.white)
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 51, 51, 51),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'images/shopeepay.png',
-                                  width: 100,
-                                  height: 50,
-                                ),
-                                SizedBox(width: 10),
-                                Text("Shopee Pay",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ))
-                              ],
-                            ),
-                            Icon(Icons.navigate_next, color: Colors.white)
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 51, 51, 51),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'images/atm.png',
-                                  width: 100,
-                                  height: 50,
-                                ),
-                                SizedBox(width: 10),
-                                Text("ATM",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                    ))
-                              ],
-                            ),
-                            Icon(Icons.navigate_next, color: Colors.white)
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 51, 51, 51),
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      child: Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 6),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                Image.asset(
-                                  'images/visa.png',
-                                  width: 100,
-                                  height: 50,
-                                ),
-                                SizedBox(width: 10),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text("International payments",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                        )),
-                                    Text("(Visa, Master, JCB, Amex)",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                        ))
-                                  ],
-                                )
-                              ],
-                            ),
-                            Icon(Icons.navigate_next, color: Colors.white)
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(
                           color: const Color.fromARGB(223, 87, 73, 37),
