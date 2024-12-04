@@ -10,11 +10,17 @@ class Film {
   String? sutradara;
   String? aktor;
   String? deskripsi;
+  String? poster_1;
+  String? poster_2;
+  String? trailer;
+  String? status;
+  double? rating;
+
+  //ini dihapus nanti
   String? picture;
   String? horizontal_picture;
   double? ratings;
   String? review;
-  String? trailer;
   int? durasi;
 
   Film(
@@ -25,11 +31,15 @@ class Film {
       this.sutradara,
       this.aktor,
       this.deskripsi,
+      this.poster_1,
+      this.poster_2,
+      this.rating,
+      this.trailer,
+      this.status,
       this.picture,
       this.horizontal_picture,
       this.ratings,
       this.review,
-      this.trailer,
       this.durasi});
 
   factory Film.fromRawJson(String str) => Film.fromJson(json.decode(str));
@@ -41,12 +51,11 @@ class Film {
       sutradara: json["sutradara"],
       aktor: json["aktor"],
       deskripsi: json["deskripsi"],
-      picture: json["picture"],
-      horizontal_picture: json["horizontal_picture"],
-      ratings: json["ratings"],
-      review: json["review"],
+      poster_1: json["poster_1"],
+      poster_2: json["poster_2"],
+      rating: json["rating"],
       trailer: json["trailer"],
-      durasi: json["durasi"]);
+      status: json["status"]);
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
@@ -57,12 +66,11 @@ class Film {
     "sutradara": sutradara,
     "aktor": aktor,
     "deskripsi": deskripsi,
-    "picture": picture,
-    "horizontal_picture": horizontal_picture,
-    "ratings": ratings,
-    "review": review,
+    "poster_1": poster_1,
+    "poster_2": poster_2,
+    "rating": rating,
     "trailer": trailer,
-    "durasi": durasi
+    "status": status,
   };
 }
 
@@ -81,6 +89,7 @@ final List<Film> films = _films
           review : e['review'] as String? ?? 'No reviews available',
           trailer : e['trailer'] as String,
           durasi : e['durasi'] as int,
+
         ))
     .toList(growable: false);
 

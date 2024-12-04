@@ -2,10 +2,15 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/film.dart';
+<<<<<<< Updated upstream
 import 'package:flutter_application_1/view/movie_view/selectSeat.dart';
 import 'package:flutter_application_1/view/movie_view/selectCinema.dart';
 import 'package:flutter_application_1/view/ratings_view/listReview.dart';
 import 'package:url_launcher/url_launcher.dart';
+=======
+import 'package:flutter_application_1/client/FilmClient.dart';
+import 'package:flutter_application_1/view/movie_view/filmDetail.dart';
+>>>>>>> Stashed changes
 
 class FilmListView extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -16,11 +21,25 @@ class FilmListView extends StatefulWidget {
 }
 
 class _FilmListViewState extends State<FilmListView> {
-  String _filter = 'Now Playing';
+  String _filter = 'Now Playing'; // Default filter
 
-  List<Film> get _filteredFilms {
-    return _filter == 'Now Playing' ? films : comingSoonFilms;
+List<Film> films = []; // List for Now Playing films
+List<Film> comingSoonFilms = []; // List for Coming Soon films
+
+void fetchFilms() async {
+  var filmClient = FilmClient();
+  try {
+    List<Film> allFilms = await filmClient.fetchAll();  // Fetch all films
+    films = allFilms.where((film) => film.status == 'Now Playing').toList();  // Filter Now Playing films
+    comingSoonFilms = allFilms.where((film) => film.status == 'Coming Soon').toList();  // Filter Coming Soon films
+  } catch (error) {
+    print('Error: $error');
   }
+}
+
+List<Film> get _filteredFilms {
+  return _filter == 'Now Playing' ? films : comingSoonFilms;
+}
 
   @override
   Widget build(BuildContext context) {

@@ -9,6 +9,7 @@ import 'package:flutter_application_1/view/profile_view/profile.dart';
 import 'package:flutter_application_1/view/movie_view/listFilm.dart';
 import 'package:flutter_application_1/view/home_view/location.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:flutter_application_1/client/FilmClient.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeView extends StatefulWidget {
@@ -29,10 +30,25 @@ class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController(viewportFraction: 0.8);
 
   double currentPage = 0;
+  List<Film> film = [];
+  
+  void fetchFilms() async {
+  var filmClient = FilmClient();
+  try {
+    List<Film> allFilms = await filmClient.fetchAll(); // Fetch all films
+    setState(() {
+      film = allFilms; // Update the state with the fetched films
+    });
+  } catch (error) {
+    print('Error: $error');
+  }
+}
+
 
   @override
   void initState() {
     super.initState();
+    fetchFilms();
     _pageController.addListener(() {
       setState(() {
         currentPage = _pageController.page!;
@@ -248,7 +264,7 @@ class _HomeViewState extends State<HomeView> {
                 SizedBox(
                   height: 380,
                   child: CarouselSlider.builder(
-                    itemCount: films.length,
+                    itemCount: film.length,
                     options: CarouselOptions(
                       height: 450,
                       aspectRatio: 16 / 9,
@@ -263,7 +279,7 @@ class _HomeViewState extends State<HomeView> {
                       },
                     ),
                     itemBuilder: (context, index, realIndex) {
-                      final film = films[index % films.length];
+                      final films = film[index % film.length];
                       return GestureDetector(
                         onTap: () {
                           // Aksi ketika film ditekan
@@ -275,7 +291,7 @@ class _HomeViewState extends State<HomeView> {
                               height: 280,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(film.picture!),
+                                  image: NetworkImage(films.poster_1!),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
@@ -288,7 +304,7 @@ class _HomeViewState extends State<HomeView> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    film.judul!,
+                                    films.judul!,
                                     style: textStyle2.copyWith(fontSize: 18),
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
@@ -296,7 +312,7 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
-                                    "${film.durasi}min • ${film.genre}",
+                                    "${films.genre}",
                                     style: textStyle2.copyWith(
                                       fontSize: 12,
                                       color: Colors.white70,
@@ -309,7 +325,7 @@ class _HomeViewState extends State<HomeView> {
                                     children: [
                                       Icon(Icons.star, color: Colors.yellow, size: 16),
                                       Text(
-                                        film.ratings.toString(),
+                                        films.rating.toString(),
                                         style: textStyle2.copyWith(
                                           fontSize: 12,
                                           color: Colors.white,
