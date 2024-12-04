@@ -7,8 +7,9 @@ import 'package:flutter_application_1/view/home_view/home.dart';
 import 'package:flutter_application_1/view/home_view/listFnB.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
 import 'package:flutter_application_1/view/movie_view/listFilm.dart';
-import 'package:flutter_application_1/view/home_view/location.dart'; // Import your location page here
+import 'package:flutter_application_1/view/home_view/location.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class HomeView extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -38,11 +39,13 @@ class _HomeViewState extends State<HomeView> {
       });
     });
   }
+
   void _updateLocation(String newLocation) {
     setState(() {
       location = newLocation;
     });
   }
+
   List<Widget> _buildScreens() {
     return [
       _buildHomeScreen(),
@@ -102,7 +105,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(14.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -146,7 +149,7 @@ class _HomeViewState extends State<HomeView> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 8),
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -245,97 +248,93 @@ class _HomeViewState extends State<HomeView> {
                   ],
                 ),
                 SizedBox(
-                  height: 300,
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemBuilder: (context, index) {
-                      // Ambil data film secara siklus
+                  height: 380,
+                  child: CarouselSlider.builder(
+                    itemCount: films.length,
+                    options: CarouselOptions(
+                      height: 450,
+                      aspectRatio: 16 / 9,
+                      viewportFraction: 0.5,
+                      enlargeCenterPage: true,
+                      enableInfiniteScroll: true,
+                      autoPlay: true,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          currentPage = index.toDouble();
+                        });
+                      },
+                    ),
+                    itemBuilder: (context, index, realIndex) {
                       final film = films[index % films.length];
-                      double scale = 1.0;
-
-                      // Animasi skala berdasarkan posisi halaman
-                      if (_pageController.hasClients) {
-                        scale = (_pageController.page! - index).abs() < 1
-                            ? 1 - (_pageController.page! - index).abs() * 0.3
-                            : 0.7;
-                      }
-
-                      return Transform.scale(
-                        scale: scale,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              // Aksi saat item di-klik
-                            },
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 150,
-                                  height: 225,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: NetworkImage(film.picture!),
-                                      fit: BoxFit.cover,
-                                    ),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                      return GestureDetector(
+                        onTap: () {
+                          // Aksi ketika film ditekan
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              width: 200,
+                              height: 280,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: NetworkImage(film.picture!),
+                                  fit: BoxFit.cover,
                                 ),
-                                const SizedBox(height: 5),
-                                SizedBox(
-                                  width: 150,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            SizedBox(
+                              width: 170,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    film.judul!,
+                                    style: textStyle2.copyWith(fontSize: 18),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "${film.durasi}min • ${film.genre}",
+                                    style: textStyle2.copyWith(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
+                                      Icon(Icons.star,
+                                          color: Colors.yellow, size: 16),
                                       Text(
-                                        film.judul!,
-                                        style: textStyle2.copyWith(fontSize: 16),
-                                        textAlign: TextAlign.center,
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        "${film.durasi}min • ${film.genre}",
+                                        film.ratings.toString(),
                                         style: textStyle2.copyWith(
                                           fontSize: 12,
-                                          color: Colors.white70,
+                                          color: Colors.white,
                                         ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.star, color: Colors.yellow, size: 16),
-                                          Text(
-                                            film.ratings.toString(),
-                                            style: textStyle2.copyWith(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
                                       ),
                                     ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
                       );
                     },
                   ),
                 ),
-
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Padding(
                       padding:
-                          EdgeInsets.only(top: 25.0, left: 4.0, bottom: 18.0),
+                          EdgeInsets.only(top: 10.0, left: 4.0, bottom: 18.0),
                       child: Text(
                         "Food and Beverage",
                         style: textStyle2.copyWith(
@@ -347,7 +346,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                     Padding(
                       padding:
-                          EdgeInsets.only(top: 25.0, right: 4.0, bottom: 18.0),
+                          EdgeInsets.only(top: 10.0, right: 4.0, bottom: 18.0),
                       child: TextButton(
                         onPressed: () {
                           Navigator.push(
