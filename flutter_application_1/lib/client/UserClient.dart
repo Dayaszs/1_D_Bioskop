@@ -120,11 +120,9 @@ class UserClient {
     required String email,
     required String nomor_telepon,
     required File profilePicture, // Profile picture is optional
-    
   }) async {
-
     try {
-      var uri = Uri.http(url, 'api/users/' + id_user.toString());
+      var uri = Uri.http(url, '/api/users/' + id_user.toString());
 
       var request = http.MultipartRequest('POST', uri)
         ..fields['id'] = id_user.toString()
@@ -133,17 +131,17 @@ class UserClient {
         ..fields['nomor_telepon'] = nomor_telepon;
 
       // Adding profile picture if it exists
-        var pic = await http.MultipartFile.fromPath(
-          'profile_picture',
-          profilePicture.path,
-        );
-        request.files.add(pic);
+      var pic = await http.MultipartFile.fromPath(
+        'profile_picture',
+        profilePicture.path,
+      );
+      request.files.add(pic);
 
       var response = await request.send();
 
       // Checking the status code of the response
       if (response.statusCode != 200) {
-      var responseData = await response.stream.bytesToString();
+        var responseData = await response.stream.bytesToString();
         throw Exception(
             'Failed to update user. Status code: ${response.statusCode}, body: $responseData');
       }
@@ -158,5 +156,37 @@ class UserClient {
     } catch (e) {
       return Future.error(e.toString());
     }
+  }
+
+  Future<Map<String, dynamic>> changePassword(
+      {required int id_user,
+      required String old_password,
+      required String new_password,
+      required String confirm_password}) async {
+    if (new_password != confirm_password) {
+      throw Exception('Konfirmasi password tidak cocok!');
+    }
+
+    // Send the request to update the password
+    var response = await http.post(
+      Uri.http(url, '/api/users/' + id_user.toString()),
+      headers: {"Content-Type": "application/json"},
+      body: json.encode({
+        'id_user': id_user,
+        'password': new_password,
+        'old_password': old_password,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Gagal mengubah password');
+    }
+
+    var data = json.decode(response.body);
+
+    return {
+      'message': 'Password berhasil diubah!',
+      'user': data['user'],
+    };
   }
 }

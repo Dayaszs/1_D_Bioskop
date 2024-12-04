@@ -106,8 +106,7 @@ class ShowProfile extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ChangePasswordView(
-                      formData:
-                          data), // Assuming ChangePasswordView needs formData
+                      data: data), // Assuming ChangePasswordView needs formData
                 ),
               );
             }),

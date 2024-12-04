@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/UserClient.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/profile_view/changePassword.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
 
 class ChangePasswordView extends StatefulWidget {
-  final Map<String, dynamic> formData;
+  final Map<String, dynamic> data;
 
-  ChangePasswordView({Key? key, required this.formData}) : super(key: key);
+  ChangePasswordView({Key? key, required this.data}) : super(key: key);
 
   @override
   _ChangePasswordViewState createState() => _ChangePasswordViewState();
@@ -22,6 +23,13 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   bool _showConfirmPassword = false;
   bool _isLoading = false;
   String? _errorMessage;
+  late Map<String, dynamic> data;
+
+  @override
+  void initState() {
+    super.initState();
+    data = Map<String, dynamic>.from(widget.data);
+  }
 
   void _toggleOldPasswordVisibility() {
     setState(() {
@@ -41,49 +49,78 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
     });
   }
 
-  void _saveChanges() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-        _errorMessage = null;
-      });
+  Future<void> _saveChanges() async {
+    try {
+      UserClient userClient = UserClient();
 
-      final registeredPassword = widget.formData['password'];
+      String old_password = _oldPasswordController.text.isEmpty
+          ? ''
+          : _oldPasswordController.text;
+      String new_password = _newPasswordController.text.isEmpty
+          ? ''
+          : _newPasswordController.text;
+      String confirm_password = _confirmPasswordController.text.isEmpty
+          ? ''
+          : _confirmPasswordController.text;
 
-      // Periksa apakah password lama cocok dengan yang terdaftar
-      if (_oldPasswordController.text != registeredPassword) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = 'Old password does not match our records!';
-        });
-        return;
-      }
+      var response = await userClient.changePassword(
+          id_user: data["id_user"],
+          old_password: old_password,
+          new_password: new_password,
+          confirm_password: confirm_password);
 
-      // Periksa apakah password baru dan konfirmasi cocok
-      if (_newPasswordController.text != _confirmPasswordController.text) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = 'New password and confirmation do not match!';
-        });
-        return;
-      }
-
-      await Future.delayed(Duration(seconds: 2));
-
-      setState(() {
-        widget.formData['password'] = _newPasswordController.text;
-        _isLoading = false;
-      });
-
-      // Navigasi kembali ke halaman profil
-      Navigator.of(context).pushReplacement(
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
-          builder: (context) => ShowProfile(data: widget.formData),
+          builder: (context) => ShowProfile(data: response['user']),
         ),
       );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to change password : $e')),
+      );
     }
-  }
+    // if (_formKey.currentState!.validate()) {
+    //   setState(() {
+    //     _isLoading = true;
+    //     _errorMessage = null;
+    //   });
 
+    //   final registeredPassword = widget.data['password'];
+
+    //   // Periksa apakah password lama cocok dengan yang terdaftar
+    //   if (_oldPasswordController.text != registeredPassword) {
+    //     setState(() {
+    //       _isLoading = false;
+    //       _errorMessage = 'Old password does not match our records!';
+    //     });
+    //     return;
+    //   }
+
+    //   // Periksa apakah password baru dan konfirmasi cocok
+    //   if (_newPasswordController.text != _confirmPasswordController.text) {
+    //     setState(() {
+    //       _isLoading = false;
+    //       _errorMessage = 'New password and confirmation do not match!';
+    //     });
+    //     return;
+    //   }
+
+    //   await Future.delayed(Duration(seconds: 2));
+
+    //   setState(() {
+    //     widget.data['password'] = _newPasswordController.text;
+    //     _isLoading = false;
+    //   });
+
+    //   // Navigasi kembali ke halaman profil
+    //   Navigator.of(context).pushReplacement(
+    //     MaterialPageRoute(
+    //       builder: (context) => ShowProfile(data: widget.data),
+    //     ),
+    //   );
+    // }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +143,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 0),
+                padding: const EdgeInsets.only(left: 3),
                 child: Icon(Icons.arrow_back_ios, color: lightColor),
               ),
               Text(
