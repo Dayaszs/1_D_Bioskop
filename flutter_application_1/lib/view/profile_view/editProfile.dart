@@ -143,22 +143,24 @@ class _EditProfileViewState extends State<EditProfileView> {
           ),
         ),
         leading: GestureDetector(
-          onTap: () {
-            Navigator.of(context).pop();
-          },
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 3),
-                child: Icon(Icons.arrow_back_ios, color: lightColor),
-              ),
-              Text(
-                'Back',
-                style: TextStyle(color: lightColor),
-              ),
-            ],
-          ),
+        onTap: () {
+          Navigator.of(context).pop();
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 0),
+              child: Icon(Icons.arrow_back_ios, color: lightColor),
+            ),
+            Text(
+              'Back',
+              style: TextStyle(color: lightColor),
+            ),
+          ],
         ),
+      ),
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

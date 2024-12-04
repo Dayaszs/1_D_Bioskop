@@ -138,7 +138,7 @@ class _LocationPageState extends State<LocationPage> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 3),
+                padding: const EdgeInsets.only(left: 0),
                 child: Icon(Icons.arrow_back_ios, color: lightColor),
               ),
               Text(
