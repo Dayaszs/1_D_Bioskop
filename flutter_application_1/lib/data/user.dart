@@ -1,22 +1,24 @@
 import 'dart:convert';
 
+import 'package:flutter/rendering.dart';
+
 class User {
-  final int id_user;
-  final String username;
-  final String password;
-  final String email;
-  final String nomor_telepon;
-  final String tanggal_lahir;
-  final String foto_profil;
+  int? id_user;
+  String? username;
+  String? password;
+  String? email;
+  String? nomor_telepon;
+  String? tanggal_lahir;
+  String? profie_picture;
 
   User(
-      {required this.id_user,
-      required this.username,
-      required this.password,
-      required this.email,
-      required this.nomor_telepon,
-      required this.foto_profil,
-      required this.tanggal_lahir});
+      {this.id_user,
+      this.username,
+      this.password,
+      this.email,
+      this.nomor_telepon,
+      this.profie_picture,
+      this.tanggal_lahir});
 
   factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
   factory User.fromJson(Map<String, dynamic> json) => User(
@@ -26,7 +28,7 @@ class User {
       email: json["email"],
       nomor_telepon: json["nomor_telepon"],
       tanggal_lahir: json["tanggal_lahir"],
-      foto_profil: json["profile_picture"]);
+      profie_picture: json["profile_picture"]);
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
@@ -36,7 +38,7 @@ class User {
         "email": email,
         "nomor_telepon": nomor_telepon,
         "tanggal_lahir": tanggal_lahir,
-        "foto_profil": foto_profil,
+        "profile_picture": profie_picture,
       };
 }
 

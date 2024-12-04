@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_application_1/data/user.dart';
@@ -114,34 +115,35 @@ class UserClient {
   }
 
   Future<Map<String, dynamic>> updateUser({
-    required String id,
+    required int id_user,
     required String username,
     required String email,
-    required String phoneNumber,
+    required String nomor_telepon,
     required File profilePicture, // Profile picture is optional
+    
   }) async {
+
     try {
-      var uri = Uri.http(url, '/api/user/update/$id');
+      var uri = Uri.http(url, 'api/users/' + id_user.toString());
 
       var request = http.MultipartRequest('POST', uri)
+        ..fields['id'] = id_user.toString()
         ..fields['username'] = username
         ..fields['email'] = email
-        ..fields['nomor_telepon'] = phoneNumber;
+        ..fields['nomor_telepon'] = nomor_telepon;
 
       // Adding profile picture if it exists
-      if (profilePicture != null) {
         var pic = await http.MultipartFile.fromPath(
           'profile_picture',
           profilePicture.path,
         );
         request.files.add(pic);
-      }
 
       var response = await request.send();
 
       // Checking the status code of the response
       if (response.statusCode != 200) {
-        var responseData = await response.stream.bytesToString();
+      var responseData = await response.stream.bytesToString();
         throw Exception(
             'Failed to update user. Status code: ${response.statusCode}, body: $responseData');
       }
@@ -150,15 +152,8 @@ class UserClient {
       var responseData = await response.stream.bytesToString();
       var data = json.decode(responseData);
 
-      // Store updated user data and token if needed
-      String token = data['token'];
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', data['user']['username']);
-      await prefs.setString('auth_token', token);
-
       return {
         'user': data['user'],
-        'token': token,
       };
     } catch (e) {
       return Future.error(e.toString());

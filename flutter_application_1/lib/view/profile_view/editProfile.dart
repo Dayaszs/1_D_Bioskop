@@ -97,10 +97,10 @@ class _EditProfileViewState extends State<EditProfileView> {
 
       // Call the updateUser method
       var response = await userClient.updateUser(
-        id: data['id'], // Make sure to pass the user ID
+        id_user : data['id_user'], // Make sure to pass the user ID
         username: username,
         email: email,
-        phoneNumber: phoneNumber,
+        nomor_telepon: phoneNumber,
         profilePicture: _imageFile!, // Send the picked profile image (if any)
       );
 
