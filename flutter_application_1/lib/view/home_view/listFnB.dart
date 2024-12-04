@@ -57,9 +57,10 @@ class ListFnbView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10)),
                       child: Image.network(
-                        fnb.picture,
+                        '${fnb.picture}',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         loadingBuilder: (context, child, loadingProgress) {
@@ -92,7 +93,7 @@ class ListFnbView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          fnb.name,
+                          '${fnb.name}',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -102,7 +103,7 @@ class ListFnbView extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          fnb.description,
+                          '${fnb.description}',
                           style: TextStyle(color: Colors.white70, fontSize: 12),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

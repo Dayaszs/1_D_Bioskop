@@ -1,35 +1,36 @@
 import 'dart:ffi';
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 
 class Film {
-  final String id_film;
-  final String judul;
-  final String genre;
-  final String tahun_rilis;
-  final String sutradara;
-  final String aktor;
-  final String deskripsi;
-  final String picture;
-  final String horizontal_picture;
-  final double? ratings;
-  final String? review;
-  final String trailer;
-  final int durasi;
+  String? id_film;
+  String? judul;
+  String? genre;
+  String? tahun_rilis;
+  String? sutradara;
+  String? aktor;
+  String? deskripsi;
+  String? picture;
+  String? horizontal_picture;
+  double? ratings;
+  String? review;
+  String? trailer;
+  int? durasi;
 
-  const Film(
-      {required this.id_film,
-      required this.judul,
-      required this.genre,
-      required this.tahun_rilis,
-      required this.sutradara,
-      required this.aktor,
-      required this.deskripsi,
-      required this.picture,
-      required this.horizontal_picture,
-      required this.ratings,
-      required this.review,
-      required this.trailer,
-      required this.durasi});
+  Film(
+      {this.id_film,
+      this.judul,
+      this.genre,
+      this.tahun_rilis,
+      this.sutradara,
+      this.aktor,
+      this.deskripsi,
+      this.picture,
+      this.horizontal_picture,
+      this.ratings,
+      this.review,
+      this.trailer,
+      this.durasi});
 
   factory Film.fromRawJson(String str) => Film.fromJson(json.decode(str));
   factory Film.fromJson(Map<String, dynamic> json) => Film(

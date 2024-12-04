@@ -1,16 +1,18 @@
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 
 class Review {
-  final int id_review;
-  final int id_tiket;
-  final int rating;
-  final String komentar;
+  
+  int? id_review;
+  int? id_tiket;
+  int? rating;
+  String? komentar;
 
   Review({
-    required this.id_review,
-    required this.id_tiket,
-    required this.rating,
-    required this.komentar,
+    this.id_review,
+    this.id_tiket,
+    this.rating,
+    this.komentar,
   });
 
   factory Review.fromRawJson(String str) => Review.fromJson(json.decode(str));

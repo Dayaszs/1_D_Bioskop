@@ -17,7 +17,7 @@ class TicketPdfPage extends StatelessWidget {
     final pdf = pw.Document();
 
     // Load the image from network
-    final image = await loadImage(ticket.picture.isNotEmpty ? ticket.picture : 'https://via.placeholder.com/200x300');
+    final image = await loadImage('${ticket.picture}'.isNotEmpty ? '${ticket.picture}' : 'https://via.placeholder.com/200x300');
 
     // Generate QR code image
     final qrCodeImage = await _generateQrCode(ticket.id.toString());
@@ -47,11 +47,11 @@ class TicketPdfPage extends StatelessWidget {
               
               // Movie Details Section
               pw.Text(
-                ticket.judul.isNotEmpty ? ticket.judul : 'Dummy Movie Title',
+                '${ticket.judul}'.isNotEmpty ? '${ticket.judul}' : 'Dummy Movie Title',
                 style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
               ),
               pw.Text(
-                ticket.genre.isNotEmpty ? ticket.genre : 'Genre: Drama, Action',
+                '${ticket.genre}'.isNotEmpty ? '${ticket.genre}' : 'Genre: Drama, Action',
                 style: pw.TextStyle(fontSize: 18, color: PdfColors.grey),
               ),
               pw.SizedBox(height: 10),

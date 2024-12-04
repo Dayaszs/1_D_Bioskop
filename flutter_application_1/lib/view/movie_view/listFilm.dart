@@ -215,7 +215,7 @@ class FilmList extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
-              film.picture,
+              film.picture!,
               fit: BoxFit.cover,
               width: double.infinity,
               height: 250,
@@ -223,7 +223,7 @@ class FilmList extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            film.judul,
+            film.judul!,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: lightColor,
@@ -235,7 +235,7 @@ class FilmList extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            film.genre,
+            film.genre!,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.grey,
@@ -272,7 +272,7 @@ class FilmDetail extends StatelessWidget {
           children: [
             // Hero image section
             Hero(
-              tag: film.judul,
+              tag: film.judul!,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 200,
@@ -291,7 +291,7 @@ class FilmDetail extends StatelessWidget {
                     fit: StackFit.expand,
                     children: [
                       Image.network(
-                        film.horizontal_picture,
+                        film.horizontal_picture!,
                         fit: BoxFit.cover,
                       ),
                       // Gradient overlay
@@ -315,8 +315,8 @@ class FilmDetail extends StatelessWidget {
                           onTap: () async {
                             // Check if trailer link exists and is valid
                             if (film.trailer != null &&
-                                film.trailer.isNotEmpty) {
-                              final Uri url = Uri.parse(film.trailer);
+                                film.trailer!.isNotEmpty) {
+                              final Uri url = Uri.parse(film.trailer!);
                               if (await canLaunchUrl(url)) {
                                 await launchUrl(url);
                               } else {
@@ -368,7 +368,7 @@ class FilmDetail extends StatelessWidget {
                 ).createShader(bounds);
               },
               child: Text(
-                film.judul,
+                film.judul!,
                 style: TextStyle(
                   fontSize: size.width * 0.07,
                   fontWeight: FontWeight.bold,
@@ -400,7 +400,7 @@ class FilmDetail extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    film.deskripsi,
+                    film.deskripsi!,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
@@ -426,28 +426,28 @@ class FilmDetail extends StatelessWidget {
                   _buildFilmDetail(
                     context,
                     "Genre",
-                    film.genre,
+                    film.genre!,
                     Icons.movie_filter,
                   ),
                   _buildDivider(),
                   _buildFilmDetail(
                     context,
                     "Cast",
-                    film.aktor,
+                    film.aktor!,
                     Icons.person,
                   ),
                   _buildDivider(),
                   _buildFilmDetail(
                     context,
                     "Release Date",
-                    film.tahun_rilis,
+                    film.tahun_rilis!,
                     Icons.calendar_today,
                   ),
                   _buildDivider(),
                   _buildFilmDetail(
                     context,
                     "Director",
-                    film.sutradara,
+                    film.sutradara!,
                     Icons.camera,
                   ),
                 ],

@@ -275,7 +275,7 @@ class _HomeViewState extends State<HomeView> {
                               height: 280,
                               decoration: BoxDecoration(
                                 image: DecorationImage(
-                                  image: NetworkImage(film.picture),
+                                  image: NetworkImage(film.picture!),
                                   fit: BoxFit.cover,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
@@ -288,7 +288,7 @@ class _HomeViewState extends State<HomeView> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    film.judul,
+                                    film.judul!,
                                     style: textStyle2.copyWith(fontSize: 18),
                                     textAlign: TextAlign.center,
                                     maxLines: 1,
@@ -386,14 +386,14 @@ class _HomeViewState extends State<HomeView> {
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
-                                      image: NetworkImage(fnbs[i].picture),
+                                      image: NetworkImage('${fnbs[i].picture}'),
                                       fit: BoxFit.cover,
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  fnbs[i].name,
+                                  '${fnbs[i].name}',
                                   style: textStyle2.copyWith(fontSize: 14),
                                   textAlign: TextAlign.center,
                                   maxLines: 1,

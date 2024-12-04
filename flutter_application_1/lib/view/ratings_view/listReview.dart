@@ -70,7 +70,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                   children: [
                     // Film title
                     Text(
-                      widget.film.judul,
+                      '${widget.film.judul}',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

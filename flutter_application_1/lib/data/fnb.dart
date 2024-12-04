@@ -1,20 +1,42 @@
-class Fnb {
-  final String id_fnb;
-  final String name;
-  final String description;
-  final int price;
-  final String picture;
+import 'dart:convert';
 
-  const Fnb(this.id_fnb, this.name, this.description, this.price, this.picture);
+class Fnb {
+  String? id_fnb;
+  String? name;
+  String? description;
+  int? price;
+  String? picture;
+
+  Fnb({this.id_fnb, this.name, this.description, this.price, this.picture});
+
+  factory Fnb.fromRawJson(String str) => Fnb.fromJson(json.decode(str));
+  factory Fnb.fromJson(Map<String, dynamic> json) => Fnb(
+    id_fnb: json["id_fnb"],
+    name: json["name"],
+    description: json["description"],
+    price: json["price"],
+    picture: json["picture"],
+  );
+
+  String toRawJson() => json.encode(toJson());
+  Map<String, dynamic> toJson() => {
+    "id_fnb" : id_fnb,
+    "name" : name,
+    "description" : description,
+    "price" : price,
+    "picture" : picture,
+  };
 }
 
-final List<Fnb> fnbs = _fnbs.map((e) => Fnb(
-  e['id_fnb'] as String,
-  e['name'] as String,
-  e['description'] as String,
-  e['price'] as int,
-  e['picture'] as String,
-)).toList(growable: false);
+final List<Fnb> fnbs = _fnbs
+    .map((e) => Fnb(
+          id_fnb : e['id_fnb'] as String,
+          name : e['name'] as String,
+          description : e['description'] as String,
+          price : e['price'] as int,
+          picture : e['picture'] as String,
+        ))
+    .toList(growable: false);
 
 final List<Map<String, Object>> _fnbs = [
   {
@@ -22,7 +44,8 @@ final List<Map<String, Object>> _fnbs = [
     'name': 'Popcorn',
     'description': 'Special popcorn with sweet flavor',
     'price': 30000,
-    'picture': 'https://akcdn.detik.net.id/community/media/visual/2023/11/03/5-makanan-tak-sehat-yang-ternyata-berkhasiat-untuk-tubuh-ada-permen-dan-popcorn-4.jpeg?w=700&q=90'
+    'picture':
+        'https://akcdn.detik.net.id/community/media/visual/2023/11/03/5-makanan-tak-sehat-yang-ternyata-berkhasiat-untuk-tubuh-ada-permen-dan-popcorn-4.jpeg?w=700&q=90'
   },
   {
     'id_fnb': 'F002',
@@ -76,7 +99,8 @@ final List<Map<String, Object>> _fnbs = [
   {
     'id_fnb': 'F009',
     'name': 'Sundae Ice Cream',
-    'description': 'Vanilla ice cream sundae with chocolate syrup and sprinkles',
+    'description':
+        'Vanilla ice cream sundae with chocolate syrup and sprinkles',
     'price': 15000,
     'picture': 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90'
   },
@@ -88,4 +112,3 @@ final List<Map<String, Object>> _fnbs = [
     'picture': 'https://images.unsplash.com/photo-1548946526-f69e2424cf45'
   },
 ];
-
