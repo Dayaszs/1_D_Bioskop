@@ -2,15 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/film.dart';
-<<<<<<< Updated upstream
 import 'package:flutter_application_1/view/movie_view/selectSeat.dart';
 import 'package:flutter_application_1/view/movie_view/selectCinema.dart';
 import 'package:flutter_application_1/view/ratings_view/listReview.dart';
 import 'package:url_launcher/url_launcher.dart';
-=======
 import 'package:flutter_application_1/client/FilmClient.dart';
 import 'package:flutter_application_1/view/movie_view/filmDetail.dart';
->>>>>>> Stashed changes
 
 class FilmListView extends StatefulWidget {
   final Map<String, dynamic> userData;
