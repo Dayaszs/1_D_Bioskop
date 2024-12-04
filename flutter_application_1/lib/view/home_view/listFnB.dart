@@ -18,7 +18,8 @@ class ListFnbView extends StatelessWidget {
         ),
         leading: GestureDetector(
           onTap: () {
-            Navigator.of(context).pop(); // Navigasi kembali ke halaman sebelumnya
+            Navigator.of(context)
+                .pop(); // Navigasi kembali ke halaman sebelumnya
           },
           child: Row(
             children: [
@@ -48,7 +49,8 @@ class ListFnbView extends StatelessWidget {
           itemBuilder: (context, index) {
             final fnb = fnbs[index];
             return Card(
-              color: Colors.grey[900], // Menyesuaikan warna card dengan tema gelap
+              color:
+                  Colors.grey[900], // Menyesuaikan warna card dengan tema gelap
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -57,9 +59,10 @@ class ListFnbView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: ClipRRect(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(10)),
                       child: Image.network(
-                        fnb.picture,
+                        '${fnb.picture}',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         loadingBuilder: (context, child, loadingProgress) {
@@ -92,7 +95,7 @@ class ListFnbView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          fnb.name,
+                          '${fnb.name}',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -102,7 +105,7 @@ class ListFnbView extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          fnb.description,
+                          '${fnb.description}',
                           style: TextStyle(color: Colors.white70, fontSize: 12),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

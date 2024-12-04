@@ -128,7 +128,7 @@ class _TicketViewState extends State<TicketView> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8),
                       child: Image.network(
-                        ticket.picture,
+                        '${ticket.picture}',
                         width: 100,
                         height: 150,
                         fit: BoxFit.cover,
@@ -143,7 +143,7 @@ class _TicketViewState extends State<TicketView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           AutoSizeText(
-                            ticket.judul,
+                            '${ticket.judul}',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class _TicketViewState extends State<TicketView> {
                               const SizedBox(width: 4),
                               Flexible(
                                 child: AutoSizeText(
-                                  ticket.genre,
+                                  '${ticket.genre}',
                                   style: const TextStyle(color: Colors.white),
                                   maxLines: 1,
                                   minFontSize: 12,
@@ -225,7 +225,7 @@ class _TicketViewState extends State<TicketView> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: AutoSizeText(
-                              ticket.status,
+                              '${ticket.status}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
