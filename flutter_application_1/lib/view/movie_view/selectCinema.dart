@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
-import 'package:flutter_application_1/data/cinema.dart';
+import 'package:flutter_application_1/data/bioskop.dart';
 import 'package:flutter_application_1/view/movie_view/selectSeat.dart';
 
 class SelectCinema extends StatefulWidget {
