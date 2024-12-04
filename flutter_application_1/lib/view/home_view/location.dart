@@ -20,12 +20,14 @@ class _LocationPageState extends State<LocationPage> {
 
   Future<void> _checkInitialPermission() async {
     LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
       setState(() {
         _showPermissionPrompt = false;
       });
       await _getCurrentLocation();
-    } else if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+    } else if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
       setState(() {
         _showPermissionPrompt = true;
       });
@@ -68,7 +70,8 @@ class _LocationPageState extends State<LocationPage> {
   // Get current location and use Nominatim API to get the address
   Future<void> _getCurrentLocation() async {
     try {
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
       await _getAddressFromCoordinates(position.latitude, position.longitude);
     } catch (e) {
       setState(() {
@@ -78,12 +81,15 @@ class _LocationPageState extends State<LocationPage> {
   }
 
   // Call Nominatim API to get the address based on coordinates
-  Future<void> _getAddressFromCoordinates(double latitude, double longitude) async {
-    final url = 'https://nominatim.openstreetmap.org/reverse?lat=$latitude&lon=$longitude&format=json';
-    
+  Future<void> _getAddressFromCoordinates(
+      double latitude, double longitude) async {
+    final url =
+        'https://nominatim.openstreetmap.org/reverse?lat=$latitude&lon=$longitude&format=json';
+
     try {
       final response = await http.get(Uri.parse(url), headers: {
-        'User-Agent': 'YourAppName/1.0 (your-email@example.com)',  // Update with your app info
+        'User-Agent':
+            'YourAppName/1.0 (your-email@example.com)', // Update with your app info
       });
 
       if (response.statusCode == 200) {
@@ -138,7 +144,7 @@ class _LocationPageState extends State<LocationPage> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 3),
+                padding: const EdgeInsets.only(left: 0),
                 child: Icon(Icons.arrow_back_ios, color: lightColor),
               ),
               Text(
@@ -167,7 +173,8 @@ class _LocationPageState extends State<LocationPage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.location_on, color: Colors.blueAccent, size: 24),
+                        Icon(Icons.location_on,
+                            color: Colors.blueAccent, size: 24),
                         SizedBox(width: 12),
                         Expanded(
                           child: Text(
