@@ -143,7 +143,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 0),
+                padding: const EdgeInsets.only(left: 3),
                 child: Icon(Icons.arrow_back_ios, color: lightColor),
               ),
               Text(
