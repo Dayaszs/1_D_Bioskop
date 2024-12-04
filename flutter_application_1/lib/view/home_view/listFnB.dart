@@ -18,13 +18,12 @@ class ListFnbView extends StatelessWidget {
         ),
         leading: GestureDetector(
           onTap: () {
-            Navigator.of(context)
-                .pop(); // Navigasi kembali ke halaman sebelumnya
+            Navigator.of(context).pop();
           },
           child: Row(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 3),
+                padding: const EdgeInsets.only(left: 0),
                 child: Icon(Icons.arrow_back_ios, color: lightColor),
               ),
               Text(
@@ -45,12 +44,11 @@ class ListFnbView extends StatelessWidget {
             mainAxisSpacing: 8.0,
             childAspectRatio: 0.7,
           ),
-          itemCount: fnbs.length, // Mengambil jumlah item dari data `fnbs`
+          itemCount: fnbs.length,
           itemBuilder: (context, index) {
             final fnb = fnbs[index];
             return Card(
-              color:
-                  Colors.grey[900], // Menyesuaikan warna card dengan tema gelap
+              color: Colors.grey[900],
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -92,7 +90,7 @@ class ListFnbView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           '${fnb.name}',
@@ -109,6 +107,7 @@ class ListFnbView extends StatelessWidget {
                           style: TextStyle(color: Colors.white70, fontSize: 12),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
                         ),
                         SizedBox(height: 4),
                         Text(
