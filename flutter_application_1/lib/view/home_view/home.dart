@@ -39,11 +39,13 @@ class _HomeViewState extends State<HomeView> {
       });
     });
   }
+
   void _updateLocation(String newLocation) {
     setState(() {
       location = newLocation;
     });
   }
+
   List<Widget> _buildScreens() {
     return [
       _buildHomeScreen(),
@@ -252,9 +254,9 @@ class _HomeViewState extends State<HomeView> {
                     options: CarouselOptions(
                       height: 450,
                       aspectRatio: 16 / 9,
-                      viewportFraction: 0.5, 
+                      viewportFraction: 0.5,
                       enlargeCenterPage: true,
-                      enableInfiniteScroll: true, 
+                      enableInfiniteScroll: true,
                       autoPlay: true,
                       onPageChanged: (index, reason) {
                         setState(() {
@@ -307,7 +309,8 @@ class _HomeViewState extends State<HomeView> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.star, color: Colors.yellow, size: 16),
+                                      Icon(Icons.star,
+                                          color: Colors.yellow, size: 16),
                                       Text(
                                         film.ratings.toString(),
                                         style: textStyle2.copyWith(

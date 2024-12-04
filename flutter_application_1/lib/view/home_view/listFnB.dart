@@ -44,7 +44,7 @@ class ListFnbView extends StatelessWidget {
             mainAxisSpacing: 8.0,
             childAspectRatio: 0.7,
           ),
-          itemCount: fnbs.length, 
+          itemCount: fnbs.length,
           itemBuilder: (context, index) {
             final fnb = fnbs[index];
             return Card(
