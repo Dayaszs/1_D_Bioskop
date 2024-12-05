@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/data/film2.dart';
+import 'package:flutter_application_1/data/film.dart';
 
 class FilmDetail extends StatelessWidget {
-  final Film film;
+  final Film film; // Replace `Film` with the actual type of your `film` object.
 
-  const FilmDetail(this.film, {super.key});
+  const FilmDetail({required this.film, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +22,14 @@ class FilmDetail extends StatelessWidget {
           children: [
             // Hero image section
             Hero(
-              tag: film.title,
+              tag: film.judul!,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                 height: 250,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.network(
-                    film.poster2, // Assuming this is the larger poster
+                    film.poster_2!, // Assuming this is the larger poster
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -46,7 +46,7 @@ class FilmDetail extends StatelessWidget {
                 ).createShader(bounds);
               },
               child: Text(
-                film.title,
+                film.judul!,
                 style: TextStyle(
                   fontSize: size.width * 0.07,
                   fontWeight: FontWeight.bold,
@@ -78,7 +78,7 @@ class FilmDetail extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    film.description,
+                    film.deskripsi!,
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white70,
@@ -102,15 +102,15 @@ class FilmDetail extends StatelessWidget {
               child: Column(
                 children: [
                   _buildFilmDetail(
-                      context, "Genre", film.genre, Icons.movie_filter),
+                      context, "Genre", film.genre!, Icons.movie_filter),
                   _buildDivider(),
-                  _buildFilmDetail(context, "Cast", film.actors, Icons.person),
+                  _buildFilmDetail(context, "Cast", film.aktor!, Icons.person),
                   _buildDivider(),
-                  _buildFilmDetail(context, "Release Year", film.releaseYear,
-                      Icons.calendar_today),
+                  _buildFilmDetail(context, "Release Year",
+                      film.tahun_rilis.toString(), Icons.calendar_today),
                   _buildDivider(),
                   _buildFilmDetail(
-                      context, "Director", film.director, Icons.camera),
+                      context, "Director", film.sutradara!, Icons.camera),
                 ],
               ),
             ),
