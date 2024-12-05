@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
@@ -64,22 +63,36 @@ class _SelectCinemaState extends State<SelectCinema> {
                       child: Container(
                         width: MediaQuery.of(context).size.width,
                         decoration: BoxDecoration(
-                          color: (selectedCinema==index ? Color.fromRGBO(151, 118, 7, 0.479) :  Color.fromRGBO(31, 31, 31, 1)),
+                          color: (selectedCinema == index
+                              ? Color.fromRGBO(151, 118, 7, 0.479)
+                              : Color.fromRGBO(31, 31, 31, 1)),
                           border: Border(
                             top: BorderSide(
-                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              color: (selectedCinema == index
+                                  ? Colors.amber
+                                  : const Color.fromARGB(
+                                      0, 0, 0, 0)), // Warna border
                               width: 1.0, // Ketebalan border
                             ),
                             bottom: BorderSide(
-                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              color: (selectedCinema == index
+                                  ? Colors.amber
+                                  : const Color.fromARGB(
+                                      0, 0, 0, 0)), // Warna border
                               width: 1.0, // Ketebalan border
                             ),
                             right: BorderSide(
-                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              color: (selectedCinema == index
+                                  ? Colors.amber
+                                  : const Color.fromARGB(
+                                      0, 0, 0, 0)), // Warna border
                               width: 1.0, // Ketebalan border
                             ),
                             left: BorderSide(
-                              color: (selectedCinema==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                              color: (selectedCinema == index
+                                  ? Colors.amber
+                                  : const Color.fromARGB(
+                                      0, 0, 0, 0)), // Warna border
                               width: 1.0, // Ketebalan border
                             ),
                           ),

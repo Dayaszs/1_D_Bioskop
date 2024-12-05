@@ -79,11 +79,9 @@ class UserClient {
             birthDate; // Add birthDate to request fields
 
       // Adding profile picture if it exists
-      if (profilePicture != null) {
-        var pic = await http.MultipartFile.fromPath(
-            'profile_picture', profilePicture.path);
-        request.files.add(pic);
-      }
+      var pic = await http.MultipartFile.fromPath(
+          'profile_picture', profilePicture.path);
+      request.files.add(pic);
 
       var response = await request.send();
 
