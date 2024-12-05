@@ -456,7 +456,7 @@ class FilmDetail extends StatelessWidget {
                   _buildFilmDetail(
                     context,
                     "Release Date",
-                    film.tahun_rilis!,
+                    film.tahun_rilis!.toString(),
                     Icons.calendar_today,
                   ),
                   _buildDivider(),
@@ -502,7 +502,7 @@ class FilmDetail extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(5, (index) {
-                        double rating = film.ratings ?? 0.0;
+                        double rating = film.rating ?? 0.0;
                         if (rating >= index + 1) {
                           return const Icon(Icons.star, color: Colors.amber, size: 30);
                         } else if (rating > index && rating < index + 1) {
@@ -514,7 +514,7 @@ class FilmDetail extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '${film.ratings?.toStringAsFixed(1) ?? "0.0"} / 5',
+                      '${film.rating?.toStringAsFixed(1) ?? "0.0"} / 5',
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,

@@ -14,13 +14,13 @@ class FilmClient {
       final response = await http.get(Uri.parse(url + endpoint));
 
       if (response.statusCode == 200) {
-        Iterable list = json.decode(response.body)['data'];
+        Iterable list = json.decode(response.body)['films'];
+
         return list.map((e) => Film.fromJson(e)).toList();
       } else {
-        throw Exception('Failed to load films. Status Code: ${response.statusCode}');
+        throw Exception('Failed to load films');
       }
     } catch (error) {
-      print('Error fetching films: $error');
       throw Exception('Failed to load films: $error');
     }
   }

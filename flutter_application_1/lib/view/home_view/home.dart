@@ -1,104 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/film.dart';
-import 'package:flutter_application_1/data/fnb.dart';
 import 'package:flutter_application_1/view/ticket_view/ticketView.dart';
-import 'package:flutter_application_1/utilities/constant.dart';
-import 'package:flutter_application_1/view/home_view/home.dart';
-import 'package:flutter_application_1/view/home_view/listFnB.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
 import 'package:flutter_application_1/view/movie_view/listFilm.dart';
 import 'package:flutter_application_1/view/home_view/location.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_application_1/client/FilmClient.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
 
-class HomeView extends StatefulWidget {
+// Provider to fetch films
+final listFilmProvider = FutureProvider<List<Film>>((ref) async {
+  return await FilmClient().fetchAll();
+});
+
+class HomeView extends ConsumerWidget {
   final Map<String, dynamic> userData;
 
   const HomeView({super.key, required this.userData});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filmsAsync = ref.watch(listFilmProvider);
 
-class _HomeViewState extends State<HomeView> {
-  final PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
-  final TextEditingController _searchController = TextEditingController();
-  String location = "No location detected";
-
-  final PageController _pageController = PageController(viewportFraction: 0.8);
-
-  double currentPage = 0;
-  List<Film> film = [];
-  
-  void fetchFilms() async {
-  var filmClient = FilmClient();
-  try {
-    List<Film> allFilms = await filmClient.fetchAll(); // Fetch all films
-    setState(() {
-      film = allFilms; // Update the state with the fetched films
-    });
-  } catch (error) {
-    print('Error: $error');
-  }
-}
-
-
-  @override
-  void initState() {
-    super.initState();
-    fetchFilms();
-    _pageController.addListener(() {
-      setState(() {
-        currentPage = _pageController.page!;
-      });
-    });
-  }
-  void _updateLocation(String newLocation) {
-    setState(() {
-      location = newLocation;
-    });
-  }
-  List<Widget> _buildScreens() {
-    return [
-      _buildHomeScreen(),
-      TicketView(),
-      FilmListView(userData: widget.userData),
-      ShowProfile(data: widget.userData),
-    ];
-  }
-
-  List<PersistentBottomNavBarItem> _navBarsItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.home),
-        title: ("Home"),
-        activeColorPrimary: lightColor,
-        inactiveColorPrimary: Colors.white,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.confirmation_number),
-        title: ("Ticket"),
-        activeColorPrimary: lightColor,
-        inactiveColorPrimary: Colors.white,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.movie),
-        title: ("Movie"),
-        activeColorPrimary: lightColor,
-        inactiveColorPrimary: Colors.white,
-      ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.person),
-        title: ("Profile"),
-        activeColorPrimary: lightColor,
-        inactiveColorPrimary: Colors.white,
-      ),
-    ];
-  }
-
-  Widget _buildHomeScreen() {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
@@ -125,7 +50,7 @@ class _HomeViewState extends State<HomeView> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      'Hi, ${widget.userData['username']}',
+                      'Hi, ${userData['username']}',
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     Text(
@@ -152,7 +77,7 @@ class _HomeViewState extends State<HomeView> {
                         ],
                       ),
                       child: TextField(
-                        controller: _searchController,
+                        controller: TextEditingController(),
                         style: TextStyle(color: Colors.black87),
                         decoration: InputDecoration(
                           hintText: "Search",
@@ -173,7 +98,7 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         ).then((value) {
                           if (value != null) {
-                            _updateLocation(value);
+                            // Update location logic here
                           }
                         });
                       },
@@ -182,7 +107,7 @@ class _HomeViewState extends State<HomeView> {
                           Icon(Icons.location_on, color: Colors.white),
                           SizedBox(width: 10),
                           Text(
-                            location,
+                            'No location detected', // Update location text here
                             style: TextStyle(color: Colors.white),
                           ),
                           Spacer(),
@@ -197,7 +122,7 @@ class _HomeViewState extends State<HomeView> {
                                 ),
                               ).then((value) {
                                 if (value != null) {
-                                  _updateLocation(value);
+                                  // Update location logic here
                                 }
                               });
                             },
@@ -212,235 +137,106 @@ class _HomeViewState extends State<HomeView> {
             automaticallyImplyLeading: false,
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+        body: filmsAsync.when(
+          data: (films) {
+            return ListView(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 8.0, left: 4.0, bottom: 18.0),
-                      child: Text(
-                        "Now Playing",
-                        style: textStyle2.copyWith(
-                          fontSize: 24,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  FilmListView(userData: widget.userData),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                        ),
-                        child: Row(
-                          children: [
-                            Text("More", style: TextStyle(color: lightColor)),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward_ios,
-                                color: lightColor, size: 16),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 380,
-                  child: CarouselSlider.builder(
-                    itemCount: film.length,
-                    options: CarouselOptions(
-                      height: 450,
-                      aspectRatio: 16 / 9,
-                      viewportFraction: 0.5, 
-                      enlargeCenterPage: true,
-                      enableInfiniteScroll: true, 
-                      autoPlay: true,
-                      onPageChanged: (index, reason) {
-                        setState(() {
-                          currentPage = index.toDouble();
-                        });
-                      },
-                    ),
-                    itemBuilder: (context, index, realIndex) {
-                      final films = film[index % film.length];
-                      return GestureDetector(
-                        onTap: () {
-                          // Aksi ketika film ditekan
-                        },
-                        child: Column(
-                          children: [
-                            Container(
-                              width: 200,
-                              height: 280,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: NetworkImage(films.poster_1!),
-                                  fit: BoxFit.cover,
-                                ),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            SizedBox(
-                              width: 170,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    films.judul!,
-                                    style: textStyle2.copyWith(fontSize: 18),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    "${films.genre}",
-                                    style: textStyle2.copyWith(
-                                      fontSize: 12,
-                                      color: Colors.white70,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.star, color: Colors.yellow, size: 16),
-                                      Text(
-                                        films.rating.toString(),
-                                        style: textStyle2.copyWith(
-                                          fontSize: 12,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                CarouselSlider(
+                  options: CarouselOptions(
+                    height: 250,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: true,
+                    autoPlay: true,
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 10.0, left: 4.0, bottom: 18.0),
-                      child: Text(
-                        "Food and Beverage",
-                        style: textStyle2.copyWith(
-                          fontSize: 24,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(top: 10.0, right: 4.0, bottom: 18.0),
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ListFnbView(),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                        ),
-                        child: Row(
-                          children: [
-                            Text("More", style: TextStyle(color: lightColor)),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward_ios,
-                                color: lightColor, size: 16),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 160,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (var i = 0; i < fnbs.length; i++)
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                      image: NetworkImage('${fnbs[i].picture}'),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  '${fnbs[i].name}',
-                                  style: textStyle2.copyWith(fontSize: 14),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                  items: films.map((film) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 5),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              film.poster_1!, // Replace with actual field
+                              fit: BoxFit.cover,
+                              width: MediaQuery.of(context).size.width,
                             ),
                           ),
-                      ],
-                    ),
+                        );
+                      },
+                    );
+                  }).toList(),
+                ),
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Now Playing',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
+                // Display films in a list or grid
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.75,
+                  ),
+                  itemCount: films.length,
+                  itemBuilder: (context, index) {
+                    final film = films[index];
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to film details page or ticket view
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => TicketView()),
+                        );
+                      },
+                      child: Card(
+                        color: Colors.white,
+                        elevation: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                film.poster_1!, // Replace with actual field
+                                height: 150,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                film.judul!,
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                'Rating: ${film.rating}', // Replace with actual field
+                                style: TextStyle(fontSize: 14, color: Colors.black54),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
-            ),
-          ),
+            );
+          },
+          loading: () => Center(child: CircularProgressIndicator()),
+          error: (error, stack) => Center(child: Text('Error: $error')),
         ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PersistentTabView(
-      context,
-      controller: _controller,
-      screens: _buildScreens(),
-      items: _navBarsItems(),
-      backgroundColor: darkColor,
-      navBarStyle: NavBarStyle.style6,
-      decoration: NavBarDecoration(
-        colorBehindNavBar: Colors.black,
       ),
     );
   }

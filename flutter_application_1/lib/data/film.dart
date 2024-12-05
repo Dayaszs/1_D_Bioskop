@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/rendering.dart';
 
 class Film {
-  String? id_film;
+  int? id_film;
   String? judul;
   String? genre;
-  String? tahun_rilis;
+  int? tahun_rilis;
   String? sutradara;
   String? aktor;
   String? deskripsi;
@@ -14,12 +14,12 @@ class Film {
   String? poster_2;
   String? trailer;
   String? status;
-  double? rating;
+  dynamic rating;
 
   //ini dihapus nanti
   String? picture;
   String? horizontal_picture;
-  double? ratings;
+  // double? ratings;
   String? review;
   int? durasi;
 
@@ -38,7 +38,6 @@ class Film {
       this.status,
       this.picture,
       this.horizontal_picture,
-      this.ratings,
       this.review,
       this.durasi});
 
@@ -76,16 +75,15 @@ class Film {
 
 final List<Film> films = _films
     .map((e) => Film(
-          id_film : e['id_film'] as String,
+          id_film : e['id_film'] as int,
           judul : e['judul'] as String,
           genre : e['genre'] as String,
-          tahun_rilis : e['tahun_rilis'] as String,
+          tahun_rilis : e['tahun_rilis'] as int,
           sutradara : e['sutradara'] as String,
           aktor : e['aktor'] as String,
           deskripsi : e['deskripsi'] as String,
           picture : e['picture'] as String,
           horizontal_picture : e['horizontal_picture'] as String,
-          ratings : e['ratings'] as double? ?? 0.0,
           review : e['review'] as String? ?? 'No reviews available',
           trailer : e['trailer'] as String,
           durasi : e['durasi'] as int,
@@ -249,16 +247,15 @@ final List<Map<String, Object>> _films = [
 
 final List<Film> comingSoonFilms = _comingSoonFilms
     .map((e) => Film(
-          id_film : e['id_film'] as String,
+          id_film : e['id_film'] as int,
           judul : e['judul'] as String,
           genre : e['genre'] as String,
-          tahun_rilis : e['tahun_rilis'] as String,
+          tahun_rilis : e['tahun_rilis'] as int,
           sutradara : e['sutradara'] as String,
           aktor : e['aktor'] as String,
           deskripsi : e['deskripsi'] as String,
           picture : e['picture'] as String,
           horizontal_picture : e['horizontal_picture'] as String,
-          ratings : e['ratings'] as double? ?? 0.0,
           review : e['review'] as String? ?? 'No reviews available',
           trailer : e['trailer'] as String,
           durasi : e['durasi'] as int,
