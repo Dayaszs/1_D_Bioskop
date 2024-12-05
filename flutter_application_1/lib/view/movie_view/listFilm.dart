@@ -202,10 +202,10 @@ class FilmList extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.black.withOpacity(0.5),
+        color: Colors.black.withOpacity(0),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center, // Centers all children horizontally
         children: [
           // Film Poster
           ClipRRect(
@@ -223,17 +223,19 @@ class FilmList extends StatelessWidget {
           Text(
             film.judul ?? '',
             style: const TextStyle(
-              color: Colors.white,
+              color: lightColor,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center, // Ensures text is centered
           ),
           const SizedBox(height: 8),
 
           // Ratings Row
           Row(
+            mainAxisAlignment: MainAxisAlignment.center, // Centers the row
             children: [
               const Icon(Icons.star, size: 16, color: Colors.amber),
               const SizedBox(width: 4),
@@ -259,6 +261,7 @@ class FilmList extends StatelessWidget {
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center, // Ensures text is centered
           ),
         ],
       ),

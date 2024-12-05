@@ -18,8 +18,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
   @override
   void initState() {
     super.initState();
-    // Initialize the user rating with the current rating if available
-    _userRating = 0.0;
+    _userRating = 0.0; // Default rating
   }
 
   // Function to create the star widgets based on rating
@@ -28,21 +27,25 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
     for (int i = 0; i < 5; i++) {
       Icon icon;
       if (rating >= i + 1) {
-        icon = Icon(Icons.star, color: lightColor, size: 30);
+        icon = Icon(Icons.star, color: lightColor, size: 40);
       } else if (rating > i && rating < i + 1) {
-        icon = Icon(Icons.star_half, color: lightColor, size: 30);
+        icon = Icon(Icons.star_half, color: lightColor, size: 40);
       } else {
-        icon = Icon(Icons.star_border, color: lightColor, size: 30);
+        icon = Icon(Icons.star_border, color: lightColor, size: 40);
       }
 
-      // Make the star icon interactive using GestureDetector
+      // Adding animation to stars
       stars.add(GestureDetector(
         onTap: () {
           setState(() {
-            _userRating = i + 1.0; // Update the rating on tap
+            _userRating = i + 1.0;
           });
         },
-        child: icon,
+        child: AnimatedOpacity(
+          opacity: 1.0,
+          duration: Duration(milliseconds: 300),
+          child: icon,
+        ),
       ));
     }
     return stars;
@@ -58,6 +61,8 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
       appBar: AppBar(
         title: const Text("Ratings & Reviews"),
         backgroundColor: darkColor,
+        elevation: 0, // Menghilangkan bayangan pada AppBar
+        toolbarHeight: 80, // Menyesuaikan tinggi app bar jika diperlukan
       ),
       body: Column(
         children: [
@@ -72,7 +77,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                     Text(
                       '${widget.film.judul}',
                       style: const TextStyle(
-                        fontSize: 24,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
@@ -92,7 +97,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Review input
+                    // Review input with border animation effect
                     TextField(
                       controller: _reviewController,
                       style: const TextStyle(color: Colors.white),
@@ -102,7 +107,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                         filled: true,
                         fillColor: const Color(0xFF222222),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12), // Rounded corners
                           borderSide: BorderSide.none,
                         ),
                       ),
@@ -112,7 +117,8 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                       color: Colors.white24,
                       height: 32,
                     ),
-                    // Reviews list
+
+                    // All Reviews section
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -126,23 +132,24 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Wrapper for User Profile & Review
                     Card(
-                      color: const Color(0xFF222222),
+                      elevation: 0, // Menghilangkan bayangan pada Card
                       margin: const EdgeInsets.only(bottom: 16),
-                      child: Padding(
+                      color: Colors.transparent, // Pastikan latar belakang Card transparan
+                      child: Container(
+                        color: Colors.transparent, // Pastikan latar belakang Container transparan
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start, // Align items to start
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CircleAvatar(
                               backgroundImage: NetworkImage(userProfileImage),
                               radius: 25,
                             ),
                             const SizedBox(width: 12),
-                            Expanded( // Use Expanded widget to prevent overflow
+                            Expanded(
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start, // Align text to start
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     username,
@@ -159,8 +166,8 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                                   Text(
                                     widget.film.review ?? "No review yet.",
                                     style: const TextStyle(color: Colors.white),
-                                    maxLines: null, // Allows the text to wrap
-                                    overflow: TextOverflow.visible, // Ensures the text is not truncated
+                                    maxLines: null,
+                                    overflow: TextOverflow.visible,
                                   ),
                                 ],
                               ),
@@ -169,18 +176,16 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
                   ],
                 ),
               ),
             ),
           ),
-          // Button to publish review
+          // Publish Review Button with hover effect
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
               onPressed: () {
-                // Implement action for saving the review
                 if (_reviewController.text.isNotEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -193,9 +198,9 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: lightColor,
-                minimumSize: Size(double.infinity, 60), // Make the button larger
+                minimumSize: Size(double.infinity, 60),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12), // Rounded corners
+                  borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: const Text(
