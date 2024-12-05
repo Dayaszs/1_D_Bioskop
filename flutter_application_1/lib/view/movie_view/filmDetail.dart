@@ -30,8 +30,7 @@ class FilmDetail extends StatelessWidget {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: size.width * 0.05,
-            vertical: 16.0,
+            vertical: 0.0,
           ),
           color: const Color(0xFF161616),
           child: Column(
@@ -56,55 +55,51 @@ class FilmDetail extends StatelessWidget {
   }
 
   Widget _buildHeroSection(Size size) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white10, width: 2),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Stack(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.network(
-              film.poster_2!,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: size.height * 0.25,
-            ),
+    return Stack(
+      children: [
+        // Full-width Image
+        ClipRRect(
+          borderRadius: BorderRadius.zero, // Remove borderRadius for full width
+          child: Image.network(
+            film.poster_2!,
+            fit: BoxFit.cover,
+            width: size.width, // Full-width image
+            height: size.height * 0.30, // Adjust height as needed
           ),
-          Positioned(
-            bottom: 4,
-            right: 4,
-            child: ElevatedButton.icon(
-              onPressed: () async {
-                if (film.trailer != null && film.trailer!.isNotEmpty) {
-                  final Uri url = Uri.parse(film.trailer!);
-                  if (await canLaunchUrl(url)) {
-                    await launchUrl(url);
-                  } else {
-                    debugPrint("Cannot launch trailer URL");
-                  }
+        ),
+        // Positioned Watch Trailer Button
+        Positioned(
+          bottom: 8,
+          right: 8,
+          child: ElevatedButton.icon(
+            onPressed: () async {
+              if (film.trailer != null && film.trailer!.isNotEmpty) {
+                final Uri url = Uri.parse(film.trailer!);
+                if (await canLaunchUrl(url)) {
+                  await launchUrl(url);
+                } else {
+                  debugPrint("Cannot launch trailer URL");
                 }
-              },
-              icon: const Icon(Icons.play_arrow, color: Colors.white),
-              label: const Text(
-                "Watch Trailer",
-                style: TextStyle(color: Colors.white),
+              }
+            },
+            icon: const Icon(Icons.play_arrow, color: Colors.white),
+            label: const Text(
+              "Watch Trailer",
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black.withOpacity(0.7),
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 12,
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black.withOpacity(0.7),
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -175,9 +170,11 @@ class FilmDetail extends StatelessWidget {
           _buildDivider(),
           _buildFilmDetail("Cast", film.aktor ?? "Unknown", Icons.people),
           _buildDivider(),
-          _buildFilmDetail("Release Year", film.tahun_rilis?.toString() ?? "Unknown", Icons.calendar_today),
+          _buildFilmDetail("Release Year",
+              film.tahun_rilis?.toString() ?? "Unknown", Icons.calendar_today),
           _buildDivider(),
-          _buildFilmDetail("Director", film.sutradara ?? "Unknown", Icons.camera),
+          _buildFilmDetail(
+              "Director", film.sutradara ?? "Unknown", Icons.camera),
         ],
       ),
     );
@@ -188,7 +185,7 @@ class FilmDetail extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Icon(icon, color: Colors.orange, size: 24),
+          Icon(icon, color: lightColor, size: 24),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -262,11 +259,14 @@ class FilmDetail extends StatelessWidget {
                   children: List.generate(5, (index) {
                     dynamic rating = film.rating ?? 0.0;
                     if (rating >= index + 1) {
-                      return const Icon(Icons.star, color: Colors.amber, size: 30);
+                      return const Icon(Icons.star,
+                          color: Colors.amber, size: 30);
                     } else if (rating > index && rating < index + 1) {
-                      return const Icon(Icons.star_half, color: Colors.amber, size: 30);
+                      return const Icon(Icons.star_half,
+                          color: Colors.amber, size: 30);
                     } else {
-                      return const Icon(Icons.star_border, color: Colors.amber, size: 30);
+                      return const Icon(Icons.star_border,
+                          color: Colors.amber, size: 30);
                     }
                   }),
                 ),
@@ -313,8 +313,8 @@ class FilmDetail extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: const [
           Icon(
-            Icons.local_activity,  // You can replace this with any other icon
-            color: Colors.black,     // Set the icon color to black
+            Icons.local_activity, // You can replace this with any other icon
+            color: Colors.black, // Set the icon color to black
           ),
           SizedBox(width: 8), // Adds some space between the icon and text
           Text(
@@ -322,7 +322,7 @@ class FilmDetail extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.black,   // Set the text color to black
+              color: Colors.black, // Set the text color to black
             ),
           ),
         ],
