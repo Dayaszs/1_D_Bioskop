@@ -11,6 +11,7 @@ class FilmDetail extends StatelessWidget {
   const FilmDetail({required this.film, Key? key}) : super(key: key);
 
   @override
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
@@ -18,7 +19,7 @@ class FilmDetail extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Film Detail",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 20, color: whiteColor),
         ),
         backgroundColor: Colors.black,
         centerTitle: true,
@@ -27,28 +28,32 @@ class FilmDetail extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
       ),
+      backgroundColor:
+          const Color(0xFF161616), // Set background for entire Scaffold
       body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(
-            vertical: 0.0,
-          ),
-          color: const Color(0xFF161616),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildHeroSection(size),
-              const SizedBox(height: 20),
-              _buildTitleSection(size),
-              const SizedBox(height: 20),
-              _buildSynopsisSection(),
-              const SizedBox(height: 16),
-              _buildDetailsSection(),
-              const SizedBox(height: 20),
-              _buildRatingsAndReviews(context),
-              const SizedBox(height: 20),
-              _buildBookNowButton(context),
-            ],
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeroSection(size),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  _buildTitleSection(size),
+                  const SizedBox(height: 20),
+                  _buildSynopsisSection(),
+                  const SizedBox(height: 16),
+                  _buildDetailsSection(),
+                  const SizedBox(height: 20),
+                  _buildRatingsAndReviews(context),
+                  const SizedBox(height: 20),
+                  _buildBookNowButton(context),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -126,7 +131,7 @@ class FilmDetail extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black26,
+        color: Colors.black26, // Tetapkan warna latar yang sesuai
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.white10),
       ),
