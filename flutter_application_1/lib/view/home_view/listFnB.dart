@@ -44,7 +44,7 @@ class ListFnbView extends StatelessWidget {
             mainAxisSpacing: 8.0,
             childAspectRatio: 0.7,
           ),
-          itemCount: fnbs.length, 
+          itemCount: fnbs.length,
           itemBuilder: (context, index) {
             final fnb = fnbs[index];
             return Card(
@@ -60,7 +60,7 @@ class ListFnbView extends StatelessWidget {
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(10)),
                       child: Image.network(
-                        '${fnb.picture}',
+                        '${fnb.gambar}',
                         fit: BoxFit.cover,
                         width: double.infinity,
                         loadingBuilder: (context, child, loadingProgress) {
@@ -93,7 +93,7 @@ class ListFnbView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '${fnb.name}',
+                          '${fnb.nama}',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -103,7 +103,7 @@ class ListFnbView extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          '${fnb.description}',
+                          '${fnb.deskripsi}',
                           style: TextStyle(color: Colors.white70, fontSize: 12),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -111,7 +111,7 @@ class ListFnbView extends StatelessWidget {
                         ),
                         SizedBox(height: 4),
                         Text(
-                          'IDR ${fnb.price}',
+                          'IDR ${fnb.harga}',
                           style: TextStyle(
                             color: Colors.amber,
                             fontWeight: FontWeight.bold,
