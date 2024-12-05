@@ -79,11 +79,9 @@ class UserClient {
             birthDate; // Add birthDate to request fields
 
       // Adding profile picture if it exists
-      if (profilePicture != null) {
-        var pic = await http.MultipartFile.fromPath(
-            'profile_picture', profilePicture.path);
-        request.files.add(pic);
-      }
+      var pic = await http.MultipartFile.fromPath(
+          'profile_picture', profilePicture.path);
+      request.files.add(pic);
 
       var response = await request.send();
 
@@ -120,9 +118,7 @@ class UserClient {
     required String email,
     required String nomor_telepon,
     required File profilePicture, // Profile picture is optional
-    
   }) async {
-
     try {
       var uri = Uri.http(url, 'api/users/' + id_user.toString());
 
@@ -133,17 +129,17 @@ class UserClient {
         ..fields['nomor_telepon'] = nomor_telepon;
 
       // Adding profile picture if it exists
-        var pic = await http.MultipartFile.fromPath(
-          'profile_picture',
-          profilePicture.path,
-        );
-        request.files.add(pic);
+      var pic = await http.MultipartFile.fromPath(
+        'profile_picture',
+        profilePicture.path,
+      );
+      request.files.add(pic);
 
       var response = await request.send();
 
       // Checking the status code of the response
       if (response.statusCode != 200) {
-      var responseData = await response.stream.bytesToString();
+        var responseData = await response.stream.bytesToString();
         throw Exception(
             'Failed to update user. Status code: ${response.statusCode}, body: $responseData');
       }

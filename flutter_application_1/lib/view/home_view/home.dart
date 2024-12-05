@@ -15,13 +15,64 @@ final listFilmProvider = FutureProvider<List<Film>>((ref) async {
   return await FilmClient().fetchAll();
 });
 
-class HomeView extends ConsumerWidget {
+class HomeView extends ConsumerStatefulWidget {
   final Map<String, dynamic> userData;
 
   const HomeView({super.key, required this.userData});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends ConsumerState<HomeView> {
+  late PersistentTabController _controller;
+  String location = "No location detected";
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+  }
+
+  List<Widget> _buildScreens() {
+    return [
+      _buildHomeScreen(),
+      TicketView(),
+      FilmListView(userData: widget.userData),
+      ShowProfile(data: widget.userData),
+    ];
+  }
+
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.home),
+        title: ("Home"),
+        activeColorPrimary: Colors.amber,
+        inactiveColorPrimary: Colors.white,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.confirmation_number),
+        title: ("Ticket"),
+        activeColorPrimary: Colors.amber,
+        inactiveColorPrimary: Colors.white,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.movie),
+        title: ("Movie"),
+        activeColorPrimary: Colors.amber,
+        inactiveColorPrimary: Colors.white,
+      ),
+      PersistentBottomNavBarItem(
+        icon: Icon(Icons.person),
+        title: ("Profile"),
+        activeColorPrimary: Colors.amber,
+        inactiveColorPrimary: Colors.white,
+      ),
+    ];
+  }
+
+  Widget _buildHomeScreen() {
     final filmsAsync = ref.watch(listFilmProvider);
 
     return SafeArea(
@@ -34,7 +85,7 @@ class HomeView extends ConsumerWidget {
             flexibleSpace: Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [lightColor, Colors.black],
+                  colors: [Colors.amber, Colors.black],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -50,7 +101,7 @@ class HomeView extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
-                      'Hi, ${userData['username']}',
+                      'Hi, ${widget.userData['username']}',
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     Text(
@@ -98,7 +149,9 @@ class HomeView extends ConsumerWidget {
                           ),
                         ).then((value) {
                           if (value != null) {
-                            // Update location logic here
+                            setState(() {
+                              location = value;
+                            });
                           }
                         });
                       },
@@ -107,7 +160,7 @@ class HomeView extends ConsumerWidget {
                           Icon(Icons.location_on, color: Colors.white),
                           SizedBox(width: 10),
                           Text(
-                            'No location detected', // Update location text here
+                            location,
                             style: TextStyle(color: Colors.white),
                           ),
                           Spacer(),
@@ -122,7 +175,9 @@ class HomeView extends ConsumerWidget {
                                 ),
                               ).then((value) {
                                 if (value != null) {
-                                  // Update location logic here
+                                  setState(() {
+                                    location = value;
+                                  });
                                 }
                               });
                             },
@@ -156,7 +211,7 @@ class HomeView extends ConsumerWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image.network(
-                              film.poster_1!, // Replace with actual field
+                              film.poster_1!,
                               fit: BoxFit.cover,
                               width: MediaQuery.of(context).size.width,
                             ),
@@ -171,72 +226,35 @@ class HomeView extends ConsumerWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     'Now Playing',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
-                ),
-                // Display films in a list or grid
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemCount: films.length,
-                  itemBuilder: (context, index) {
-                    final film = films[index];
-                    return GestureDetector(
-                      onTap: () {
-                        // Navigate to film details page or ticket view
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => TicketView()),
-                        );
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 4,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(8),
-                              child: Image.network(
-                                film.poster_1!, // Replace with actual field
-                                height: 150,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                film.judul!,
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                'Rating: ${film.rating}', // Replace with actual field
-                                style: TextStyle(fontSize: 14, color: Colors.black54),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
                 ),
               ],
             );
           },
           loading: () => Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(child: Text('Error: $error')),
+          error: (error, stack) => Center(
+              child:
+                  Text("Error: $error", style: TextStyle(color: Colors.white))),
         ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PersistentTabView(
+      context,
+      controller: _controller,
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      backgroundColor: Colors.black,
+      navBarStyle: NavBarStyle.style6,
+      decoration: NavBarDecoration(
+        colorBehindNavBar: Colors.black,
       ),
     );
   }

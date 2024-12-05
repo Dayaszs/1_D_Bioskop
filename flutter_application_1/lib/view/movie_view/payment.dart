@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
@@ -299,22 +298,37 @@ class _PaymentState extends State<Payment> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    color: (selectedPayment==index ? Color.fromRGBO(151, 118, 7, 0.479) : const Color.fromARGB(255, 51, 51, 51)),
+                                    color: (selectedPayment == index
+                                        ? Color.fromRGBO(151, 118, 7, 0.479)
+                                        : const Color.fromARGB(
+                                            255, 51, 51, 51)),
                                     border: Border(
                                       top: BorderSide(
-                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        color: (selectedPayment == index
+                                            ? Colors.amber
+                                            : const Color.fromARGB(
+                                                0, 0, 0, 0)), // Warna border
                                         width: 1.0, // Ketebalan border
                                       ),
                                       bottom: BorderSide(
-                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        color: (selectedPayment == index
+                                            ? Colors.amber
+                                            : const Color.fromARGB(
+                                                0, 0, 0, 0)), // Warna border
                                         width: 1.0, // Ketebalan border
                                       ),
                                       right: BorderSide(
-                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        color: (selectedPayment == index
+                                            ? Colors.amber
+                                            : const Color.fromARGB(
+                                                0, 0, 0, 0)), // Warna border
                                         width: 1.0, // Ketebalan border
                                       ),
                                       left: BorderSide(
-                                        color: (selectedPayment==index ? Colors.amber : const Color.fromARGB(0, 0, 0, 0)), // Warna border
+                                        color: (selectedPayment == index
+                                            ? Colors.amber
+                                            : const Color.fromARGB(
+                                                0, 0, 0, 0)), // Warna border
                                         width: 1.0, // Ketebalan border
                                       ),
                                     ),
@@ -341,29 +355,34 @@ class _PaymentState extends State<Payment> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              if(payment[index]["details"] != "") ...[
-                                                Text('${payment[index]["name"]}',
+                                              if (payment[index]["details"] !=
+                                                  "") ...[
+                                                Text(
+                                                    '${payment[index]["name"]}',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 16,
                                                     )),
-                                                Text('${payment[index]["details"]}',
+                                                Text(
+                                                    '${payment[index]["details"]}',
                                                     style: TextStyle(
                                                       color: Colors.white,
                                                       fontSize: 10,
                                                     ))
                                               ] else ...[
-                                                Text('${payment[index]["name"]}',
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                ))
+                                                Text(
+                                                    '${payment[index]["name"]}',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                    ))
                                               ]
                                             ],
                                           )
                                         ],
                                       ),
-                                      Icon(Icons.navigate_next, color: Colors.white)
+                                      Icon(Icons.navigate_next,
+                                          color: Colors.white)
                                     ],
                                   ),
                                 ),

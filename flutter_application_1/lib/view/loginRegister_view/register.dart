@@ -77,13 +77,11 @@ class _RegisterViewState extends State<RegisterView> {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
-    if (pickedDate != null) {
-      setState(() {
-        _selectedDate = pickedDate;
-        tanggalLahirController.text =
-            "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
-      });
-    }
+    setState(() {
+      _selectedDate = pickedDate;
+      tanggalLahirController.text =
+          "${_selectedDate!.year}-${_selectedDate!.month.toString().padLeft(2, '0')}-${_selectedDate!.day.toString().padLeft(2, '0')}";
+    });
   }
 
   // Function to call the register API through UserClient
