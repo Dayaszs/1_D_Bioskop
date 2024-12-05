@@ -182,9 +182,9 @@ class FilmList extends StatelessWidget {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-        mainAxisSpacing: 10.0,
-        crossAxisSpacing: 10.0,
-        childAspectRatio: 0.6,
+        mainAxisSpacing: 12.0, // Spacing between rows
+        crossAxisSpacing: 12.0, // Spacing between columns
+        childAspectRatio: 0.55, // Adjusted ratio for taller content
       ),
       itemCount: films.length,
       itemBuilder: (context, index) {
@@ -207,24 +207,24 @@ class FilmList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Film Poster with taller height
+          // Film Poster
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: Image.network(
               film.poster_1 ?? '',
               fit: BoxFit.cover,
               width: double.infinity,
-              height: 280, // Increased height for a taller poster
+              height: 250, // Adjusted height for poster
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
           // Film Title
           Text(
             film.judul ?? '',
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18, // Slightly larger font for title
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
             maxLines: 1,
@@ -232,52 +232,33 @@ class FilmList extends StatelessWidget {
           ),
           const SizedBox(height: 8),
 
-          // Rating, Duration, and Genre
+          // Ratings Row
           Row(
             children: [
-              // Rating with star icon
               const Icon(Icons.star, size: 16, color: Colors.amber),
               const SizedBox(width: 4),
               Text(
-                (film.rating ?? 0.0).toStringAsFixed(1), // Display rating
+                (film.rating ?? 0.0).toStringAsFixed(1),
                 style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
               const SizedBox(width: 4),
               Text(
-                "(888)", // Placeholder for reviews count
+                "(100)", // Placeholder for reviews count
                 style: const TextStyle(color: Colors.grey, fontSize: 12),
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
 
-          // Duration with clock icon
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                "${(film.durasi ?? 0) ~/ 60} hour ${(film.durasi ?? 0) % 60} minutes",
-                style: const TextStyle(color: Colors.white, fontSize: 14),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-
-          // Genre with genre text
-          Row(
-            children: [
-              const Icon(Icons.movie, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  film.genre ?? '',
-                  style: const TextStyle(color: Colors.grey, fontSize: 14),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
+          // Film Genre
+          Text(
+            film.genre ?? '',
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 14,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
