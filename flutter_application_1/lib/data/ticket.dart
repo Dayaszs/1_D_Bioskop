@@ -6,7 +6,7 @@ class Ticket {
   String? picture;
   String? judul;
   String? genre;
-  String? status; // "Completed" or "Not Watched"
+  dynamic? status; // "Completed" or "Not Watched"
 
   Ticket({
     this.id,
@@ -42,7 +42,7 @@ final List<Ticket> tickets = films
         index,
         Ticket(
           id: 1,
-          picture: film.picture,
+          picture: film.poster_1,
           judul: film.judul,
           genre: film.genre,
           status: index.isEven

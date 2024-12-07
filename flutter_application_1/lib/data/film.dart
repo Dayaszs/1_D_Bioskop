@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'package:flutter/rendering.dart';
 
@@ -58,36 +57,35 @@ class Film {
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
-    "id_film": id_film,
-    "judul": judul,
-    "genre": genre,
-    "tahun_rilis": tahun_rilis,
-    "sutradara": sutradara,
-    "aktor": aktor,
-    "deskripsi": deskripsi,
-    "poster_1": poster_1,
-    "poster_2": poster_2,
-    "rating": rating,
-    "trailer": trailer,
-    "status": status,
-  };
+        "id_film": id_film,
+        "judul": judul,
+        "genre": genre,
+        "tahun_rilis": tahun_rilis,
+        "sutradara": sutradara,
+        "aktor": aktor,
+        "deskripsi": deskripsi,
+        "poster_1": poster_1,
+        "poster_2": poster_2,
+        "rating": rating,
+        "trailer": trailer,
+        "status": status,
+      };
 }
 
 final List<Film> films = _films
     .map((e) => Film(
-          id_film : e['id_film'] as int,
-          judul : e['judul'] as String,
-          genre : e['genre'] as String,
-          tahun_rilis : e['tahun_rilis'] as int,
-          sutradara : e['sutradara'] as String,
-          aktor : e['aktor'] as String,
-          deskripsi : e['deskripsi'] as String,
-          picture : e['picture'] as String,
-          horizontal_picture : e['horizontal_picture'] as String,
-          review : e['review'] as String? ?? 'No reviews available',
-          trailer : e['trailer'] as String,
-          durasi : e['durasi'] as int,
-
+          id_film: e['id_film'] as int,
+          judul: e['judul'] as String,
+          genre: e['genre'] as String,
+          tahun_rilis: e['tahun_rilis'] as int,
+          sutradara: e['sutradara'] as String,
+          aktor: e['aktor'] as String,
+          deskripsi: e['deskripsi'] as String,
+          picture: e['picture'] as String,
+          horizontal_picture: e['horizontal_picture'] as String,
+          review: e['review'] as String? ?? 'No reviews available',
+          trailer: e['trailer'] as String,
+          durasi: e['durasi'] as int,
         ))
     .toList(growable: false);
 
@@ -247,18 +245,18 @@ final List<Map<String, Object>> _films = [
 
 final List<Film> comingSoonFilms = _comingSoonFilms
     .map((e) => Film(
-          id_film : e['id_film'] as int,
-          judul : e['judul'] as String,
-          genre : e['genre'] as String,
-          tahun_rilis : e['tahun_rilis'] as int,
-          sutradara : e['sutradara'] as String,
-          aktor : e['aktor'] as String,
-          deskripsi : e['deskripsi'] as String,
-          picture : e['picture'] as String,
-          horizontal_picture : e['horizontal_picture'] as String,
-          review : e['review'] as String? ?? 'No reviews available',
-          trailer : e['trailer'] as String,
-          durasi : e['durasi'] as int,
+          id_film: e['id_film'] as int,
+          judul: e['judul'] as String,
+          genre: e['genre'] as String,
+          tahun_rilis: e['tahun_rilis'] as int,
+          sutradara: e['sutradara'] as String,
+          aktor: e['aktor'] as String,
+          deskripsi: e['deskripsi'] as String,
+          picture: e['picture'] as String,
+          horizontal_picture: e['horizontal_picture'] as String,
+          review: e['review'] as String? ?? 'No reviews available',
+          trailer: e['trailer'] as String,
+          durasi: e['durasi'] as int,
         ))
     .toList(growable: false);
 

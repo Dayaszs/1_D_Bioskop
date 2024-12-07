@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -16,35 +15,115 @@ class SelectSeat extends StatefulWidget {
 }
 
 class _SelectSeatState extends State<SelectSeat> {
-
   List<String> statusSeat = [
-    'reserved', 'reserved', 'available', 'available', 'available',
-    'available', 'available', 'reserved', 'available', 'available',
-    'reserved', 'available', 'available', 'reserved', 'available',
-    'available', 'available', 'reserved', 'available', 'available',
-    'available', 'available', 'reserved', 'reserved', 'available',
-    'reserved', 'available', 'reserved', 'available', 'reserved',
-    'available', 'available', 'available', 'reserved', 'available',
-    'available', 'reserved', 'available', 'reserved', 'available',
-    'reserved', 'reserved', 'available', 'available', 'reserved',
-    'reserved', 'reserved', 'available', 'reserved', 'reserved',
-    'reserved', 'reserved', 'reserved', 'reserved', 'available',
-    'available', 'available', 'available', 'reserved', 'reserved',
-    'reserved', 'available', 'available', 'available', 'available',
-    'available', 'reserved', 'reserved', 'available', 'reserved',
-    'reserved', 'reserved', 'reserved', 'reserved', 'reserved',
-    'available', 'available', 'reserved', 'reserved', 'available',
-    'reserved', 'available', 'available', 'available', 'reserved',
-    'available', 'available', 'reserved', 'reserved', 'reserved',
-    'reserved', 'reserved', 'available', 'available', 'reserved',
-    'reserved', 'reserved', 'available', 'reserved', 'available'
+    'reserved',
+    'reserved',
+    'available',
+    'available',
+    'available',
+    'available',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'available',
+    'available',
+    'reserved',
+    'reserved',
+    'available',
+    'reserved',
+    'available',
+    'reserved',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'reserved',
+    'available',
+    'reserved',
+    'available',
+    'reserved',
+    'reserved',
+    'available',
+    'available',
+    'reserved',
+    'reserved',
+    'reserved',
+    'available',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'available',
+    'available',
+    'available',
+    'available',
+    'reserved',
+    'reserved',
+    'reserved',
+    'available',
+    'available',
+    'available',
+    'available',
+    'available',
+    'reserved',
+    'reserved',
+    'available',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'available',
+    'available',
+    'reserved',
+    'reserved',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'available',
+    'reserved',
+    'available',
+    'available',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'reserved',
+    'available',
+    'available',
+    'reserved',
+    'reserved',
+    'reserved',
+    'available',
+    'reserved',
+    'available'
   ];
 
   int price = 50000;
   final formatter = NumberFormat('#,###');
 
   DateTime selectedDate = DateTime.now();
-  DateTime selectedTime = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0);
+  DateTime selectedTime = DateTime(
+      DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0);
 
   int selectedIndexDate = 0;
   int selectedIndexTime = 0;
@@ -131,11 +210,18 @@ class _SelectSeatState extends State<SelectSeat> {
                                     onTap: () {
                                       setState(() {
                                         // Jika kursi available, ubah menjadi selected
-                                        if (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'available') {
-                                          statusSeat[(10*(index ~/ 5) + (index % 5))] = 'selected';
-                                        } else if (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'selected') {
+                                        if (statusSeat[(10 * (index ~/ 5) +
+                                                (index % 5))] ==
+                                            'available') {
+                                          statusSeat[(10 * (index ~/ 5) +
+                                              (index % 5))] = 'selected';
+                                        } else if (statusSeat[
+                                                (10 * (index ~/ 5) +
+                                                    (index % 5))] ==
+                                            'selected') {
                                           // Jika kursi selected, ubah kembali ke available
-                                          statusSeat[(10*(index ~/ 5) + (index % 5))] = 'available';
+                                          statusSeat[(10 * (index ~/ 5) +
+                                              (index % 5))] = 'available';
                                         }
                                       });
                                     },
@@ -144,18 +230,30 @@ class _SelectSeatState extends State<SelectSeat> {
                                       width: 13,
                                       height: 13,
                                       decoration: BoxDecoration(
-                                        color:
-                                            (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'available' ? (Color.fromARGB(255, 55, 55, 55)) : (
-                                              statusSeat[(10*(index ~/ 5) + (index % 5))] == 'reserved' ? Color.fromRGBO(243, 198, 49, 0.604) : Colors.amber
-                                            )),
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(5)),
+                                        color: (statusSeat[(10 * (index ~/ 5) +
+                                                    (index % 5))] ==
+                                                'available'
+                                            ? (Color.fromARGB(255, 55, 55, 55))
+                                            : (statusSeat[(10 * (index ~/ 5) +
+                                                        (index % 5))] ==
+                                                    'reserved'
+                                                ? Color.fromRGBO(
+                                                    243, 198, 49, 0.604)
+                                                : Colors.amber)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
                                       ),
-                                      child: Text('${String.fromCharCode(65+(index ~/ 5))}${(index%5) + 1}',
+                                      child: Text(
+                                          '${String.fromCharCode(65 + (index ~/ 5))}${(index % 5) + 1}',
                                           style: TextStyle(
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
-                                            color: (statusSeat[(10*(index ~/ 5) + (index % 5))] == 'available' ? Colors.white : Colors.black),
+                                            color: (statusSeat[
+                                                        (10 * (index ~/ 5) +
+                                                            (index % 5))] ==
+                                                    'available'
+                                                ? Colors.white
+                                                : Colors.black),
                                           )),
                                     ),
                                   );
@@ -174,11 +272,22 @@ class _SelectSeatState extends State<SelectSeat> {
                                     onTap: () {
                                       setState(() {
                                         // Jika kursi available, ubah menjadi selected
-                                        if (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'available') {
-                                          statusSeat[(10*(index ~/ 5) + (index % 5))+5] = 'selected';
-                                        } else if (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'selected') {
+                                        if (statusSeat[(10 * (index ~/ 5) +
+                                                    (index % 5)) +
+                                                5] ==
+                                            'available') {
+                                          statusSeat[(10 * (index ~/ 5) +
+                                                  (index % 5)) +
+                                              5] = 'selected';
+                                        } else if (statusSeat[
+                                                (10 * (index ~/ 5) +
+                                                        (index % 5)) +
+                                                    5] ==
+                                            'selected') {
                                           // Jika kursi selected, ubah kembali ke available
-                                          statusSeat[(10*(index ~/ 5) + (index % 5))+5] = 'available';
+                                          statusSeat[(10 * (index ~/ 5) +
+                                                  (index % 5)) +
+                                              5] = 'available';
                                         }
                                       });
                                     },
@@ -187,18 +296,33 @@ class _SelectSeatState extends State<SelectSeat> {
                                       width: 13,
                                       height: 13,
                                       decoration: BoxDecoration(
-                                        color:
-                                            (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'available' ? (Color.fromARGB(255, 55, 55, 55)) : (
-                                              statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'reserved' ? Color.fromRGBO(243, 198, 49, 0.604) : Colors.amber
-                                            )),
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(5)),
+                                        color: (statusSeat[(10 * (index ~/ 5) +
+                                                        (index % 5)) +
+                                                    5] ==
+                                                'available'
+                                            ? (Color.fromARGB(255, 55, 55, 55))
+                                            : (statusSeat[(10 * (index ~/ 5) +
+                                                            (index % 5)) +
+                                                        5] ==
+                                                    'reserved'
+                                                ? Color.fromRGBO(
+                                                    243, 198, 49, 0.604)
+                                                : Colors.amber)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
                                       ),
-                                      child: Text('${String.fromCharCode(65+(index ~/ 5))}${(index%5) + 6}',
+                                      child: Text(
+                                          '${String.fromCharCode(65 + (index ~/ 5))}${(index % 5) + 6}',
                                           style: TextStyle(
                                             fontSize: 10,
                                             fontWeight: FontWeight.bold,
-                                            color: (statusSeat[(10*(index ~/ 5) + (index % 5))+5] == 'available' ? Colors.white : Colors.black),
+                                            color: (statusSeat[
+                                                        (10 * (index ~/ 5) +
+                                                                (index % 5)) +
+                                                            5] ==
+                                                    'available'
+                                                ? Colors.white
+                                                : Colors.black),
                                           )),
                                     ),
                                   );
@@ -302,11 +426,16 @@ class _SelectSeatState extends State<SelectSeat> {
                                     child: Container(
                                       alignment: Alignment.center,
                                       padding: EdgeInsets.only(
-                                          top: 10, left: 3, right: 3, bottom: 3),
+                                          top: 10,
+                                          left: 3,
+                                          right: 3,
+                                          bottom: 3),
                                       decoration: BoxDecoration(
-                                        color: (selectedIndexDate == index ? Colors.amber : Color.fromARGB(255, 44, 44, 44)),
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(30)),
+                                        color: (selectedIndexDate == index
+                                            ? Colors.amber
+                                            : Color.fromARGB(255, 44, 44, 44)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(30)),
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
@@ -314,9 +443,13 @@ class _SelectSeatState extends State<SelectSeat> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Text("${DateFormat('MMM').format(selectedDate.add(Duration(days:index)))}",
+                                          Text(
+                                              "${DateFormat('MMM').format(selectedDate.add(Duration(days: index)))}",
                                               style: TextStyle(
-                                                color: (selectedIndexDate == index ? Colors.black : Colors.white),
+                                                color:
+                                                    (selectedIndexDate == index
+                                                        ? Colors.black
+                                                        : Colors.white),
                                                 fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                               )),
@@ -327,15 +460,21 @@ class _SelectSeatState extends State<SelectSeat> {
                                             alignment: Alignment.center,
                                             padding: EdgeInsets.all(12),
                                             decoration: BoxDecoration(
-                                              color: (selectedIndexDate == index ? const Color.fromARGB(255, 32, 30, 30) : Color.fromARGB(255, 81, 81, 81)),
+                                              color: (selectedIndexDate == index
+                                                  ? const Color.fromARGB(
+                                                      255, 32, 30, 30)
+                                                  : Color.fromARGB(
+                                                      255, 81, 81, 81)),
                                               borderRadius: BorderRadius.all(
                                                   Radius.circular(100)),
                                             ),
-                                            child: Text("${DateFormat('dd').format(DateTime.now().add(Duration(days:index)))}",
+                                            child: Text(
+                                                "${DateFormat('dd').format(DateTime.now().add(Duration(days: index)))}",
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 15,
-                                                    fontWeight: FontWeight.bold)),
+                                                    fontWeight:
+                                                        FontWeight.bold)),
                                           )
                                         ],
                                       ),
@@ -366,14 +505,19 @@ class _SelectSeatState extends State<SelectSeat> {
                                       padding: EdgeInsets.symmetric(
                                           vertical: 8, horizontal: 20),
                                       decoration: BoxDecoration(
-                                        color: (selectedIndexTime == index ? Colors.amber : Color.fromARGB(255, 44, 44, 44)),
-                                        borderRadius:
-                                            BorderRadius.all(Radius.circular(30)),
+                                        color: (selectedIndexTime == index
+                                            ? Colors.amber
+                                            : Color.fromARGB(255, 44, 44, 44)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(30)),
                                       ),
-                                      child: Text("${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: (index*2))))} - ${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: 2 + (index*2))))}",
+                                      child: Text(
+                                          "${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: (index * 2))))} - ${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: 2 + (index * 2))))}",
                                           style: TextStyle(
                                             fontWeight: FontWeight.bold,
-                                            color: (selectedIndexTime == index ? Colors.black : Colors.white),
+                                            color: (selectedIndexTime == index
+                                                ? Colors.black
+                                                : Colors.white),
                                             fontSize: 12,
                                           )),
                                     ),
@@ -421,18 +565,25 @@ class _SelectSeatState extends State<SelectSeat> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: statusSeat.where((seat) => seat == 'selected').length > 0
-                    ? () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Payment(),
-                          ),
-                        );
-                      }
-                    : () {},
+                    onPressed:
+                        statusSeat.where((seat) => seat == 'selected').length >
+                                0
+                            ? () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const Payment(),
+                                  ),
+                                );
+                              }
+                            : () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: (statusSeat.where((seat) => seat == 'selected').length > 0 ? Colors.amber : Colors.grey),
+                      backgroundColor: (statusSeat
+                                  .where((seat) => seat == 'selected')
+                                  .length >
+                              0
+                          ? Colors.amber
+                          : Colors.grey),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 32, vertical: 18),
                       shape: RoundedRectangleBorder(
