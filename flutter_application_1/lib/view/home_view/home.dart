@@ -13,6 +13,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 
+
 // Provider to fetch films
 final listFilmProvider = FutureProvider<List<Film>>((ref) async {
   return await FilmClient().fetchAll();
