@@ -17,9 +17,13 @@ class FilmDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Film Detail",
-          style: TextStyle(fontSize: 20, color: whiteColor),
+         title: const Text(
+          "Detail Movies",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.black,
         centerTitle: true,
