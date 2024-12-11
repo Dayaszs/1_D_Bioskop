@@ -12,7 +12,7 @@ import 'package:flutter_application_1/data/fnb.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
-
+import 'dart:ui';
 
 // Provider to fetch films
 final listFilmProvider = FutureProvider<List<Film>>((ref) async {
@@ -111,6 +111,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    // Gambar profil dengan bentuk lingkaran
                     Text(
                       'Hi, ${widget.userData['username']}',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -127,29 +128,37 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(27),
-                        border: Border.all(color: Colors.black12, width: 1.5),
+                        border: Border.all(color: Colors.white.withOpacity(0.3)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 3,
-                            offset: Offset(1, 1),
+                            color: Colors.black26,
+                            blurRadius: 5,
+                            offset: Offset(2, 2),
                           ),
                         ],
                       ),
-                      child: TextField(
-                        controller: TextEditingController(),
-                        style: TextStyle(color: Colors.black87),
-                        decoration: InputDecoration(
-                          hintText: "Search",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          prefixIcon: Icon(Icons.search, color: Colors.black87),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(27),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: TextField(
+                            controller: TextEditingController(),
+                            style: TextStyle(color: Colors.white),
+                            cursorColor: Colors.white,
+                            decoration: InputDecoration(
+                              hintText: "Search",
+                              hintStyle: TextStyle(color: Colors.white70),
+                              prefixIcon: Icon(Icons.search, color: Colors.white),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () {
