@@ -413,7 +413,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                             ),
                                           ),
                                         ),
-                                        const SizedBox(height: 5),
+                                        const SizedBox(height: 10),
                                         Text(
                                           menu[i].nama!,
                                           style: textStyle2.copyWith(fontSize: 14),

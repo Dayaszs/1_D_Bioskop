@@ -25,6 +25,7 @@ class _RegisterViewState extends State<RegisterView> {
   File? _profileImage;
   bool _isImageErrorVisible = false;
   DateTime? _selectedDate;
+  bool _isPasswordVisible = false;
 
   // Function to pick an image for the profile picture
   Future<void> _pickImage(ImageSource source) async {
@@ -150,6 +151,11 @@ class _RegisterViewState extends State<RegisterView> {
     }
   }
 
+  void _togglePasswordVisibility() {
+    setState(() {
+      _isPasswordVisible = !_isPasswordVisible;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -174,211 +180,234 @@ class _RegisterViewState extends State<RegisterView> {
         ),
         resizeToAvoidBottomInset: true,
         body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Center(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 90),
-                  GestureDetector(
-                    onTap: _showImageSourceDialog,
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundImage: _profileImage != null
-                          ? FileImage(_profileImage!)
-                          : const AssetImage('assets/placeholder.png')
-                              as ImageProvider,
-                      child: _profileImage == null
-                          ? const Icon(Icons.camera_alt,
-                              size: 50, color: Colors.grey)
-                          : null,
-                    ),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Center(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 30),
+                GestureDetector(
+                  onTap: _showImageSourceDialog,
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: _profileImage != null
+                        ? FileImage(_profileImage!)
+                        : const AssetImage('assets/placeholder.png') as ImageProvider,
+                    child: _profileImage == null
+                        ? const Icon(Icons.camera_alt, size: 50, color: Colors.grey)
+                        : null,
                   ),
-                  if (_isImageErrorVisible)
-                    const Padding(
-                      padding: EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        "Profile Pic is required!",
-                        style: TextStyle(color: Colors.red, fontSize: 12),
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                  // Username Field
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: TextFormField(
-                      controller: usernameController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.person, color: Colors.white),
-                        hintText: "Username",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Username is required!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  // Password Field
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: TextFormField(
-                      controller: passwordController,
-                      obscureText: true,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.lock, color: Colors.white),
-                        hintText: "********",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required!';
-                        }
-                        if (value.length < 8) {
-                          return 'Password must be at least 8 characters';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  // Email Field
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: TextFormField(
-                      controller: emailController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.mail, color: Colors.white),
-                        hintText: "user@gmail.com",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email is required!';
-                        }
-                        if (!value.contains('@')) {
-                          return 'Email must contain "@"';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  // Phone Number Field
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: TextFormField(
-                      controller: nomorTeleponController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.phone, color: Colors.white),
-                        hintText: "Phone Number",
-                        hintStyle: TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Phone number is required!';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  // Date of Birth Field
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: TextFormField(
-                      controller: tanggalLahirController,
-                      style: const TextStyle(color: Colors.white),
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.calendar_today,
-                            color: Colors.white),
-                        hintText: "Select your birthdate",
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        filled: true,
-                        fillColor: Colors.transparent,
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.arrow_drop_down),
-                          color: Colors.white,
-                          onPressed: _pickDate,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Register Button
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, top: 20, right: 20),
-                    child: ElevatedButton(
-                      onPressed: _register, // Trigger the register function
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFCC434),
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(84),
-                        ),
-                      ),
-                      child: const Text(
-                        'Register',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
+                ),
+                if (_isImageErrorVisible)
                   const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+                    padding: EdgeInsets.only(top: 8.0),
                     child: Text(
-                      'By signing in or signing up, you agree to our Terms of Service and Privacy Policy',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white54,
-                        fontSize: 12,
+                      "Profile Pic is required!",
+                      style: TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  ),
+                const SizedBox(height: 30),
+                // Username Field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextFormField(
+                    controller: usernameController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person, color: Colors.white),
+                      hintText: "Username",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Username is required!';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                // Password Field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextFormField(
+                    controller: passwordController,
+                    obscureText: !_isPasswordVisible, // Toggle visibility
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                      hintText: "Enter new password",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: _togglePasswordVisibility,
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is required!';
+                      }
+                      if (value.length < 8) {
+                        return 'Password must be at least 8 characters';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                // Email Field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextFormField(
+                    controller: emailController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.mail, color: Colors.white),
+                      hintText: "user@gmail.com",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email is required!';
+                      }
+                      if (!value.contains('@')) {
+                        return 'Email must contain "@"';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                // Phone Number Field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextFormField(
+                    controller: nomorTeleponController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.phone, color: Colors.white),
+                      hintText: "Phone Number",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Phone number is required!';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                // Date of Birth Field
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: TextFormField(
+                    controller: tanggalLahirController,
+                    style: const TextStyle(color: Colors.white),
+                    readOnly: true,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.calendar_today, color: Colors.white),
+                      hintText: "Select your birthdate",
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white54),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: lightColor),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.arrow_drop_down),
+                        color: Colors.white,
+                        onPressed: _pickDate,
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 20),
+                // Register Button
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+                  child: ElevatedButton(
+                    onPressed: _register, // Trigger the register function
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFCC434),
+                      minimumSize: const Size(double.infinity, 50),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(84),
+                      ),
+                    ),
+                    child: const Text(
+                      'Register',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 150, horizontal: 20),
+                  child: Text(
+                    'By signing in or signing up, you agree to our Terms of Service and Privacy Policy',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
+      ),
+
       ),
     );
   }

@@ -19,7 +19,15 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController emailController;
   late TextEditingController passwordController;
+  bool _showPassword = false;
+
   Map<String, dynamic>? dataForm;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _showPassword = !_showPassword;
+    });
+  }
 
   @override
   void initState() {
@@ -112,12 +120,11 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: TextFormField(
                       style: const TextStyle(color: Colors.white),
                       controller: passwordController,
-                      obscureText: true,
+                      obscureText: !_showPassword,  // Add this line to control visibility
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.password, color: Colors.white),
                         hintText: "********",
@@ -125,17 +132,19 @@ class _LoginViewState extends State<LoginView> {
                         filled: true,
                         fillColor: Colors.transparent,
                         enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color: Colors
-                                  .white54), // Warna border saat tidak aktif
-                          borderRadius:
-                              BorderRadius.circular(8.0), // Radius sudut border
+                          borderSide: BorderSide(color: Colors.white54),
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                              color:
-                                  lightColor), // Warna border saat input aktif
+                          borderSide: BorderSide(color: lightColor),
                           borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        suffixIcon: IconButton(  // Add this part for password visibility toggle
+                          icon: Icon(
+                            _showPassword ? Icons.visibility : Icons.visibility_off,
+                            color: Colors.white,
+                          ),
+                          onPressed: _togglePasswordVisibility,  // Call the toggle function
                         ),
                       ),
                       validator: (p0) {
@@ -272,7 +281,7 @@ class _LoginViewState extends State<LoginView> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', token);
         Fluttertoast.showToast(
-          msg: "Profile updated successfully!",
+          msg: "Login successfully !",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.TOP,
           backgroundColor: Colors.green,
@@ -299,3 +308,5 @@ class _LoginViewState extends State<LoginView> {
     }
   }
 }
+
+
