@@ -89,7 +89,7 @@ class ShowProfile extends StatelessWidget {
             buildOptionButton(context, Icons.confirmation_number, 'My ticket',
                 () {
               Navigator.pushNamed(context,
-                  '/view/myTicket.dart'); // Navigate to "My Ticket" page
+                  '/lib/view/ticket_view/ticketView.dart'); // Navigate to "My Ticket" page
             }),
             buildOptionButton(context, Icons.edit, 'Edit Profile', () {
               Navigator.push(
@@ -109,11 +109,6 @@ class ShowProfile extends StatelessWidget {
                 ),
               );
             }),
-            Text('${data.toString()}',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                )),
             const Spacer(),
             buildLogoutButton(context),
             const SizedBox(height: 30),
