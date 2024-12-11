@@ -41,14 +41,3 @@ class User {
         "profile_picture": profie_picture,
       };
 }
-
-// final List<User> users = _users
-//     .map((e) => User(
-//         e['id_user'] as String,
-//         e['username'] as String,
-//         e['password'] as String,
-//         e['email'] as String,
-//         e['nomor_telepon'] as String))
-//     .toList(growable: false);
-
-// final List<Map<String, Object>> _users = [{}];

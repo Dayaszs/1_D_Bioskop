@@ -3,6 +3,7 @@ import 'package:flutter_application_1/client/UserClient.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/profile_view/changePassword.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ChangePasswordView extends StatefulWidget {
   final Map<String, dynamic> data;

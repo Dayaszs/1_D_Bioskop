@@ -48,6 +48,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return [
       _buildHomeScreen(),
       TicketView(),
+      TicketView(data: widget.userData),
       FilmListView(userData: widget.userData),
       ShowProfile(data: widget.userData),
     ];

@@ -4,6 +4,7 @@ import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
 import 'package:flutter_application_1/client/UserClient.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class EditProfileView extends StatefulWidget {
   final Map<String, dynamic> data;
@@ -104,6 +105,15 @@ class _EditProfileViewState extends State<EditProfileView> {
         profilePicture: _imageFile!, // Send the picked profile image (if any)
       );
 
+      // Show success toast
+      Fluttertoast.showToast(
+        msg: "Profile updated successfully!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+
       // Navigate to the profile view with updated data
       Navigator.pushReplacement(
         context,
@@ -113,6 +123,14 @@ class _EditProfileViewState extends State<EditProfileView> {
       );
     } catch (e) {
       // Handle the error
+      // Show failure toast
+      Fluttertoast.showToast(
+        msg: "Failed to update profile!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update profile: $e')),
       );

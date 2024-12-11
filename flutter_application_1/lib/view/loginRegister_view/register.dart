@@ -5,6 +5,7 @@ import 'package:flutter_application_1/view/loginRegister_view/login.dart';
 import 'package:flutter_application_1/utilities/constant.dart'; // If you have any constants for your API
 import 'package:flutter_application_1/client/UserClient.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Import the UserClient class
+import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -112,6 +113,14 @@ class _RegisterViewState extends State<RegisterView> {
           // You can store the token and user data here (e.g., using SharedPreferences)
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('auth_token', token);
+
+          Fluttertoast.showToast(
+            msg: "Successfully register!",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
