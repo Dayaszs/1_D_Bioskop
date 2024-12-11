@@ -306,7 +306,7 @@ class FilmDetail extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const SelectCinema()),
+          MaterialPageRoute(builder: (context) => SelectCinema(film: film)),
         );
       },
       style: ElevatedButton.styleFrom(
