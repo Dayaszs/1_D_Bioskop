@@ -10,7 +10,7 @@ class Studioclient {
 
   Future<Map<String, dynamic>> fetchById(int id) async {
     try {
-      final response = await http.get(Uri.parse(url + endpoint + '/${id}'));
+      final response = await http.get(Uri.parse(protocol + url + endpoint + '/${id}'));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

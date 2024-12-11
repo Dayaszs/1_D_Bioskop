@@ -8,7 +8,7 @@ class BioskopClient {
   static final String endpoint = '/api/bioskops';
 
   Future<List<Bioskop>> fetchBioskops() async {
-    final response = await http.get(Uri.parse(baseUrl + endpoint));
+    final response = await http.get(Uri.parse(protocol + baseUrl + endpoint));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -20,7 +20,7 @@ class BioskopClient {
 
   Future<void> updateBioskopLocation(int id, String location) async {
     final response = await http.put(
-      Uri.parse(baseUrl + endpoint + '/${id}'),
+      Uri.parse(protocol + baseUrl + endpoint + '/${id}'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'alamat': location}),
     );

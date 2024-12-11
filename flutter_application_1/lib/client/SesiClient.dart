@@ -11,7 +11,7 @@ class Sesiclient {
 
   Future<List<Sesi>> fetchAll() async {
     try {
-      final response = await http.get(Uri.parse(url + endpoint));
+      final response = await http.get(Uri.parse(protocol + url + endpoint));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -28,7 +28,7 @@ class Sesiclient {
 
   Future<List<Sesi>> fetchById(id_sesi) async {
     try {
-      final response = await http.get(Uri.parse(url + endpoint + '/${id_sesi}'));
+      final response = await http.get(Uri.parse(protocol + url + endpoint + '/${id_sesi}'));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);;

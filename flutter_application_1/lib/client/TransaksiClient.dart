@@ -10,7 +10,7 @@ class Transaksiclient {
 
   Future<List<Transaksi>> fetchAll() async {
     try {
-      final response = await http.get(Uri.parse(url + endPoint));
+      final response = await http.get(Uri.parse(protocol + url + endPoint));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -28,7 +28,7 @@ class Transaksiclient {
 
   Future<Map<String, dynamic>> fetchById(id) async {
     try {
-      final response = await http.get(Uri.parse(url + endPoint + '/${id}'));
+      final response = await http.get(Uri.parse(protocol + url + endPoint + '/${id}'));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

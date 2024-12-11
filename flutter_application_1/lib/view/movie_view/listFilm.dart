@@ -43,6 +43,11 @@ class _FilmListViewState extends ConsumerState<FilmListView> {
       ),
       body: Column(
         children: [
+          Text("${filmsAsyncValue.toString()}", style: TextStyle(
+            color: whiteColor,
+            fontSize: 12,
+            fontWeight: FontWeight.bold
+          ),),
           _buildFilterSection(),
           Expanded(
             child: filmsAsyncValue.when(
