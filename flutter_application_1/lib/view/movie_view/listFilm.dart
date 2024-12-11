@@ -33,11 +33,15 @@ class _FilmListViewState extends ConsumerState<FilmListView> {
     final filmsAsyncValue = ref.watch(filmsProvider);
 
     return Scaffold(
-      appBar: AppBar(
+     appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
           "Movies",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: true,
       ),

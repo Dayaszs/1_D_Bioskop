@@ -12,7 +12,7 @@ final listTicketProvider =
 class TicketView extends ConsumerStatefulWidget {
   const TicketView({super.key, required this.data});
 
-  final Map<String, dynamic> data; // data contains the user ID
+  final Map<String, dynamic> data;
 
   @override
   _TicketViewState createState() => _TicketViewState();
@@ -167,12 +167,21 @@ class _TicketViewState extends ConsumerState<TicketView> {
                               maxLines: 1,
                             ),
                             const SizedBox(height: 10),
+                            Text(
+                              ticket.penayangan?.tanggal_tayang.toString().substring(0,10)?? 'Unknown',
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            const SizedBox(height: 10),
                             // Seat Number and Status
                             Row(
                               children: [
                                 Flexible(
                                   child: Text(
-                                    'Seat: ${ticket.nomorKursi ?? 'N/A'}',
+                                    'Status:',
                                     style: const TextStyle(
                                       color: Colors.white,
                                     ),
