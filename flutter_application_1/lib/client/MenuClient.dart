@@ -8,7 +8,7 @@ class Menuclient {
   static final String endpoint = '/api/menus';
 
   Future<List<Fnb>> fetchMenus() async {
-    final response = await http.get(Uri.parse(baseUrl + endpoint));
+    final response = await http.get(Uri.parse(protocol + baseUrl + endpoint));
 
     if (response.statusCode == 200) {
       // Parsing langsung sebagai list karena API memberikan array JSON

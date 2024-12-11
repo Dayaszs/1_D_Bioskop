@@ -11,7 +11,7 @@ class TicketClient {
 
   Future<List<Ticket>> fetchAll() async {
     try {
-      final response = await http.get(Uri.parse(url + endpoint));
+      final response = await http.get(Uri.parse(protocol + url + endpoint));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -29,7 +29,7 @@ class TicketClient {
   Future<List<Ticket>> fetchOnlyUsers(id_user) async {
     try {
       final response =
-          await http.get(Uri.parse(url + endpoint + '/${id_user}'));
+          await http.get(Uri.parse(protocol + url + endpoint + '/${id_user}'));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);

@@ -10,7 +10,7 @@ class Pembayaranclient {
 
   Future<List<Pembayaran>> fetchAll() async {
     try {
-      final response = await http.get(Uri.parse(url + endpoint));
+      final response = await http.get(Uri.parse(protocol + url + endpoint));
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
@@ -28,7 +28,7 @@ class Pembayaranclient {
 
   Future<Map<String, dynamic>> fetchById(id_pembayaran) async {
     try {
-      final response = await http.get(Uri.parse(url + endpoint + '/${id_pembayaran}'));
+      final response = await http.get(Uri.parse(protocol + url + endpoint + '/${id_pembayaran}'));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);

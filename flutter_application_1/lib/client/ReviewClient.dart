@@ -10,7 +10,7 @@ class ReviewClient {
 
   Future<List<Review>> fetchAll() async {
     try {
-      final response = await http.get(Uri.parse(url + endpoint));
+      final response = await http.get(Uri.parse(protocol + url + endpoint));
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         List<Review> reviews =
