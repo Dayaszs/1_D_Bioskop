@@ -11,13 +11,27 @@ class TicketView extends StatefulWidget {
 }
 
 class _TicketViewState extends State<TicketView> {
-  String _filter = 'Completed';
+  dynamic _filter = 'Completed';
 
   List<Ticket> get _filteredTickets {
-    return _filter == 'Completed'
-        ? tickets.where((ticket) => ticket.status == 'Completed').toList()
-        : tickets.where((ticket) => ticket.status == 'Not Watched').toList();
-  }
+  print('Selected Filter: $_filter');
+  print('Filtering status: ${_filter == "Completed" ? "Completed" : "Not Watched"}');
+
+  // Debugging: Check types
+  tickets.forEach((ticket) {
+    print('Ticket Status type: ${ticket.status.runtimeType}');
+  });
+
+  return _filter == 'Completed'
+      ? tickets.where((ticket) {
+          print('Ticket Status: ${ticket.status}'); // Debug log
+          return ticket.status == 'Completed';
+        }).toList()
+      : tickets.where((ticket) {
+          print('Ticket Status: ${ticket.status}'); // Debug log
+          return ticket.status == 'Not Watched';
+        }).toList();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +110,16 @@ class _TicketViewState extends State<TicketView> {
 
   // Builds the list of filtered tickets based on status
   Widget _buildTicketLayout() {
+    if (_filteredTickets.isEmpty) {
+      // Placeholder if no tickets are available
+      return Center(
+        child: Text(
+          'No tickets available for the selected filter.',
+          style: TextStyle(color: Colors.white, fontSize: 18),
+        ),
+      );
+    }
+
     return ListView.builder(
       itemCount: _filteredTickets.length,
       itemBuilder: (context, index) {

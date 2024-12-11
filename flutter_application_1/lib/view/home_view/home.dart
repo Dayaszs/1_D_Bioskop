@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/film.dart';
+import 'package:flutter_application_1/view/home_view/listFnB.dart';
 import 'package:flutter_application_1/view/ticket_view/ticketView.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
 import 'package:flutter_application_1/view/movie_view/listFilm.dart';
 import 'package:flutter_application_1/view/home_view/location.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:flutter_application_1/client/FilmClient.dart';
+import 'package:flutter_application_1/client/MenuClient.dart';
+import 'package:flutter_application_1/data/fnb.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
+import 'dart:ui';
 
 // Provider to fetch films
 final listFilmProvider = FutureProvider<List<Film>>((ref) async {
   return await FilmClient().fetchAll();
+});
+final listMenuProvider = FutureProvider<List<Fnb>>((ref) async {
+  return await Menuclient().fetchMenus();
 });
 
 class HomeView extends ConsumerStatefulWidget {
@@ -27,11 +34,14 @@ class HomeView extends ConsumerStatefulWidget {
 class _HomeViewState extends ConsumerState<HomeView> {
   late PersistentTabController _controller;
   String location = "No location detected";
+  double currentPage = 0;
+  late Future<List<Fnb>> _fnbs;
 
   @override
   void initState() {
     super.initState();
     _controller = PersistentTabController(initialIndex: 0);
+    _fnbs = Menuclient().fetchMenus();
   }
 
   List<Widget> _buildScreens() {
@@ -74,6 +84,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   Widget _buildHomeScreen() {
     final filmsAsync = ref.watch(listFilmProvider);
+    final menusAsync = ref.watch(listMenuProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -100,6 +111,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    // Gambar profil dengan bentuk lingkaran
                     Text(
                       'Hi, ${widget.userData['username']}',
                       style: TextStyle(fontSize: 18, color: Colors.white),
@@ -116,29 +128,37 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(27),
-                        border: Border.all(color: Colors.black12, width: 1.5),
+                        border: Border.all(color: Colors.white.withOpacity(0.3)),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black12,
-                            blurRadius: 3,
-                            offset: Offset(1, 1),
+                            color: Colors.black26,
+                            blurRadius: 5,
+                            offset: Offset(2, 2),
                           ),
                         ],
                       ),
-                      child: TextField(
-                        controller: TextEditingController(),
-                        style: TextStyle(color: Colors.black87),
-                        decoration: InputDecoration(
-                          hintText: "Search",
-                          hintStyle: TextStyle(color: Colors.black54),
-                          prefixIcon: Icon(Icons.search, color: Colors.black87),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(vertical: 15),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(27),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: TextField(
+                            controller: TextEditingController(),
+                            style: TextStyle(color: Colors.white),
+                            cursorColor: Colors.white,
+                            decoration: InputDecoration(
+                              hintText: "Search",
+                              hintStyle: TextStyle(color: Colors.white70),
+                              prefixIcon: Icon(Icons.search, color: Colors.white),
+                              border: InputBorder.none,
+                              contentPadding: EdgeInsets.symmetric(vertical: 15),
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: () {
@@ -194,51 +214,231 @@ class _HomeViewState extends ConsumerState<HomeView> {
         ),
         body: filmsAsync.when(
           data: (films) {
-            return ListView(
-              children: [
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 250,
-                    enlargeCenterPage: true,
-                    enableInfiniteScroll: true,
-                    autoPlay: true,
-                  ),
-                  items: films.map((film) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              film.poster_1!,
-                              fit: BoxFit.cover,
-                              width: MediaQuery.of(context).size.width,
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 8.0, left: 4.0, bottom: 18.0),
+                          child: Text(
+                            "Now Playing",
+                            style: textStyle2.copyWith(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      FilmListView(userData: widget.userData),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Row(
+                              children: [
+                                Text("More", style: TextStyle(color: lightColor)),
+                                SizedBox(width: 4),
+                                Icon(Icons.arrow_forward_ios,
+                                    color: lightColor, size: 16),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 380,
+                      child: CarouselSlider.builder(
+                        itemCount: films.length,
+                        options: CarouselOptions(
+                          height: 450,
+                          aspectRatio: 16 / 9,
+                          viewportFraction: 0.5,
+                          enlargeCenterPage: true,
+                          enableInfiniteScroll: true,
+                          autoPlay: true,
+                          onPageChanged: (index, reason) {
+                            setState(() {
+                              currentPage = index.toDouble();
+                            });
+                          },
+                        ),
+                        itemBuilder: (context, index, realIndex) {
+                          final film = films[index % films.length];
+                          return GestureDetector(
+                            onTap: () {
+                              // Aksi ketika film ditekan
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 200,
+                                  height: 280,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage(film.poster_1!),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                SizedBox(
+                                  width: 170,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        film.judul!,
+                                        style: textStyle2.copyWith(fontSize: 18),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "${film.tahun_rilis} • ${film.genre}",
+                                        style: textStyle2.copyWith(
+                                          fontSize: 12,
+                                          color: Colors.white70,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.star,
+                                              color: Colors.yellow, size: 16),
+                                          Text(
+                                            film.rating.toString(),
+                                            style: textStyle2.copyWith(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 8.0, left: 4.0, bottom: 18.0),
+                          child: Text(
+                            "Food and Beverage",
+                            style: textStyle2.copyWith(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      ListFnbView(),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.zero,
+                            ),
+                            child: Row(
+                              children: [
+                                Text("More", style: TextStyle(color: lightColor)),
+                                SizedBox(width: 4),
+                                Icon(Icons.arrow_forward_ios,
+                                    color: lightColor, size: 16),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    menusAsync.when(
+                      data: (menu) {
+                        return SizedBox(
+                          height: 160,
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                for (var i = 0; i < menu.length; i++)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          height: 100,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            image: DecorationImage(
+                                              image: NetworkImage(menu[i].gambar!),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          menu[i].nama!,
+                                          style: textStyle2.copyWith(fontSize: 14),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                              ],
                             ),
                           ),
                         );
                       },
-                    );
-                  }).toList(),
+                      loading: () => Center(child: CircularProgressIndicator()),
+                      error: (error, stack) => Center(child: Text('Failed to load data')),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Now Playing',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-              ],
+              ),
             );
           },
           loading: () => Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(
-              child:
-                  Text("Error: $error", style: TextStyle(color: Colors.white))),
+          error: (error, stackTrace) => Center(child: Text('Error: $error')),
         ),
       ),
     );
