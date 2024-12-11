@@ -3,9 +3,10 @@ import 'package:flutter_application_1/data/film.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_1/setting/client.dart';
 
 class FilmClient {
-  static final String url = 'http://10.0.2.2:8000'; // Ensure this is correct
+  static final String url = constantURL;
   static final String endpoint = '/api/films';
 
   Future<List<Film>> fetchAll() async {

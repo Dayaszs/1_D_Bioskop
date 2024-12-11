@@ -7,9 +7,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_application_1/setting/client.dart';
 
 class UserClient {
-  static final String url = '10.0.2.2:8000';
+  static final String url = constantURL;
   static final String endpoint = '/api/users';
 
   // static Future<List<User>> fetchAll() async {
