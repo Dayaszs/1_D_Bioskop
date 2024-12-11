@@ -86,7 +86,14 @@ class _FilmListViewState extends ConsumerState<FilmListView> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: TextButton(
-        onPressed: () => setState(() => _filter = label),
+        onPressed: () {
+          setState(() {
+            _filter = label;
+          });
+
+          // Memicu reload dengan refresh
+          ref.refresh(filmsProvider); // Menyegarkan filmsProvider
+        },
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 10),
         ),
@@ -205,7 +212,8 @@ class FilmList extends StatelessWidget {
         color: Colors.black.withOpacity(0),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center, // Centers all children horizontally
+        crossAxisAlignment:
+            CrossAxisAlignment.center, // Centers all children horizontally
         children: [
           // Film Poster
           ClipRRect(
