@@ -6,6 +6,7 @@ import 'package:flutter_application_1/view/loginRegister_view/register.dart';
 import 'package:flutter_application_1/view/home_view/home.dart';
 import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -270,7 +271,13 @@ class _LoginViewState extends State<LoginView> {
 
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('auth_token', token);
-
+        Fluttertoast.showToast(
+          msg: "Profile updated successfully!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+        );
         // Navigasi ke HomeView dengan data user
         Navigator.pushReplacement(
           context,
@@ -280,6 +287,13 @@ class _LoginViewState extends State<LoginView> {
         showLoginError(context); // Menampilkan error jika token tidak ada
       }
     } catch (e) {
+      Fluttertoast.showToast(
+        msg: "Failed to login!",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
       print("Login Error: $e");
       showLoginError(context); // Menampilkan error jika terjadi exception
     }

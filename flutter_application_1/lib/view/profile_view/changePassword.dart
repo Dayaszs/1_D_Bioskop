@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/profile_view/changePassword.dart';
 import 'package:flutter_application_1/view/profile_view/profile.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ChangePasswordView extends StatefulWidget {
   final Map<String, dynamic> formData;
@@ -49,12 +50,11 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
       });
 
       final registeredPassword = widget.formData['password'];
-
       // Periksa apakah password lama cocok dengan yang terdaftar
       if (_oldPasswordController.text != registeredPassword) {
         setState(() {
           _isLoading = false;
-          _errorMessage = 'Old password does not match our records!';
+           _errorMessage = 'Old password does not match our records! Registered password: $registeredPassword ';
         });
         return;
       }
