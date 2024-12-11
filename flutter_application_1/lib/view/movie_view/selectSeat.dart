@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/data/film.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -5,10 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/data/penayangan.dart';
+import 'package:flutter_application_1/data/bioskop.dart';
 import 'package:flutter_application_1/view/movie_view/payment.dart';
 
 class SelectSeat extends StatefulWidget {
-  const SelectSeat({super.key});
+  final Film film;
+  final Bioskop bioskop;
+
+  const SelectSeat({super.key, required this.film, required this.bioskop});
 
   @override
   State<SelectSeat> createState() => _SelectSeatState();
