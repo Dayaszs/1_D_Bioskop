@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
@@ -7,6 +8,7 @@ import 'package:printing/printing.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter_application_1/data/ticket.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
 
 class TicketPdfPage extends StatelessWidget {
   final Ticket ticket;
@@ -18,75 +20,190 @@ class TicketPdfPage extends StatelessWidget {
     String formattedDate = DateFormat('dd-MM-yyyy').format(ticket.penayangan!.tanggal_tayang!);
     final image = await loadImage('${ticket.film!.poster_1}'.isNotEmpty ? '${ticket.film!.poster_1}' : 'https://via.placeholder.com/200x300');
 
+    // Load logo image
+    final logoImage = pw.MemoryImage(
+      (await rootBundle.load('images/loadLogo.png')).buffer.asUint8List(),
+    );
+
     // Generate QR code image
     final qrCodeImage = await _generateQrCode(ticket.idTiket.toString());
 
     pdf.addPage(
       pw.Page(
+        pageTheme: pw.PageTheme(
+          margin: pw.EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          theme: pw.ThemeData(),
+        ),
         build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-  
-              pw.Container(
-                alignment: pw.Alignment.center,
-                margin: pw.EdgeInsets.only(bottom: 20),
-                child: pw.Text(
-                  'ATMA Cinema',
-                  style: pw.TextStyle(fontSize: 36, fontWeight: pw.FontWeight.bold, color: PdfColors.yellow400),
+          return pw.Container(
+            decoration: pw.BoxDecoration(
+              color: PdfColors.grey100,
+              borderRadius: pw.BorderRadius.circular(15),
+            ),
+            child: pw.Column(
+              children: [
+                // Top Section with curved design
+                pw.Container(
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.black,
+                    borderRadius: pw.BorderRadius.vertical(top: pw.Radius.circular(15)),
+                  ),
+                  padding: pw.EdgeInsets.all(20),
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Image(logoImage, width: 80, height: 40),
+                      pw.Text(
+                        'ATMA CINEMA',
+                        style: pw.TextStyle(
+                          fontSize: 24,
+                          color: PdfColors.orange200,
+                          fontWeight: pw.FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              
 
-              pw.Center(
-                child: pw.Image(image, width: 200, height: 300),
-              ),
-              
-              pw.SizedBox(height: 20),
-              
-              pw.Text(
-                '${ticket.film!.judul}',
-                style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
-              ),
-              pw.Text(
-                '${ticket.film!.genre}',
-                style: pw.TextStyle(fontSize: 18, color: PdfColors.grey),
-              ),
-
-              pw.SizedBox(height: 10),
-              pw.Text(
-                '${ticket.bioskop!.namaBioskop}',
-                style: pw.TextStyle(fontSize: 14, color: PdfColors.black),
-              ),
-              pw.Text(
-                'Date: ${formattedDate} ${ticket.sesi!.jam_mulai} WIB',
-                style: pw.TextStyle(fontSize: 14, color: PdfColors.black),
-              ),
-              pw.SizedBox(height: 30),
-              // QR Code for Ticket ID
-              pw.Center(
-                child: pw.Image(
-                  qrCodeImage,
-                  width: 100,
-                  height: 100,
+                // Movie Details Section
+                pw.Container(
+                  padding: pw.EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                  child: pw.Row(
+                    children: [
+                      // Left side - Poster
+                      pw.Container(
+                        width: 120,
+                        height: 180,
+                        decoration: pw.BoxDecoration(
+                          borderRadius: pw.BorderRadius.circular(10),
+                          boxShadow: [
+                            pw.BoxShadow(
+                              color: PdfColors.black,
+                              blurRadius: 3,
+                            ),
+                          ],
+                        ),
+                        child: pw.ClipRRect(
+                          horizontalRadius: 10,
+                          verticalRadius: 10,
+                          child: pw.Image(image, fit: pw.BoxFit.cover),
+                        ),
+                      ),
+                      pw.SizedBox(width: 20),
+                      pw.Expanded(
+                        child: pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                              '${ticket.film!.judul}',
+                              style: pw.TextStyle(
+                                fontSize: 24,
+                                fontWeight: pw.FontWeight.bold,
+                              ),
+                            ),
+                            pw.SizedBox(height: 5),
+                            pw.Text(
+                              '${ticket.film!.genre}',
+                              style: pw.TextStyle(
+                                fontSize: 14,
+                                color: PdfColors.grey700,
+                              ),
+                            ),
+                            pw.SizedBox(height: 15),
+                            _buildInfoRow('Theater', '${ticket.bioskop!.namaBioskop}'),
+                            _buildInfoRow('Date', formattedDate),
+                            _buildInfoRow('Time', '${ticket.sesi!.jam_mulai} WIB'),
+                            _buildInfoRow('Seat', 'A12'), // Add seat information if available
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              pw.SizedBox(height: 30),
 
-              pw.Center(
-                child: pw.Text("Ticket ID: " + ticket.idTiket.toString())
-              ),
-              
-              pw.SizedBox(height: 30),
-              pw.Divider(),
-              pw.SizedBox(height: 10),
-              pw.Text(
-                'Thank you for choosing ATMA Cinema!',
-                style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold, color: PdfColors.black),
-                textAlign: pw.TextAlign.center,
-              ),
-              
-            ],
+                // Divider with decorative edges
+                pw.Container(
+                  margin: pw.EdgeInsets.symmetric(horizontal: 20),
+                  child: pw.Row(
+                    children: [
+                      pw.Container(
+                        width: 15,
+                        height: 30,
+                        decoration: pw.BoxDecoration(
+                          color: PdfColors.grey100,
+                          shape: pw.BoxShape.circle,
+                        ),
+                      ),
+                      pw.Expanded(
+                        child: pw.Container(
+                          height: 2,
+                          color: PdfColors.grey400,
+                          margin: pw.EdgeInsets.symmetric(horizontal: 10),
+                        ),
+                      ),
+                      pw.Container(
+                        width: 15,
+                        height: 30,
+                        decoration: pw.BoxDecoration(
+                          color: PdfColors.grey100,
+                          shape: pw.BoxShape.circle,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Bottom Section
+                // Bottom Section with centered QR and text
+                pw.Container(
+                  padding: pw.EdgeInsets.all(20),
+                  child: pw.Column(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    children: [
+                      // QR Code
+                      pw.Container(
+                        padding: pw.EdgeInsets.all(10),
+                        decoration: pw.BoxDecoration(
+                          color: PdfColors.white,
+                          borderRadius: pw.BorderRadius.circular(10),
+                          boxShadow: [
+                            pw.BoxShadow(
+                              color: PdfColors.grey300,
+                              blurRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: pw.Image(qrCodeImage, width: 100, height: 100),
+                      ),
+                      pw.SizedBox(height: 15),
+                      // Ticket ID and Additional Info
+                      pw.Column(
+                        children: [
+                          pw.Text(
+                            'Ticket ID: ${ticket.idTiket}',
+                            style: pw.TextStyle(
+                              fontSize: 12,
+                              color: PdfColors.grey800,
+                            ),
+                            textAlign: pw.TextAlign.center,
+                          ),
+                          pw.SizedBox(height: 5),
+                          pw.Text(
+                            'Enjoy Your Movie!',
+                            style: pw.TextStyle(
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.black,
+                            ),
+                            textAlign: pw.TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -95,36 +212,57 @@ class TicketPdfPage extends StatelessWidget {
     return pdf;
   }
 
-  // Load image from network and convert it to PdfImage
+  pw.Widget _buildInfoRow(String label, String value) {
+    return pw.Container(
+      margin: pw.EdgeInsets.only(bottom: 5),
+      child: pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Container(
+            width: 60,
+            child: pw.Text(
+              label,
+              style: pw.TextStyle(
+                fontSize: 12,
+                color: PdfColors.grey600,
+              ),
+            ),
+          ),
+          pw.Text(
+            ': ',
+            style: pw.TextStyle(
+              fontSize: 12,
+              color: PdfColors.grey600,
+            ),
+          ),
+          pw.Expanded(
+            child: pw.Text(
+              value,
+              style: pw.TextStyle(
+                fontSize: 12,
+                fontWeight: pw.FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<pw.ImageProvider> loadImage(String imageUrl) async {
     final ByteData data = await NetworkAssetBundle(Uri.parse(imageUrl)).load('');
     final Uint8List bytes = data.buffer.asUint8List();
     return pw.MemoryImage(bytes);
   }
 
-  // Generate QR Code and return it as a PdfImage
   Future<pw.ImageProvider> _generateQrCode(String ticketId) async {
-    // Create a QR code data object
-    final qr = QrCode(
-      4, // version (this is a fixed size, you can adjust for your needs)
-      QrErrorCorrectLevel.L,
-    );
-
-    // Add the ticket ID as data
-    qr.addData(ticketId);
-
-    // Generate a QR painter
     final qrPainter = QrPainter(
-      data: ticketId,  // The data for the QR code (ticket ID)
-      version: 4,  // Version of the QR code (size of the matrix)
-      errorCorrectionLevel: QrErrorCorrectLevel.L,  // Error correction level
-      gapless: true,  // Whether to have gaps between the QR code modules
+      data: ticketId,
+      version: QrVersions.auto,
+      gapless: true,
     );
 
-    // Convert QR code to image data
     final data = await qrPainter.toImageData(200);
-
-    // Return the image data as MemoryImage
     return pw.MemoryImage(data!.buffer.asUint8List());
   }
 
@@ -134,7 +272,7 @@ class TicketPdfPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
-          'Ticket PDF',
+          'Your Ticket',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -151,9 +289,7 @@ class TicketPdfPage extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            // Render the PDF directly using Printing.layoutPdf
             final pdf = snapshot.data!;
-
             return PdfPreview(
               build: (format) async => pdf.save(),
               canChangePageFormat: false,

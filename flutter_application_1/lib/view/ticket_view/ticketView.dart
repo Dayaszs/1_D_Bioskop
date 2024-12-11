@@ -124,12 +124,15 @@ class _TicketViewState extends ConsumerState<TicketView> {
           final ticket = filteredTickets[index];
           
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
             child: Card(
-              color: const Color.fromARGB(255, 22, 22, 22),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              color: const Color.fromARGB(255, 30, 30, 30),
+              elevation: 4,
               child: InkWell(
                 onTap: () {
-                  // Navigate to the TicketPdfPage when the ticket is clicked
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -138,19 +141,23 @@ class _TicketViewState extends ConsumerState<TicketView> {
                   );
                 },
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: 100,
-                        height: 150,
-                        child: Image.network(
-                          ticket.film!.poster_1 ?? 'default_image_url',
-                          fit: BoxFit.cover,
+                      // Poster
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: SizedBox(
+                          width: 100,
+                          height: 150,
+                          child: Image.network(
+                            ticket.film?.poster_1 ?? 'https://via.placeholder.com/100x150',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 15),
                       // Ticket Details
                       Expanded(
                         child: Column(
@@ -162,14 +169,80 @@ class _TicketViewState extends ConsumerState<TicketView> {
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: lightColor,
                               ),
                             ),
                             const SizedBox(height: 5),
-                            // Other details like date, time, etc.
+                            // Genre
                             Text(
-                              'Status: ${ticket.penayangan?.status ?? 'Unknown'}',
-                              style: const TextStyle(color: Colors.white),
+                              ticket.film?.genre ?? 'Unknown Genre',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white70,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            // Cinema Name
+                            Row(
+                              children: [
+                                const Icon(Icons.location_on, size: 14, color: Colors.white70),
+                                const SizedBox(width: 5),
+                                Expanded(
+                                  child: Text(
+                                    ticket.bioskop?.namaBioskop ?? 'Unknown Cinema',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            // Date and Time
+                            Row(
+                              children: [
+                                const Icon(Icons.calendar_today, size: 14, color: Colors.white70),
+                                const SizedBox(width: 5),
+                                Text(
+                                  '${ticket.penayangan?.tanggal_tayang.toString().substring(0, 10) ?? 'Unknown Date'}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  ticket.sesi?.jam_mulai ?? 'Unknown Time',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            // Status
+                           Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: ticket.penayangan?.status == 'Available'
+                                    ? Colors.green
+                                    : Colors.red,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                ticket.penayangan?.status == 'Available' ? 'Ongoing' : 'Watched',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                             ),
                           ],
                         ),
