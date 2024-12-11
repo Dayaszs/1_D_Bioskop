@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter_application_1/data/ticket.dart';
-import 'package:flutter_application_1/view/ticket_view/ticketPDF.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_application_1/data/ticket.dart';
 import 'package:flutter_application_1/client/TicketClient.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
 
-final listTicketProvider = FutureProvider.family<List<Ticket>, int>((ref, userId) async {
+final listTicketProvider =
+    FutureProvider.family<List<Ticket>, int>((ref, userId) async {
   return await TicketClient().fetchOnlyUsers(userId);
 });
 
@@ -19,15 +19,11 @@ class TicketView extends ConsumerStatefulWidget {
 }
 
 class _TicketViewState extends ConsumerState<TicketView> {
-
-  dynamic _filter = 'Completed';
+  String _filter = 'Available';
 
   @override
   Widget build(BuildContext context) {
-    // Fetch tickets using the userID from widget.data['id']
     final userId = widget.data['id_user'];
-
-    // Watch the future provider with the userId argument
     final ticketsAsync = ref.watch(listTicketProvider(userId));
 
     return Scaffold(
@@ -46,56 +42,163 @@ class _TicketViewState extends ConsumerState<TicketView> {
       ),
       body: Column(
         children: [
-          _buildFilterSection(),
+          _buildTabBar(),
           Expanded(child: _buildTicketLayout(ticketsAsync)),
         ],
       ),
     );
   }
 
-  // Builds the filter buttons for 'Completed' and 'Not Watched'
-  Widget _buildFilterSection() {
+  Widget _buildTabBar() {
     return Container(
-      color: const Color.fromARGB(255, 22, 22, 22),
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      color: Colors.black,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Add your filter buttons here
-          // Example:
-          ElevatedButton(
-            onPressed: () {
+          GestureDetector(
+            onTap: () {
               setState(() {
-                _filter = 'Completed';
+                _filter = 'Available';
               });
             },
-            child: const Text('Completed'),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                color: _filter == 'Available' ? lightColor : darkColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Available',
+                style: TextStyle(
+                  color: _filter == 'Available' ? Colors.black : Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
-          ElevatedButton(
-            onPressed: () {
+          const SizedBox(width: 10),
+          GestureDetector(
+            onTap: () {
               setState(() {
-                _filter = 'Not Watched';
+                _filter = 'Not Available';
               });
             },
-            child: const Text('Not Watched'),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                color: _filter == 'Not Available' ? lightColor : darkColor,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Not Available',
+                style: TextStyle(
+                  color:
+                      _filter == 'Not Available' ? Colors.black : Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  // Display the tickets in the layout
   Widget _buildTicketLayout(AsyncValue<List<Ticket>> ticketsAsync) {
     return ticketsAsync.when(
       data: (tickets) {
+        // Filter tickets based on the current filter
+        final filteredTickets = tickets.where((ticket) {
+          final status = ticket.penayangan?.status ?? 'Unknown';
+          if (_filter == 'Available') {
+            return status == 'Available';
+          } else {
+            return status == 'Not Available';
+          }
+        }).toList();
+
         return ListView.builder(
-          itemCount: tickets.length,
+          itemCount: filteredTickets.length,
           itemBuilder: (context, index) {
-            final ticket = tickets[index];
-            return ListTile(
-              title: Text(ticket.nomorKursi!),
-              subtitle: Text('Film: ${ticket.film!.judul}!'),
-              // Add more ticket details here
+            final ticket = filteredTickets[index];
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              child: Card(
+                color: const Color.fromARGB(255, 22, 22, 22),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Display poster with fallback for null values
+                      SizedBox(
+                        width: 100,
+                        height: 150,
+                        child: Image.network(
+                          ticket.film!.poster_1!, // Default placeholder
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      // Ticket Details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Movie Title
+                            Text(
+                              ticket.film?.judul ?? 'Unknown Title',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            const SizedBox(height: 5),
+                            // Movie Genre
+                            Text(
+                              ticket.film?.genre ?? 'Unknown Genre',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            const SizedBox(height: 10),
+                            // Seat Number and Status
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    'Seat: ${ticket.nomorKursi ?? 'N/A'}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  ticket.penayangan?.status ?? 'Unknown',
+                                  style: TextStyle(
+                                    color:
+                                        ticket.penayangan?.status == 'Available'
+                                            ? Colors.green
+                                            : Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
           },
         );
