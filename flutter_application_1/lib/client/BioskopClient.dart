@@ -1,14 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_application_1/data/bioskop.dart';
+import 'package:flutter_application_1/setting/client.dart';
 
 class BioskopClient {
-  final String baseUrl;
-
-  BioskopClient(this.baseUrl);
+  static final String baseUrl = constantURL;
+  static final String endpoint = '/api/bioskops';
 
   Future<List<Bioskop>> fetchBioskops() async {
-    final response = await http.get(Uri.parse('$baseUrl/bioskops'));
+    final response = await http.get(Uri.parse(baseUrl + endpoint));
 
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
@@ -20,7 +20,7 @@ class BioskopClient {
 
   Future<void> updateBioskopLocation(int id, String location) async {
     final response = await http.put(
-      Uri.parse('$baseUrl/bioskops/$id'),
+      Uri.parse(baseUrl + endpoint + '/${id}'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'alamat': location}),
     );

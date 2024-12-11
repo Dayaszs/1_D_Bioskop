@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_application_1/data/review.dart';
+import 'package:flutter_application_1/setting/client.dart';
 
 class ReviewClient {
-  static final String url = '10.0.2.2:8000';
+  static final String url = constantURL;
   static final String endpoint = '/api/reviews';
 
   Future<List<Review>> fetchAll() async {
