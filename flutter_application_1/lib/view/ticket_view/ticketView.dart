@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_application_1/data/ticket.dart';
 import 'package:flutter_application_1/client/TicketClient.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/ticket_view/ticketPDF.dart';
 
 final listTicketProvider =
     FutureProvider.family<List<Ticket>, int>((ref, userId) async {
@@ -12,7 +13,7 @@ final listTicketProvider =
 class TicketView extends ConsumerStatefulWidget {
   const TicketView({super.key, required this.data});
 
-  final Map<String, dynamic> data;
+  final Map<String, dynamic> data; // data contains the user ID
 
   @override
   _TicketViewState createState() => _TicketViewState();
@@ -105,37 +106,47 @@ class _TicketViewState extends ConsumerState<TicketView> {
   }
 
   Widget _buildTicketLayout(AsyncValue<List<Ticket>> ticketsAsync) {
-    return ticketsAsync.when(
-      data: (tickets) {
-        // Filter tickets based on the current filter
-        final filteredTickets = tickets.where((ticket) {
-          final status = ticket.penayangan?.status ?? 'Unknown';
-          if (_filter == 'Available') {
-            return status == 'Available';
-          } else {
-            return status == 'Not Available';
-          }
-        }).toList();
+  return ticketsAsync.when(
+    data: (tickets) {
+      // Filter tickets based on the current filter
+      final filteredTickets = tickets.where((ticket) {
+        final status = ticket.penayangan?.status ?? 'Unknown';
+        if (_filter == 'Available') {
+          return status == 'Available';
+        } else {
+          return status == 'Not Available';
+        }
+      }).toList();
 
-        return ListView.builder(
-          itemCount: filteredTickets.length,
-          itemBuilder: (context, index) {
-            final ticket = filteredTickets[index];
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: Card(
-                color: const Color.fromARGB(255, 22, 22, 22),
+      return ListView.builder(
+        itemCount: filteredTickets.length,
+        itemBuilder: (context, index) {
+          final ticket = filteredTickets[index];
+          
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Card(
+              color: const Color.fromARGB(255, 22, 22, 22),
+              child: InkWell(
+                onTap: () {
+                  // Navigate to the TicketPdfPage when the ticket is clicked
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TicketPdfPage(ticket: ticket),
+                    ),
+                  );
+                },
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Display poster with fallback for null values
                       SizedBox(
                         width: 100,
                         height: 150,
                         child: Image.network(
-                          ticket.film!.poster_1!, // Default placeholder
+                          ticket.film!.poster_1 ?? 'default_image_url',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -147,59 +158,18 @@ class _TicketViewState extends ConsumerState<TicketView> {
                           children: [
                             // Movie Title
                             Text(
-                              ticket.film?.judul ?? 'Unknown Title',
+                              ticket.film?.judul ?? 'Unknown Movie',
                               style: const TextStyle(
-                                color: Colors.white,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            const SizedBox(height: 5),
-                            // Movie Genre
-                            Text(
-                              ticket.film?.genre ?? 'Unknown Genre',
-                              style: const TextStyle(
-                                color: Colors.grey,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              ticket.penayangan?.tanggal_tayang.toString().substring(0,10)?? 'Unknown',
-                              style: const TextStyle(
                                 color: Colors.white,
                               ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
                             ),
-                            const SizedBox(height: 10),
-                            // Seat Number and Status
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'Status:',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  ticket.penayangan?.status ?? 'Unknown',
-                                  style: TextStyle(
-                                    color:
-                                        ticket.penayangan?.status == 'Available'
-                                            ? Colors.green
-                                            : Colors.red,
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(height: 5),
+                            // Other details like date, time, etc.
+                            Text(
+                              'Status: ${ticket.penayangan?.status ?? 'Unknown'}',
+                              style: const TextStyle(color: Colors.white),
                             ),
                           ],
                         ),
@@ -208,12 +178,14 @@ class _TicketViewState extends ConsumerState<TicketView> {
                   ),
                 ),
               ),
-            );
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stackTrace) => Center(child: Text('Error: $error')),
-    );
-  }
+            ),
+          );
+        },
+      );
+    },
+    loading: () => const Center(child: CircularProgressIndicator()),
+    error: (error, stackTrace) => Center(child: Text('Error: $error')),
+  );
+}
+
 }
