@@ -163,12 +163,12 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                                     children: _buildStarRating(userRating),
                                   ),
                                   const SizedBox(height: 8),
-                                  Text(
-                                    widget.film.review ?? "No review yet.",
-                                    style: const TextStyle(color: Colors.white),
-                                    maxLines: null,
-                                    overflow: TextOverflow.visible,
-                                  ),
+                                  // Text(
+                                  //   // widget.film.review ?? "No review yet.",
+                                  //   style: const TextStyle(color: Colors.white),
+                                  //   maxLines: null,
+                                  //   overflow: TextOverflow.visible,
+                                  // ),
                                 ],
                               ),
                             ),
