@@ -40,7 +40,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   double currentPage = 0;
   late Future<List<Fnb>> _fnbs;
   TextEditingController _searchController = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
@@ -89,7 +89,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
         activeColorPrimary: Colors.amber,
         inactiveColorPrimary: Colors.white,
       ),
-      
     ];
   }
 
@@ -141,7 +140,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(27),
-                        border: Border.all(color: Colors.white.withOpacity(0.3)),
+                        border:
+                            Border.all(color: Colors.white.withOpacity(0.3)),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black26,
@@ -159,14 +159,17 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             style: TextStyle(color: Colors.white),
                             cursorColor: Colors.white,
                             onChanged: (value) {
-                              ref.read(searchKeywordProvider.state).state = value;
+                              ref.read(searchKeywordProvider.state).state =
+                                  value;
                             },
                             decoration: InputDecoration(
                               hintText: "Search",
                               hintStyle: TextStyle(color: Colors.white70),
-                              prefixIcon: Icon(Icons.search, color: Colors.white),
+                              prefixIcon:
+                                  Icon(Icons.search, color: Colors.white),
                               border: InputBorder.none,
-                              contentPadding: EdgeInsets.symmetric(vertical: 15),
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 15),
                             ),
                           ),
                         ),
@@ -240,7 +243,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   children: [
                     if (keyword.isNotEmpty) ...[
                       Padding(
-                        padding: EdgeInsets.only(top: 2.0, left: 4.0, bottom: 18.0),
+                        padding:
+                            EdgeInsets.only(top: 2.0, left: 4.0, bottom: 18.0),
                         child: Text(
                           "Search Results",
                           style: textStyle2.copyWith(
@@ -257,7 +261,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           crossAxisCount: 2, // 2 columns
                           crossAxisSpacing: 20.0, // Spacing between columns
                           mainAxisSpacing: 16.0, // Spacing between rows
-                          childAspectRatio: 0.58, // Adjust this to make the cards more or less tall
+                          childAspectRatio:
+                              0.58, // Adjust this to make the cards more or less tall
                         ),
                         itemCount: filteredFilms.length,
                         itemBuilder: (context, index) {
@@ -266,7 +271,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             onTap: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) => FilmDetail(film: film),
+                                  builder: (context) => FilmDetail(
+                                    film: film,
+                                    userData: widget.userData,
+                                  ),
                                 ),
                               );
                             },
@@ -289,12 +297,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 SizedBox(
                                   width: 170,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
                                     children: [
                                       // Title
                                       Text(
                                         film.judul!,
-                                        style: textStyle2.copyWith(fontSize: 18),
+                                        style:
+                                            textStyle2.copyWith(fontSize: 18),
                                         textAlign: TextAlign.center,
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -312,9 +322,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                       const SizedBox(height: 4),
                                       // Rating
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Icon(Icons.star, color: Colors.yellow, size: 16),
+                                          Icon(Icons.star,
+                                              color: Colors.yellow, size: 16),
                                           Text(
                                             film.rating.toString(),
                                             style: textStyle2.copyWith(
@@ -332,14 +344,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           );
                         },
                       ),
-
                     ] else ...[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsets.only(top: 8.0, left: 4.0, bottom: 18.0),
+                            padding: EdgeInsets.only(
+                                top: 8.0, left: 4.0, bottom: 18.0),
                             child: Text(
                               "Now Playing",
                               style: textStyle2.copyWith(
@@ -350,8 +361,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
+                            padding: EdgeInsets.only(
+                                top: 8.0, right: 4.0, bottom: 18.0),
                             child: TextButton(
                               onPressed: () {
                                 Navigator.push(
@@ -367,7 +378,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               ),
                               child: Row(
                                 children: [
-                                  Text("More", style: TextStyle(color: lightColor)),
+                                  Text("More",
+                                      style: TextStyle(color: lightColor)),
                                   SizedBox(width: 4),
                                   Icon(Icons.arrow_forward_ios,
                                       color: lightColor, size: 16),
@@ -400,7 +412,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => FilmDetail(film: film),
+                                    builder: (context) => FilmDetail(
+                                        film: film, userData: widget.userData),
                                   ),
                                 );
                               },
@@ -421,11 +434,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   SizedBox(
                                     width: 170,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Text(
                                           film.judul!,
-                                          style: textStyle2.copyWith(fontSize: 18),
+                                          style:
+                                              textStyle2.copyWith(fontSize: 18),
                                           textAlign: TextAlign.center,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -441,7 +456,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                         ),
                                         const SizedBox(height: 4),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Icon(Icons.star,
                                                 color: Colors.yellow, size: 16),
@@ -467,8 +483,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding:
-                                EdgeInsets.only(top: 8.0, left: 4.0, bottom: 18.0),
+                            padding: EdgeInsets.only(
+                                top: 8.0, left: 4.0, bottom: 18.0),
                             child: Text(
                               "Food and Beverage",
                               style: textStyle2.copyWith(
@@ -479,15 +495,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(top: 8.0, right: 4.0, bottom: 18.0),
+                            padding: EdgeInsets.only(
+                                top: 8.0, right: 4.0, bottom: 18.0),
                             child: TextButton(
                               onPressed: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        ListFnbView(),
+                                    builder: (context) => ListFnbView(),
                                   ),
                                 );
                               },
@@ -496,7 +511,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               ),
                               child: Row(
                                 children: [
-                                  Text("More", style: TextStyle(color: lightColor)),
+                                  Text("More",
+                                      style: TextStyle(color: lightColor)),
                                   SizedBox(width: 4),
                                   Icon(Icons.arrow_forward_ios,
                                       color: lightColor, size: 16),
@@ -517,7 +533,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 children: [
                                   for (var i = 0; i < menu.length; i++)
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
                                       child: Column(
                                         children: [
                                           Container(
@@ -526,7 +543,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
-                                                image: NetworkImage(menu[i].gambar!),
+                                                image: NetworkImage(
+                                                    menu[i].gambar!),
                                                 fit: BoxFit.cover,
                                               ),
                                             ),
@@ -534,7 +552,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                           const SizedBox(height: 10),
                                           Text(
                                             menu[i].nama!,
-                                            style: textStyle2.copyWith(fontSize: 14),
+                                            style: textStyle2.copyWith(
+                                                fontSize: 14),
                                             textAlign: TextAlign.center,
                                             maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
@@ -547,8 +566,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                             ),
                           );
                         },
-                        loading: () => Center(child: CircularProgressIndicator()),
-                        error: (error, stack) => Center(child: Text('Failed to load data')),
+                        loading: () =>
+                            Center(child: CircularProgressIndicator()),
+                        error: (error, stack) =>
+                            Center(child: Text('Failed to load data')),
                       ),
                     ],
                   ],

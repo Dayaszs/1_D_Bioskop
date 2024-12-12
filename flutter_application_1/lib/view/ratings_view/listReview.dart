@@ -1,24 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/client/ReviewClient.dart'; // Fetch data review
+import 'package:flutter_application_1/data/review.dart';
+import 'package:flutter_application_1/client/TicketClient.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final reviewsProvider = StateNotifierProvider<ReviewsNotifier, List<Review>>(
+  (ref) => ReviewsNotifier(),
+);
+
+class ReviewsNotifier extends StateNotifier<List<Review>> {
+  ReviewsNotifier() : super([]);
+
+  Future<void> fetchReviewsByFilmId(int filmId) async {
+    final reviews = await ReviewClient().fetchByFilmId(filmId);
+    state = reviews;
+  }
+
+  void addReview(Review review) {
+    state = [...state, review];
+  }
+}
 
 class RatingsAndReviewsView extends StatefulWidget {
   final Film film;
+  final Map<String, dynamic> userData;
 
-  const RatingsAndReviewsView({super.key, required this.film});
+  const RatingsAndReviewsView({
+    super.key,
+    required this.film,
+    required this.userData,
+  });
 
   @override
   _RatingsAndReviewsViewState createState() => _RatingsAndReviewsViewState();
 }
 
 class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
+  int? tiketId;
   final TextEditingController _reviewController = TextEditingController();
   double _userRating = 0.0;
+  late Future<List<Review>> _futureReviews;
 
   @override
   void initState() {
     super.initState();
-    _userRating = 0.0; // Default rating
+    _futureReviews = ReviewClient().fetchByFilmId(widget.film.id_film!);
+    fetchUserTicketAndPenayangan(widget.userData["id_user"]);
+  }
+
+  Future<void> fetchUserTicketAndPenayangan(int userId) async {
+    try {
+      final tickets = await TicketClient().fetchOnlyUsers(userId);
+
+      for (var ticket in tickets) {
+        if (ticket.penayangan?.status == "Not Available") {
+          setState(() {
+            tiketId = ticket.idTiket; // Update tiketId jika syarat terpenuhi
+          });
+          break;
+        }
+      }
+    } catch (error) {
+      debugPrint("Error fetching tickets: $error");
+    }
   }
 
   // Function to create the star widgets based on rating
@@ -27,42 +73,90 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
     for (int i = 0; i < 5; i++) {
       Icon icon;
       if (rating >= i + 1) {
-        icon = Icon(Icons.star, color: lightColor, size: 40);
+        icon = Icon(Icons.star, color: lightColor, size: 30);
       } else if (rating > i && rating < i + 1) {
-        icon = Icon(Icons.star_half, color: lightColor, size: 40);
+        icon = Icon(Icons.star_half, color: lightColor, size: 30);
       } else {
-        icon = Icon(Icons.star_border, color: lightColor, size: 40);
+        icon = Icon(Icons.star_border, color: lightColor, size: 30);
       }
 
-      // Adding animation to stars
-      stars.add(GestureDetector(
-        onTap: () {
-          setState(() {
-            _userRating = i + 1.0;
-          });
-        },
-        child: AnimatedOpacity(
-          opacity: 1.0,
-          duration: Duration(milliseconds: 300),
+      stars.add(
+        GestureDetector(
+          onTapDown: (details) {
+            setState(() {
+              // Hitung posisi tap pada bintang
+              final tapPosition = details.localPosition.dx;
+              final starWidth = 30.0; // Lebar bintang dalam piksel
+
+              if (tapPosition < starWidth / 2) {
+                // Ketukan di setengah kiri bintang
+                _userRating = i + 0.5;
+              } else {
+                // Ketukan di setengah kanan bintang
+                _userRating = i + 1.0;
+              }
+            });
+          },
           child: icon,
         ),
-      ));
+      );
     }
     return stars;
   }
 
+  // Function to build review card
+  Widget _buildReviewCard(Review review) {
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.only(bottom: 16.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(review.user!.profie_picture ?? ''),
+              radius: 25,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    review.user?.username ??
+                        "Anonymous", // Menampilkan username
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Row(
+                      children:
+                          _buildStarRating(review.rating?.toDouble() ?? 0.0)),
+                  const SizedBox(height: 8),
+                  Text(
+                    review.komentar ?? "No comments provided.",
+                    style: const TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final String username = "Kevin Tanamas";
-    final String userProfileImage = "https://www.example.com/profile.jpg";
-    final double userRating = 4.5;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Ratings & Reviews"),
         backgroundColor: darkColor,
-        elevation: 0, // Menghilangkan bayangan pada AppBar
-        toolbarHeight: 80, // Menyesuaikan tinggi app bar jika diperlukan
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -75,7 +169,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                   children: [
                     // Film title
                     Text(
-                      '${widget.film.judul}',
+                      widget.film.judul ?? "Movie Title",
                       style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.bold,
@@ -85,7 +179,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Film rating (stars) - dynamic stars
+                    // Star rating widget
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: _buildStarRating(_userRating),
@@ -97,7 +191,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Review input with border animation effect
+                    // Add review input field
                     TextField(
                       controller: _reviewController,
                       style: const TextStyle(color: Colors.white),
@@ -107,18 +201,15 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                         filled: true,
                         fillColor: const Color(0xFF222222),
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12), // Rounded corners
+                          borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide.none,
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
-                    const Divider(
-                      color: Colors.white24,
-                      height: 32,
-                    ),
+                    const Divider(color: Colors.white24, height: 32),
 
-                    // All Reviews section
+                    // Display all reviews section
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -132,80 +223,112 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                     ),
                     const SizedBox(height: 16),
 
-                    Card(
-                      elevation: 0, // Menghilangkan bayangan pada Card
-                      margin: const EdgeInsets.only(bottom: 16),
-                      color: Colors.transparent, // Pastikan latar belakang Card transparan
-                      child: Container(
-                        color: Colors.transparent, // Pastikan latar belakang Container transparan
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              backgroundImage: NetworkImage(userProfileImage),
-                              radius: 25,
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    username,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Row(
-                                    children: _buildStarRating(userRating),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    widget.film.review ?? "No review yet.",
-                                    style: const TextStyle(color: Colors.white),
-                                    maxLines: null,
-                                    overflow: TextOverflow.visible,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    // Fetch and display reviews
+                    StatefulBuilder(
+                      builder: (context, setState) {
+                        return FutureBuilder<List<Review>>(
+                          future: _futureReviews,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                child: Text(
+                                  "Error: ${snapshot.error}",
+                                  style: const TextStyle(color: Colors.red),
+                                ),
+                              );
+                            } else if (!snapshot.hasData ||
+                                snapshot.data!.isEmpty) {
+                              return const Center(
+                                child: Text(
+                                  "No reviews available.",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              );
+                            }
+
+                            final reviews = snapshot.data!;
+                            return Column(
+                              children: reviews
+                                  .map((review) => _buildReviewCard(review))
+                                  .toList(),
+                            );
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          // Publish Review Button with hover effect
+
+          // Publish review button
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: ElevatedButton(
-              onPressed: () {
-                if (_reviewController.text.isNotEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text("Review added successfully!"),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                  _reviewController.clear();
-                }
-              },
+              onPressed: tiketId != null
+                  ? () async {
+                      if (_reviewController.text.isNotEmpty) {
+                        try {
+                          final isSuccess = await ReviewClient().postReview(
+                            tiketId!,
+                            _userRating,
+                            _reviewController.text,
+                          );
+
+                          if (isSuccess) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Review added successfully!"),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+
+                            // Gunakan setState untuk memicu refresh
+                            setState(() {
+                              _reviewController.clear(); // Kosongkan komentar
+                              _userRating = 0.0; // Reset rating
+                              _futureReviews = ReviewClient().fetchByFilmId(
+                                  widget.film.id_film!); // Refresh review
+                            });
+                          }
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Failed to post review: $e"),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                                "Please write a review before publishing!"),
+                            backgroundColor: Colors.orange,
+                          ),
+                        );
+                      }
+                    }
+                  : null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: lightColor,
-                minimumSize: Size(double.infinity, 60),
+                backgroundColor: tiketId != null ? lightColor : Colors.grey,
+                minimumSize: const Size(double.infinity, 60),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: const Text(
                 "Publish Review",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkColor),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: darkColor,
+                ),
               ),
             ),
           ),

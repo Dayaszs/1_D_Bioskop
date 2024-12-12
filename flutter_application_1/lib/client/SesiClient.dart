@@ -28,10 +28,12 @@ class Sesiclient {
 
   Future<List<Sesi>> fetchById(id_sesi) async {
     try {
-      final response = await http.get(Uri.parse(protocol + url + endpoint + '/${id_sesi}'));
+      final response =
+          await http.get(Uri.parse(protocol + url + endpoint + '/${id_sesi}'));
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);;
+        return json.decode(response.body);
+        ;
       } else {
         throw Exception('Failed to load sesi');
       }

@@ -16,7 +16,16 @@ class Ticket {
   Bioskop? bioskop;
   Sesi? sesi;
 
-  Ticket({this.idTiket, this.idUser, this.idPenayangan, this.nomorKursi, this.penayangan, this.film, this.studio, this.bioskop, this.sesi});
+  Ticket(
+      {this.idTiket,
+      this.idUser,
+      this.idPenayangan,
+      this.nomorKursi,
+      this.penayangan,
+      this.film,
+      this.studio,
+      this.bioskop,
+      this.sesi});
 
   factory Ticket.fromJson(Map<String, dynamic> json) {
     return Ticket(
@@ -29,6 +38,15 @@ class Ticket {
       studio: Studio.fromJson(json['penayangan']['studio']),
       bioskop: Bioskop.fromJson(json['penayangan']['studio']['bioskop']),
       sesi: Sesi.fromJson(json['penayangan']['sesi']),
+    );
+  }
+
+  factory Ticket.fromJsonKecil(Map<String, dynamic> json) {
+    return Ticket(
+      idTiket: json['id_tiket'],
+      idUser: json['id_user'],
+      idPenayangan: json['id_penayangan'],
+      nomorKursi: json['nomor_kursi'],
     );
   }
 }

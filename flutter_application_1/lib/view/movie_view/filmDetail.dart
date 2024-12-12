@@ -7,8 +7,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class FilmDetail extends StatelessWidget {
   final Film film;
+  final Map<String, dynamic> userData;
 
-  const FilmDetail({required this.film, Key? key}) : super(key: key);
+  const FilmDetail({required this.film, required this.userData, Key? key})
+      : super(key: key);
 
   @override
   @override
@@ -17,7 +19,7 @@ class FilmDetail extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-         title: const Text(
+        title: const Text(
           "Detail Movies",
           style: TextStyle(
             color: Colors.white,
@@ -238,7 +240,10 @@ class FilmDetail extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RatingsAndReviewsView(film: film),
+            builder: (context) => RatingsAndReviewsView(
+              film: film,
+              userData: userData,
+            ), // Panggil RatingsAndReviewsView
           ),
         );
       },
@@ -290,7 +295,7 @@ class FilmDetail extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
+            const Positioned(
               top: 8,
               right: 8,
               child: Icon(

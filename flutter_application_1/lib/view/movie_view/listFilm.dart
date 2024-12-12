@@ -33,7 +33,7 @@ class _FilmListViewState extends ConsumerState<FilmListView> {
     final filmsAsyncValue = ref.watch(filmsProvider);
 
     return Scaffold(
-     appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.black,
         title: const Text(
           "Movies",
@@ -119,8 +119,8 @@ class _FilmListViewState extends ConsumerState<FilmListView> {
       child: LayoutBuilder(
         builder: (context, constraints) {
           return constraints.maxWidth > 600
-              ? WideLayout(films: films)
-              : NarrowLayout(films: films);
+              ? WideLayout(films: films, userData: widget.userData)
+              : NarrowLayout(films: films, userData: widget.userData);
         },
       ),
     );
@@ -129,8 +129,9 @@ class _FilmListViewState extends ConsumerState<FilmListView> {
 
 class NarrowLayout extends StatelessWidget {
   final List<Film> films;
+  final Map<String, dynamic> userData;
 
-  const NarrowLayout({super.key, required this.films});
+  const NarrowLayout({super.key, required this.films, required this.userData});
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +139,7 @@ class NarrowLayout extends StatelessWidget {
       films: films,
       onFilmTap: (film) => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => FilmDetail(film: film),
+          builder: (context) => FilmDetail(film: film, userData: userData),
         ),
       ),
     );
@@ -147,8 +148,9 @@ class NarrowLayout extends StatelessWidget {
 
 class WideLayout extends StatefulWidget {
   final List<Film> films;
+  final Map<String, dynamic> userData;
 
-  const WideLayout({super.key, required this.films});
+  const WideLayout({super.key, required this.films, required this.userData});
 
   @override
   State<WideLayout> createState() => _WideLayoutState();
@@ -175,7 +177,10 @@ class _WideLayoutState extends State<WideLayout> {
               ? Center(
                   child:
                       Image.asset('images/logo1.png', width: 500, height: 500))
-              : FilmDetail(film: _selectedFilm!),
+              : FilmDetail(
+                  film: _selectedFilm!,
+                  userData: widget.userData,
+                ),
         ),
       ],
     );

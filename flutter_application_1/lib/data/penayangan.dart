@@ -33,6 +33,12 @@ class Penayangan {
         tanggal_tayang: DateTime.parse(json["tanggal_tayang"]),
       );
 
+  factory Penayangan.fromJsonReview(Map<String, dynamic> json) => Penayangan(
+        id_penayangan: json["id_penayangan"],
+        id_film: json["id_film"],
+        status: json["status"],
+      );
+
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
         "id_penayangan": id_penayangan,

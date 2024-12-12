@@ -15,16 +15,16 @@ class PenayanganClient {
     int? id_studio,
   }) async {
     try {
+      var params = {
+        if (id_film != null) 'id_film': id_film.toString(),
+        if (id_sesi != null) 'id_sesi': id_sesi.toString(),
+        if (tanggal_tayang != null) 'tanggal_tayang': tanggal_tayang,
+        if (id_studio != null) 'id_studio': id_studio.toString(),
+      };
 
-      var response = await http.post(
-        Uri.http(url, '/searchPenayangan'),
+      var response = await http.get(
+        Uri.http(url, endpoint, params),
         headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          'id_film': id_film,
-          'id_sesi': id_sesi,
-          'id_studio': id_studio,
-          'tanggal_tayang': tanggal_tayang
-        }),
       );
 
       if (response.statusCode == 200) {
@@ -32,7 +32,7 @@ class PenayanganClient {
       } else {
         throw Exception('Penayangan tidak ditemukan');
       }
-    } catch(error) {
+    } catch (error) {
       return Future.error(error.toString());
     }
   }
