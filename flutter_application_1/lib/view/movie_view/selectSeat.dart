@@ -1,3 +1,5 @@
+import 'package:flutter_application_1/client/PenayanganClient.dart';
+import 'package:flutter_application_1/client/StudioClient.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/standalone.dart' as tz;
@@ -20,109 +22,6 @@ class SelectSeat extends StatefulWidget {
 }
 
 class _SelectSeatState extends State<SelectSeat> {
-  List<String> statusSeat = [
-    'reserved',
-    'reserved',
-    'available',
-    'available',
-    'available',
-    'available',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'available',
-    'available',
-    'reserved',
-    'reserved',
-    'available',
-    'reserved',
-    'available',
-    'reserved',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'reserved',
-    'available',
-    'reserved',
-    'available',
-    'reserved',
-    'reserved',
-    'available',
-    'available',
-    'reserved',
-    'reserved',
-    'reserved',
-    'available',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'available',
-    'available',
-    'available',
-    'available',
-    'reserved',
-    'reserved',
-    'reserved',
-    'available',
-    'available',
-    'available',
-    'available',
-    'available',
-    'reserved',
-    'reserved',
-    'available',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'available',
-    'available',
-    'reserved',
-    'reserved',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'available',
-    'reserved',
-    'available',
-    'available',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'reserved',
-    'available',
-    'available',
-    'reserved',
-    'reserved',
-    'reserved',
-    'available',
-    'reserved',
-    'available'
-  ];
-
   int price = 50000;
   final formatter = NumberFormat('#,###');
 
@@ -132,6 +31,53 @@ class _SelectSeatState extends State<SelectSeat> {
 
   int selectedIndexDate = 0;
   int selectedIndexTime = 0;
+
+  late Future<Map<String, dynamic>> studioFuture;
+  late Future<Map<String, dynamic>> penayanganFuture;
+
+  List<dynamic> statusSeat = List.filled(100, 'available');
+  List<dynamic> selectedSeats = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Pindahkan pemanggilan ke dalam initState
+    studioFuture = Studioclient().searchStudio(
+      id_film: widget.film.id_film!,
+      id_bioskop: widget.bioskop.idBioskop!,
+    );
+
+    studioFuture.then((studioData) {
+      final idStudio = studioData['id']; // Akses ID dari hasil studioFuture
+
+      penayanganFuture = PenayanganClient().fetchPenayangan(
+          id_film: widget.film.id_film!,
+          id_sesi: 1,
+          id_studio: idStudio,
+          tanggal_tayang: DateTime.now().toString());
+
+      penayanganFuture.then((penayanganData) {
+        List<dynamic> userSeat =
+            penayanganData['nomor_kursi_terpakai'].split(',');
+
+        for (int i = 1; i <= 100; i++) {
+          if (userSeat.contains(i)) {
+            statusSeat[i - 1] = "reserved";
+          }
+        }
+
+        setState(() {});
+      }).catchError((error) {
+        // Tangani error jika `studioFuture` gagal
+        print('Error fetching penayangan: $error');
+      });
+      setState(() {}); // Perbarui state jika diperlukan
+    }).catchError((error) {
+      // Tangani error jika `studioFuture` gagal
+      print('Error fetching studio: $error');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -177,26 +123,6 @@ class _SelectSeatState extends State<SelectSeat> {
                       )),
                   SizedBox(height: 24),
                   Container(
-                    // decoration: BoxDecoration(
-                    //   border: Border(
-                    //     top: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //     bottom: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //     right: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //     left: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //   ),
-                    // ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -220,6 +146,8 @@ class _SelectSeatState extends State<SelectSeat> {
                                             'available') {
                                           statusSeat[(10 * (index ~/ 5) +
                                               (index % 5))] = 'selected';
+                                          selectedSeats.add((10 * (index ~/ 5) +
+                                              (index % 5)) + 1);
                                         } else if (statusSeat[
                                                 (10 * (index ~/ 5) +
                                                     (index % 5))] ==
@@ -227,6 +155,9 @@ class _SelectSeatState extends State<SelectSeat> {
                                           // Jika kursi selected, ubah kembali ke available
                                           statusSeat[(10 * (index ~/ 5) +
                                               (index % 5))] = 'available';
+                                          selectedSeats.remove(
+                                              (10 * (index ~/ 5) +
+                                                  (index % 5)) + 1);
                                         }
                                       });
                                     },
@@ -284,6 +215,9 @@ class _SelectSeatState extends State<SelectSeat> {
                                           statusSeat[(10 * (index ~/ 5) +
                                                   (index % 5)) +
                                               5] = 'selected';
+                                          selectedSeats.add((10 * (index ~/ 5) +
+                                                  (index % 5)) +
+                                              5 + 1);
                                         } else if (statusSeat[
                                                 (10 * (index ~/ 5) +
                                                         (index % 5)) +
@@ -293,6 +227,9 @@ class _SelectSeatState extends State<SelectSeat> {
                                           statusSeat[(10 * (index ~/ 5) +
                                                   (index % 5)) +
                                               5] = 'available';
+                                          selectedSeats.remove((10 * (index ~/ 5) +
+                                                  (index % 5)) +
+                                              5 + 1);
                                         }
                                       });
                                     },
@@ -389,26 +326,6 @@ class _SelectSeatState extends State<SelectSeat> {
                   ),
                   SizedBox(height: 24),
                   Container(
-                    // decoration: BoxDecoration(
-                    //   border: Border(
-                    //     top: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //     bottom: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //     right: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //     left: BorderSide(
-                    //       color: Colors.grey, // Warna border
-                    //       width: 1.0, // Ketebalan border
-                    //     ),
-                    //   ),
-                    // ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -533,6 +450,11 @@ class _SelectSeatState extends State<SelectSeat> {
                             }),
                           ),
                         ),
+                        Text("${widget.film.judul} \n ${widget.bioskop.namaBioskop} \n ${selectedSeats.toString()} \n ${studioFuture} \n", style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: whiteColor,
+                                  ),)
                       ],
                     ),
                   ),

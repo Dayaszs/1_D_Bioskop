@@ -10,7 +10,8 @@ class Studioclient {
 
   Future<Map<String, dynamic>> fetchById(int id) async {
     try {
-      final response = await http.get(Uri.parse(protocol + url + endpoint + '/${id}'));
+      final response =
+          await http.get(Uri.parse(protocol + url + endpoint + '/${id}'));
 
       if (response.statusCode == 200) {
         return json.decode(response.body);
@@ -22,4 +23,22 @@ class Studioclient {
     }
   }
 
+  Future<Map<String, dynamic>> searchStudio(
+      {required int id_film, required int id_bioskop}) async {
+    try {
+      final response = await http.post(
+        Uri.http(url, '/searchStudio'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({'id_film': id_film, 'id_bioskop': id_bioskop}),
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load studio data');
+      }
+    } catch (error) {
+      throw Exception('Failed to load studio data');
+    }
+  }
 }
