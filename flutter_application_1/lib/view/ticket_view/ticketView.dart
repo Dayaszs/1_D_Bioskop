@@ -69,7 +69,7 @@ class _TicketViewState extends ConsumerState<TicketView> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Available',
+                'Ongoing',
                 style: TextStyle(
                   color: _filter == 'Available' ? Colors.black : Colors.white,
                   fontWeight: FontWeight.bold,
@@ -91,7 +91,7 @@ class _TicketViewState extends ConsumerState<TicketView> {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'Not Available',
+                'History',
                 style: TextStyle(
                   color:
                       _filter == 'Not Available' ? Colors.black : Colors.white,
@@ -189,7 +189,24 @@ class _TicketViewState extends ConsumerState<TicketView> {
                                 const SizedBox(width: 5),
                                 Expanded(
                                   child: Text(
-                                    ticket.bioskop?.namaBioskop ?? 'Unknown Cinema',
+                                    '${ticket.bioskop?.namaBioskop}' ?? 'Unknown Cinema',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.white70,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const Icon(Icons.theaters, size: 14, color: Colors.white70),
+                                const SizedBox(width: 5),
+                                Expanded(
+                                  child: Text(
+                                    '${ticket.studio!.nama_studio}, ${ticket.nomorKursi}',
                                     style: const TextStyle(
                                       fontSize: 12,
                                       color: Colors.white70,

@@ -37,7 +37,7 @@ class TicketPdfPage extends StatelessWidget {
         build: (pw.Context context) {
           return pw.Container(
             decoration: pw.BoxDecoration(
-              color: PdfColors.grey100,
+              color: PdfColors.black,
               borderRadius: pw.BorderRadius.circular(15),
             ),
             child: pw.Column(
@@ -54,16 +54,26 @@ class TicketPdfPage extends StatelessWidget {
                     children: [
                       pw.Image(logoImage, width: 80, height: 40),
                       pw.Text(
-                        'ATMA CINEMA',
+                        'E-Ticket Atma Cinema',
                         style: pw.TextStyle(
                           fontSize: 24,
-                          color: PdfColors.orange200,
+                          color: PdfColors.amber500,
                           fontWeight: pw.FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
                 ),
+                pw.Container(
+                  child:  pw.Expanded(
+                        child: pw.Container(
+                          height: 2,
+                          color: PdfColors.amber500,
+                          margin: pw.EdgeInsets.symmetric(horizontal: 10),
+                        ),
+                      ),
+                )
+                ,
 
                 // Movie Details Section
                 pw.Container(
@@ -78,7 +88,7 @@ class TicketPdfPage extends StatelessWidget {
                           borderRadius: pw.BorderRadius.circular(10),
                           boxShadow: [
                             pw.BoxShadow(
-                              color: PdfColors.black,
+                              color: PdfColors.amber500,
                               blurRadius: 3,
                             ),
                           ],
@@ -99,6 +109,7 @@ class TicketPdfPage extends StatelessWidget {
                               style: pw.TextStyle(
                                 fontSize: 24,
                                 fontWeight: pw.FontWeight.bold,
+                                color: PdfColors.amber500,
                               ),
                             ),
                             pw.SizedBox(height: 5),
@@ -106,14 +117,16 @@ class TicketPdfPage extends StatelessWidget {
                               '${ticket.film!.genre}',
                               style: pw.TextStyle(
                                 fontSize: 14,
-                                color: PdfColors.grey700,
+                                color: PdfColors.amber400,
                               ),
                             ),
                             pw.SizedBox(height: 15),
-                            _buildInfoRow('Theater', '${ticket.bioskop!.namaBioskop}'),
-                            _buildInfoRow('Date', formattedDate),
-                            _buildInfoRow('Time', '${ticket.sesi!.jam_mulai} WIB'),
-                            _buildInfoRow('Seat', 'A12'), // Add seat information if available
+                            _buildInfoRow('Bioskop', '${ticket.bioskop!.namaBioskop}'),
+                            _buildInfoRow('Tanggal', formattedDate),
+                            _buildInfoRow('Jam', '${ticket.sesi!.jam_mulai} WIB'),
+                            _buildInfoRow('Studio', '${ticket.studio!.nama_studio}'),
+                            _buildInfoRow('Kursi', '${ticket.nomorKursi}'), 
+                            _buildInfoRow('Harga', 'Rp ${ticket.penayangan!.harga_tiket}'), 
                           ],
                         ),
                       ),
@@ -130,14 +143,14 @@ class TicketPdfPage extends StatelessWidget {
                         width: 15,
                         height: 30,
                         decoration: pw.BoxDecoration(
-                          color: PdfColors.grey100,
+                          color: PdfColors.amber500,
                           shape: pw.BoxShape.circle,
                         ),
                       ),
                       pw.Expanded(
                         child: pw.Container(
                           height: 2,
-                          color: PdfColors.grey400,
+                          color: PdfColors.amber500,
                           margin: pw.EdgeInsets.symmetric(horizontal: 10),
                         ),
                       ),
@@ -145,7 +158,7 @@ class TicketPdfPage extends StatelessWidget {
                         width: 15,
                         height: 30,
                         decoration: pw.BoxDecoration(
-                          color: PdfColors.grey100,
+                          color: PdfColors.amber500,
                           shape: pw.BoxShape.circle,
                         ),
                       ),
@@ -183,7 +196,7 @@ class TicketPdfPage extends StatelessWidget {
                             'Ticket ID: ${ticket.idTiket}',
                             style: pw.TextStyle(
                               fontSize: 12,
-                              color: PdfColors.grey800,
+                              color: PdfColors.amber500,
                             ),
                             textAlign: pw.TextAlign.center,
                           ),
@@ -193,7 +206,17 @@ class TicketPdfPage extends StatelessWidget {
                             style: pw.TextStyle(
                               fontSize: 16,
                               fontWeight: pw.FontWeight.bold,
-                              color: PdfColors.black,
+                              color: PdfColors.amber500,
+                            ),
+                            textAlign: pw.TextAlign.center,
+                          ),
+                          pw.SizedBox(height: 100),
+                          pw.Text(
+                            'Thank you for choosing Atma Cinema!',
+                            style: pw.TextStyle(
+                              fontSize: 16,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.amber500,
                             ),
                             textAlign: pw.TextAlign.center,
                           ),
@@ -224,7 +247,7 @@ class TicketPdfPage extends StatelessWidget {
               label,
               style: pw.TextStyle(
                 fontSize: 12,
-                color: PdfColors.grey600,
+                color: PdfColors.amber500,
               ),
             ),
           ),
@@ -232,7 +255,7 @@ class TicketPdfPage extends StatelessWidget {
             ': ',
             style: pw.TextStyle(
               fontSize: 12,
-              color: PdfColors.grey600,
+              color: PdfColors.amber500,
             ),
           ),
           pw.Expanded(
@@ -241,6 +264,7 @@ class TicketPdfPage extends StatelessWidget {
               style: pw.TextStyle(
                 fontSize: 12,
                 fontWeight: pw.FontWeight.bold,
+                color: PdfColors.amber500,
               ),
             ),
           ),
