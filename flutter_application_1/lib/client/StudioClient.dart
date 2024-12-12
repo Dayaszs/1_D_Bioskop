@@ -23,22 +23,23 @@ class Studioclient {
     }
   }
 
-  Future<Map<String, dynamic>> searchStudio(
-      {required int id_film, required int id_bioskop}) async {
+  Future<Map<String, dynamic>> searchStudio(int id_film, int id_bioskop) async {
     try {
+      print('id_bioskop : $id_bioskop');
       final response = await http.post(
-        Uri.http(url, '/searchStudio'),
+        Uri.http(url, '/api/searchStudio'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({'id_film': id_film, 'id_bioskop': id_bioskop}),
       );
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        var data = json.decode(response.body);
+        return data;
       } else {
         throw Exception('Failed to load studio data');
       }
     } catch (error) {
-      throw Exception('Failed to load studio data');
+      throw Exception('Failed to load studio data: ${error}');
     }
   }
 }

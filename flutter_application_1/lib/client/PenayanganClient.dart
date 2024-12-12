@@ -6,34 +6,37 @@ import 'package:flutter_application_1/setting/client.dart';
 
 class PenayanganClient {
   static final String url = constantURL;
-  static final String endpoint = '/api/penayangans';
+  static final String endpoint = '/api/searchPenayangan';
 
   Future<Map<String, dynamic>> fetchPenayangan({
-    int? id_film,
-    int? id_sesi,
-    String? tanggal_tayang,
-    int? id_studio,
+    required int id_film,
+    required int id_sesi,
+    required String tanggal_tayang,
+    required int id_studio,
   }) async {
     try {
-      var params = {
-        if (id_film != null) 'id_film': id_film.toString(),
-        if (id_sesi != null) 'id_sesi': id_sesi.toString(),
-        if (tanggal_tayang != null) 'tanggal_tayang': tanggal_tayang,
-        if (id_studio != null) 'id_studio': id_studio.toString(),
-      };
-
-      var response = await http.get(
-        Uri.http(url, endpoint, params),
+      final response = await http.post(
+        Uri.http(url, endpoint),
         headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          'id_film': id_film,
+          'id_sesi': id_sesi,
+          'tanggal_tayang': tanggal_tayang,
+          'id_studio': id_studio
+        }),
       );
 
+      print(
+          "id film : $id_film , id_sesi : $id_sesi , tanggal tayang : $tanggal_tayang , id studio : $id_studio , response ${response.body} , status code : ${response.statusCode}");
+
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        var data = json.decode(response.body);
+        return data;
       } else {
-        throw Exception('Penayangan tidak ditemukan');
+        throw Exception('Failed to load penayangan ${json.decode(response.body)}');
       }
     } catch (error) {
-      return Future.error(error.toString());
+      throw Exception('Failed to load penayangan: $error');
     }
   }
 }
