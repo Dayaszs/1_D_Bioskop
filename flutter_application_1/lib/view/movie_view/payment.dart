@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/formComponent.dart';
+import 'package:flutter_application_1/data/penayangan.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/movie_view/paymentSuccess.dart';
+import 'package:intl/intl.dart';
 
 class Payment extends StatefulWidget {
-  const Payment({super.key});
+  final Penayangan usedPenayangan;
+  final List<int> seats;
+
+  const Payment({super.key, required this.usedPenayangan, required this.seats});
 
   @override
   State<Payment> createState() => _PaymentState();
@@ -12,6 +17,7 @@ class Payment extends StatefulWidget {
 
 class _PaymentState extends State<Payment> {
   TextEditingController DiscountCodeController = TextEditingController();
+  final formatter = NumberFormat('#,###');
 
   List<Map<String, String>> payment = [
     {
@@ -28,20 +34,32 @@ class _PaymentState extends State<Payment> {
       "image": "images/shopeepay.png",
       "name": "Shopee Pay",
       "details": "",
-    },
-    {
-      "image": "images/atm.png",
-      "name": "ATM",
-      "details": "",
-    },
-    {
-      "image": "images/visa.png",
-      "name": "International Payments",
-      "details": "(Visa, Master, JCB, Amex)",
-    },
+    }
   ];
 
-  int selectedPayment = 0;
+  String? selectedPayment = "Gopay";
+
+  List<String>? listSeat;
+
+  List<String> convertSeatNumbers(List<int> seats) {
+    return seats.map((seat) {
+      if (seat < 10) {
+        return 'A${seat + 1}'; // Kursi A dimulai dari A1, bukan A0
+      } else {
+        // Hitung karakter baris berdasarkan hasil pembagian seat dengan 10
+        final row = String.fromCharCode(65 + (seat ~/ 10));
+        final column = (seat % 10); // Kolom dimulai dari 1
+        return '$row$column';
+      }
+    }).toList();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Pastikan `widget.seats` adalah List<int> dan tidak null
+    listSeat = convertSeatNumbers(widget.seats.whereType<int>().toList());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +101,7 @@ class _PaymentState extends State<Payment> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset("images/film.png",
+                          Image.asset("${widget.usedPenayangan.film!.poster_1}",
                               width: 100, height: 140),
                           Padding(
                             padding: const EdgeInsets.symmetric(
@@ -92,7 +110,7 @@ class _PaymentState extends State<Payment> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Avengers Infinity War',
+                                Text('${widget.usedPenayangan.film!.judul}',
                                     style: TextStyle(
                                       color: Colors.amber,
                                       fontWeight: FontWeight.bold,
@@ -108,7 +126,7 @@ class _PaymentState extends State<Payment> {
                                       color: Colors.white,
                                     ),
                                     SizedBox(width: 10),
-                                    Text("Acton, adventure, sci-fi",
+                                    Text("${widget.usedPenayangan.film!.genre}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -125,7 +143,8 @@ class _PaymentState extends State<Payment> {
                                       color: Colors.white,
                                     ),
                                     SizedBox(width: 10),
-                                    Text("ATMA Cinema Pakuwon Jogja",
+                                    Text(
+                                        "${widget.usedPenayangan.bioskop!.namaBioskop}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -142,7 +161,8 @@ class _PaymentState extends State<Payment> {
                                       color: Colors.white,
                                     ),
                                     SizedBox(width: 10),
-                                    Text("09 October 2024, 11:00 WIB",
+                                    Text(
+                                        "${widget.usedPenayangan.tanggal_tayang}",
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontSize: 12,
@@ -185,7 +205,7 @@ class _PaymentState extends State<Payment> {
                                 color: Colors.white,
                                 fontSize: 20,
                               )),
-                          Text("H7, H8",
+                          Text("${listSeat.toString()}",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -270,7 +290,8 @@ class _PaymentState extends State<Payment> {
                                 color: Colors.white,
                                 fontSize: 20,
                               )),
-                          Text("Rp. 189.000,00",
+                          Text(
+                              "Rp. ${formatter.format(widget.seats.length * widget.usedPenayangan.harga_tiket)}",
                               style: TextStyle(
                                 color: Colors.amber,
                                 fontSize: 20,
@@ -291,41 +312,46 @@ class _PaymentState extends State<Payment> {
                         return GestureDetector(
                           onTap: () {
                             setState(() {
-                              selectedPayment = index;
+                              selectedPayment = payment[index]["name"];
                             });
                           },
                           child: Column(
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                    color: (selectedPayment == index
+                                    color: (selectedPayment ==
+                                            payment[index]["name"]
                                         ? Color.fromRGBO(151, 118, 7, 0.479)
                                         : const Color.fromARGB(
                                             255, 51, 51, 51)),
                                     border: Border(
                                       top: BorderSide(
-                                        color: (selectedPayment == index
+                                        color: (selectedPayment ==
+                                                payment[index]["name"]
                                             ? Colors.amber
                                             : const Color.fromARGB(
                                                 0, 0, 0, 0)), // Warna border
                                         width: 1.0, // Ketebalan border
                                       ),
                                       bottom: BorderSide(
-                                        color: (selectedPayment == index
+                                        color: (selectedPayment ==
+                                                payment[index]["name"]
                                             ? Colors.amber
                                             : const Color.fromARGB(
                                                 0, 0, 0, 0)), // Warna border
                                         width: 1.0, // Ketebalan border
                                       ),
                                       right: BorderSide(
-                                        color: (selectedPayment == index
+                                        color: (selectedPayment ==
+                                                payment[index]["name"]
                                             ? Colors.amber
                                             : const Color.fromARGB(
                                                 0, 0, 0, 0)), // Warna border
                                         width: 1.0, // Ketebalan border
                                       ),
                                       left: BorderSide(
-                                        color: (selectedPayment == index
+                                        color: (selectedPayment ==
+                                                payment[index]["name"]
                                             ? Colors.amber
                                             : const Color.fromARGB(
                                                 0, 0, 0, 0)), // Warna border
@@ -439,7 +465,9 @@ class _PaymentState extends State<Payment> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const PaymentSuccess(),
+                    builder: (context) => PaymentSuccess(
+                        listSeats: widget.seats,
+                        penayangan: widget.usedPenayangan),
                   ),
                 );
               },

@@ -1,7 +1,9 @@
 import 'package:flutter_application_1/client/PenayanganClient.dart';
 import 'package:flutter_application_1/client/StudioClient.dart';
+import 'package:flutter_application_1/client/PenayanganClient.dart';
 import 'package:flutter_application_1/data/film.dart';
 import 'package:flutter_application_1/data/studio.dart';
+import 'package:flutter_application_1/data/penayangan.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/standalone.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -26,229 +28,203 @@ class _SelectSeatState extends State<SelectSeat> {
   int price = 50000;
   final formatter = NumberFormat('#,###');
 
-  DateTime selectedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  DateTime selectedTime = DateTime(
-      DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0);
+  DateTime selectedDate = DateTime(2024, 12, 12);
+  DateTime selectedTime = DateTime(2024, 12, 12, 7, 0);
 
   int selectedIndexDate = 0;
-  int selectedIndexTime = 0;
-
-  late Future<Map<String, dynamic>> studioFuture = Studioclient()
-      .searchStudio(widget.film!.id_film!, widget.bioskop!.idBioskop!);
-  late Future<Map<String, dynamic>> penayanganFuture;
+  int selectedIndexTime = 1;
+  late int id_film;
+  late int id_bioskop;
 
   List<dynamic> statusSeat = List.filled(100, 'available');
-  List<dynamic> selectedSeats = [];
+  List<int> selectedSeats = [];
+
+  late Future<List<Penayangan>> penayangan;
+  Penayangan? usedPenayangan;
 
   void initState() {
     super.initState();
-    // Memanggil studioFuture
-    studioFuture = Studioclient().searchStudio(
-      widget.film.id_film!,
-      widget.bioskop.idBioskop!,
-    );
-    // Setelah mendapatkan data dari studioFuture, baru inisialisasi penayanganFuture
-    studioFuture.then((studioData) {
-      final idStudio = studioData['id_studio'];  // Ambil id_studio dari data studio
-      // Inisialisasi penayanganFuture setelah studioFuture selesai
-      setState(() {
-        penayanganFuture = PenayanganClient().fetchPenayangan(
-          id_film: widget.film.id_film!,
-          id_sesi: 1,
-          id_studio: idStudio,  // Gunakan id_studio
-          tanggal_tayang: DateTime.now().toString(),
-        );
-      });
-    });
+    penayangan = PenayanganClient().fetchByFilm(widget.film!.id_film!);
+    id_film = widget.film!.id_film!;
+    id_bioskop = widget.bioskop!.idBioskop!;
+    statusSeat = List.filled(100, 'available');
+  }
+
+  Penayangan? searchPenayangan(List<Penayangan> datas, int id_bioskop,
+      int id_film, int id_sesi, DateTime tanggal_tayang) {
+    // Iterasi untuk mencari penayangan yang sesuai
+    print(datas.map((d) => {d.tanggal_tayang}));
+    for (var i = 0; i < datas.length; i++) {
+      if (datas[i].bioskop!.idBioskop == id_bioskop &&
+          datas[i].id_film == id_film &&
+          datas[i].id_sesi == id_sesi &&
+          datas[i].tanggal_tayang.toString() == tanggal_tayang.toString()) {
+        return datas[i]; // Kembalikan penayangan yang ditemukan
+      }
+    }
+    // Jika tidak ada penayangan yang cocok, kembalikan null
+    return null;
+  }
+
+  void refreshSeat() {
+    statusSeat = [];
+    selectedSeats = [];
+    statusSeat = List.filled(100, 'available');
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
-        appBar: AppBar(
           backgroundColor: Colors.black,
-          title: Text('Select Seat', style: textStyle7),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            title: Text('${widget.bioskop.namaBioskop}', style: textStyle7),
+            centerTitle: true,
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
-        ),
-        body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: FutureBuilder<Map<String, dynamic>>(
-            future: studioFuture,
-            builder: (context, StudioSnapshot) {
-              if (StudioSnapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (StudioSnapshot.hasError) {
-                return Center(
-                    child: Text(
-                  'Error: ${StudioSnapshot.error}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: whiteColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ));
-              } else if (!StudioSnapshot.hasData) {
-                return Center(
-                    child: Text(
-                  'No data available.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: whiteColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ));
-              } else if (StudioSnapshot.hasData) {
-                final studioData = StudioSnapshot.data!;
+          body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: FutureBuilder<List<Penayangan>>(
+                future: penayangan,
+                builder: (context, PenayanganSnapshot) {
+                  if (PenayanganSnapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (PenayanganSnapshot.hasError) {
+                    print('Error: ${PenayanganSnapshot.error}');
+                    return Center(
+                        child: Text(
+                      'Error: ${PenayanganSnapshot.error}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors
+                            .white, // Asumsikan whiteColor adalah Colors.white
+                      ),
+                      softWrap: true, // Properti ini pada widget Text
+                      overflow: TextOverflow.visible,
+                    ));
+                  } else if (!PenayanganSnapshot.hasData) {
+                    return Center(
+                        child: Text(
+                      'No data available.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: whiteColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ));
+                  } else if (PenayanganSnapshot.hasData) {
+                    final List<Penayangan> PenayanganData =
+                        PenayanganSnapshot.data!;
+                    usedPenayangan = searchPenayangan(
+                        PenayanganData,
+                        id_bioskop!,
+                        id_film!,
+                        selectedIndexTime + 1,
+                        selectedDate);
 
-                PenayanganClient().fetchPenayangan(
-                    id_film: widget.film.id_film!,
-                    id_sesi: 1,
-                    id_studio: studioData['id_studio'],
-                    tanggal_tayang: selectedDate.toString());
-
-                return FutureBuilder<Map<String, dynamic>>(
-                    future: penayanganFuture,
-                    builder: (context, PenayanganSnapshot) {
-                      if (PenayanganSnapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      } else if (PenayanganSnapshot.hasError) {
-                        return Center(
-                            child: Text(
-                          'Error: ${PenayanganSnapshot.error}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: whiteColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ));
-                      } else if (!PenayanganSnapshot.hasData) {
-                        return Center(
-                            child: Text(
-                          'No data available.',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: whiteColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ));
-                      } else if (PenayanganSnapshot.hasData) {
-                        final PenayanganData = PenayanganSnapshot.data!;
-                        List<dynamic> userSeat = PenayanganData['nomor_kursi_terpakai'].split(',');
-                        for (int i = 1; i <= 100; i++) {
-                          if (userSeat.contains(i)) {
-                            statusSeat[i - 1] = "reserved";
-                          }
-                        }
-                        return _mainWidget();
-                      } else {
-                        return Center(
-                            child: Text(
-                          'Unknown Error',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: whiteColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ));
+                    List<dynamic> userSeat = usedPenayangan!
+                        .nomor_kursi_terpakai!
+                        .split(',')
+                        .map((seat) => int.parse(seat))
+                        .toList();
+                    for (int i = 1; i <= 100; i++) {
+                      if (userSeat.contains(i)) {
+                        statusSeat[i - 1] = 'reserved';
                       }
-                    });
-              } else {
-                return Center(
-                    child: Text(
-                  'Unknown Error',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: whiteColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ));
-              }
-            },
+                    }
+
+                    return _mainWidget(PenayanganData);
+                  } else {
+                    return Center(
+                        child: Text(
+                      'Unknown Error',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: whiteColor,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ));
+                  }
+                }),
           ),
-        ),
-        bottomNavigationBar: _bottomWidget()
-      ),
+          bottomNavigationBar: _bottomWidget()),
     );
   }
 
   Widget _bottomWidget() {
     return Container(
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey, // Warna border
-                width: 1.0, // Ketebalan border
-              ),
-            ),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Colors.grey, // Warna border
+            width: 1.0, // Ketebalan border
           ),
-          child: BottomAppBar(
-            color: Colors.black,
-            child: Container(
-              height: 60,
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total: \nRp. ${formatter.format(statusSeat.where((seat) => seat == 'selected').length * price)}.00',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed:
-                        statusSeat.where((seat) => seat == 'selected').length >
-                                0
-                            ? () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const Payment(),
-                                  ),
-                                );
-                              }
-                            : () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: (statusSeat
-                                  .where((seat) => seat == 'selected')
-                                  .length >
-                              0
+        ),
+      ),
+      child: BottomAppBar(
+        color: Colors.black,
+        child: Container(
+          height: 60,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Total: \nRp. ${formatter.format(statusSeat.where((seat) => seat == 'selected').length * price)}.00',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              ElevatedButton(
+                onPressed:
+                    statusSeat.where((seat) => seat == 'selected').length > 0
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Payment(usedPenayangan: usedPenayangan!, seats: selectedSeats),
+                              ),
+                            );
+                          }
+                        : () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      (statusSeat.where((seat) => seat == 'selected').length > 0
                           ? Colors.amber
                           : Colors.grey),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: const Text(
-                      'Buy Ticket',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 18),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
                   ),
-                ],
+                ),
+                child: const Text(
+                  'Buy Ticket',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        );
+        ),
+      ),
+    );
   }
 
-  Widget _mainWidget() {
+  Widget _mainWidget(dataPenayangan) {
     return Center(
       child: Padding(
         padding: EdgeInsets.all(10.0),
@@ -489,6 +465,7 @@ class _SelectSeatState extends State<SelectSeat> {
                             GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  refreshSeat();
                                   selectedIndexDate = index;
                                 });
                               },
@@ -531,7 +508,7 @@ class _SelectSeatState extends State<SelectSeat> {
                                             Radius.circular(100)),
                                       ),
                                       child: Text(
-                                          "${DateFormat('dd').format(DateTime.now().add(Duration(days: index)))}",
+                                          "${DateFormat('dd').format(selectedDate.add(Duration(days: index)))}",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15,
@@ -558,7 +535,8 @@ class _SelectSeatState extends State<SelectSeat> {
                             GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  selectedIndexTime = index;
+                                  refreshSeat();
+                                  selectedIndexTime = index + 1;
                                 });
                               },
                               child: Container(
@@ -566,7 +544,7 @@ class _SelectSeatState extends State<SelectSeat> {
                                 padding: EdgeInsets.symmetric(
                                     vertical: 8, horizontal: 20),
                                 decoration: BoxDecoration(
-                                  color: (selectedIndexTime == index
+                                  color: (selectedIndexTime - 1 == index
                                       ? Colors.amber
                                       : Color.fromARGB(255, 44, 44, 44)),
                                   borderRadius:
@@ -576,7 +554,7 @@ class _SelectSeatState extends State<SelectSeat> {
                                     "${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: (index * 2))))} - ${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: 2 + (index * 2))))}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      color: (selectedIndexTime == index
+                                      color: (selectedIndexTime - 1 == index
                                           ? Colors.black
                                           : Colors.white),
                                       fontSize: 12,
@@ -589,6 +567,7 @@ class _SelectSeatState extends State<SelectSeat> {
                       }),
                     ),
                   ),
+                  _debugText(dataPenayangan),
                 ],
               ),
             ),
@@ -601,15 +580,26 @@ class _SelectSeatState extends State<SelectSeat> {
     );
   }
 
-  Widget _debugText() {
+  Widget _debugText(dataPenayangan) {
+    final data = dataPenayangan!;
+
     return Container(
       child: Text(
-        "${widget.film.judul} \n ${widget.bioskop.namaBioskop} \n ${selectedSeats.toString()} \n ${studioFuture.toString()} \n",
-        style: TextStyle(
+        "${widget.film.judul} \n"
+        "${widget.bioskop.namaBioskop} \n"
+        "${selectedSeats.toString()} \n"
+        "${data.isNotEmpty ? data[widget.film.id_film].tanggal_tayang : 'Tidak ada data'} \n"
+        "${statusSeat.toString()} \n" // Antisipasi jika data kosong
+        "${usedPenayangan.toString()} \n"
+        "id bioskop : ${id_bioskop} id_film : ${id_film} selected index time : ${selectedIndexTime} selected date : ${selectedDate.toString()}",
+
+        style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
-          color: whiteColor,
+          color: Colors.white, // Asumsikan whiteColor adalah Colors.white
         ),
+        softWrap: true, // Properti ini pada widget Text
+        overflow: TextOverflow.visible, // Pastikan teks tetap terlihat
       ),
     );
   }

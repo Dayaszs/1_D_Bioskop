@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/penayangan.dart';
 import 'package:flutter_application_1/view/movie_view/listFilm.dart';
 
 class PaymentSuccess extends StatefulWidget {
-  const PaymentSuccess({super.key});
+  final List<int> listSeats;
+  final Penayangan penayangan;
+
+  const PaymentSuccess({
+    super.key,
+    required this.listSeats,
+    required this.penayangan
+  });
 
   @override
   State<PaymentSuccess> createState() => _PaymentSuccessState();
