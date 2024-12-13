@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/client/BioskopClient.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:http/http.dart' as http;
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LocationPage extends StatefulWidget {
   @override
@@ -11,34 +13,35 @@ class LocationPage extends StatefulWidget {
 
 class _LocationPageState extends State<LocationPage> {
   String _currentLocation = "---";
-  bool _showPermissionPrompt = true;
+  final BioskopClient client = BioskopClient();
+  bool _showPermissionPrompt = false;
 
   @override
   void initState() {
     super.initState();
+    _loadSavedLocation();
+    _getCurrentLocation(); // Memperbarui lokasi saat halaman dibuka
   }
 
-  Future<void> _checkInitialPermission() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.always ||
-        permission == LocationPermission.whileInUse) {
+  Future<void> _loadSavedLocation() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? savedLocation = prefs.getString('currentLocation');
+    bool permissionRequested = prefs.getBool('permissionRequested') ?? false;
+
+    if (savedLocation != null) {
       setState(() {
-        _showPermissionPrompt = false;
+        _currentLocation = savedLocation;
       });
-      await _getCurrentLocation();
-    } else if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      setState(() {
-        _showPermissionPrompt = true;
-      });
+    } else if (!permissionRequested) {
+      // If location hasn't been requested yet, ask for permission
+      await _requestLocationPermission();
     }
   }
 
-  Future<void> _checkLocationPermission() async {
-    bool serviceEnabled;
-    LocationPermission permission;
+  Future<void> _requestLocationPermission() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       setState(() {
         _currentLocation = "Location services are disabled.";
@@ -46,33 +49,29 @@ class _LocationPageState extends State<LocationPage> {
       return;
     }
 
-    permission = await Geolocator.checkPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        setState(() {
-          _currentLocation = "Location permission denied.";
-        });
-        return;
-      }
     }
 
-    if (permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
+      await _getCurrentLocation();
+    } else {
       setState(() {
-        _currentLocation = "Location permissions are permanently denied.";
+        _currentLocation = "Location permission denied.";
+        _showPermissionPrompt = true;
       });
-      return;
     }
 
-    await _getCurrentLocation();
+    await prefs.setBool('permissionRequested', true);
   }
 
-  // Get current location and use Nominatim API to get the address
   Future<void> _getCurrentLocation() async {
     try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      await _getAddressFromCoordinates(position.latitude, position.longitude);
+      await _getCityFromCoordinates(position.latitude, position.longitude);
     } catch (e) {
       setState(() {
         _currentLocation = "Failed to get location: $e";
@@ -80,23 +79,25 @@ class _LocationPageState extends State<LocationPage> {
     }
   }
 
-  // Call Nominatim API to get the address based on coordinates
-  Future<void> _getAddressFromCoordinates(
+  // Mengambil nama kota dari koordinat
+  Future<void> _getCityFromCoordinates(
       double latitude, double longitude) async {
     final url =
         'https://nominatim.openstreetmap.org/reverse?lat=$latitude&lon=$longitude&format=json';
 
     try {
       final response = await http.get(Uri.parse(url), headers: {
-        'User-Agent':
-            'YourAppName/1.0 (your-email@example.com)', // Update with your app info
+        'User-Agent': 'YourAppName/1.0 (your-email@example.com)',
       });
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        // Menampilkan hanya nama kota
+        final city = _extractCityName(data['address']);
         setState(() {
-          _currentLocation = data['display_name'] ?? 'Address not found';
+          _currentLocation = city ?? 'City not found';
         });
+        await _saveLocation(_currentLocation);
       } else {
         setState(() {
           _currentLocation = 'Failed to get address';
@@ -109,18 +110,21 @@ class _LocationPageState extends State<LocationPage> {
     }
   }
 
-  void _handleAllow() async {
-    await _checkLocationPermission();
-    setState(() {
-      _showPermissionPrompt = false;
-    });
+  String? _extractCityName(Map<String, dynamic> addressData) {
+    // Mencari nama kota dari addressData
+    if (addressData.containsKey('city')) {
+      return addressData['city'];
+    } else if (addressData.containsKey('town')) {
+      return addressData['town'];
+    } else if (addressData.containsKey('village')) {
+      return addressData['village'];
+    }
+    return null;
   }
 
-  void _handleDeny() {
-    setState(() {
-      _currentLocation = "---";
-      _showPermissionPrompt = false;
-    });
+  Future<void> _saveLocation(String location) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('currentLocation', location);
   }
 
   @override
@@ -173,8 +177,7 @@ class _LocationPageState extends State<LocationPage> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.location_on,
-                            color: Colors.blueAccent, size: 24),
+                        Icon(Icons.location_on, color: Colors.blueAccent, size: 24),
                         SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -184,31 +187,10 @@ class _LocationPageState extends State<LocationPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                          onPressed: _handleDeny,
-                          child: Text(
-                            'Deny',
-                            style: TextStyle(color: Colors.redAccent),
-                          ),
-                        ),
-                        SizedBox(width: 8),
-                        TextButton(
-                          onPressed: _handleAllow,
-                          child: Text(
-                            'Allow',
-                            style: TextStyle(color: Colors.yellow),
-                          ),
-                        ),
-                      ],
-                    ),
                   ],
                 ),
               ),
-            if (_showPermissionPrompt) SizedBox(height: 20),
+            SizedBox(height: 20),
             Text(
               'Your Current Location:',
               style: TextStyle(color: Colors.grey, fontSize: 16),
@@ -234,6 +216,32 @@ class _LocationPageState extends State<LocationPage> {
                 ],
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+              child: ElevatedButton(
+                onPressed: () async {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('currentLocation', _currentLocation);
+
+                  Navigator.of(context).pop(_currentLocation);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFCC434),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(84),
+                  ),
+                ),
+                child: const Text(
+                  'Save',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -248,8 +256,11 @@ class _LocationPageState extends State<LocationPage> {
       ),
       trailing: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
       onTap: () {
-        // Handle city selection
-      },
+        setState(() {
+          _currentLocation = cityName;
+        });
+        _saveLocation(_currentLocation);  // Menyimpan lokasi baru
+      }
     );
   }
 }

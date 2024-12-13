@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'dart:ui';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // Provider to fetch films
 final listFilmProvider = FutureProvider<List<Film>>((ref) async {
@@ -46,6 +47,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
     super.initState();
     _controller = PersistentTabController(initialIndex: 0);
     _fnbs = Menuclient().fetchMenus();
+    _loadLocationFromPreferences();
+  }
+
+  // Fungsi untuk mengambil lokasi dari SharedPreferences
+  Future<void> _loadLocationFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      location = prefs.getString('current_location') ?? "No Location Detected";
+    });
   }
 
   @override
@@ -163,7 +173,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   value;
                             },
                             decoration: InputDecoration(
-                              hintText: "Search",
+                              hintText: "Search Film",
                               hintStyle: TextStyle(color: Colors.white70),
                               prefixIcon:
                                   Icon(Icons.search, color: Colors.white),
@@ -396,7 +406,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           options: CarouselOptions(
                             height: 450,
                             aspectRatio: 16 / 9,
-                            viewportFraction: 0.5,
+                            viewportFraction: 0.6,
                             enlargeCenterPage: true,
                             enableInfiniteScroll: true,
                             autoPlay: true,
@@ -502,7 +512,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ListFnbView(),
+                                    builder: (context) => ListFnbView(), // Updated constructor parameter
                                   ),
                                 );
                               },
