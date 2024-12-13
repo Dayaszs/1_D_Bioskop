@@ -17,8 +17,13 @@ import 'package:flutter_application_1/view/movie_view/payment.dart';
 class SelectSeat extends StatefulWidget {
   final Film film;
   final Bioskop bioskop;
+  final Map<String, dynamic> userData;
 
-  const SelectSeat({super.key, required this.film, required this.bioskop});
+  const SelectSeat(
+      {super.key,
+      required this.film,
+      required this.bioskop,
+      required this.userData});
 
   @override
   State<SelectSeat> createState() => _SelectSeatState();
@@ -127,17 +132,19 @@ class _SelectSeatState extends State<SelectSeat> {
                         PenayanganData,
                         id_bioskop!,
                         id_film!,
-                        selectedIndexTime + 1,
+                        selectedIndexTime,
                         selectedDate);
 
-                    List<dynamic> userSeat = usedPenayangan!
-                        .nomor_kursi_terpakai!
-                        .split(',')
-                        .map((seat) => int.parse(seat))
-                        .toList();
-                    for (int i = 1; i <= 100; i++) {
-                      if (userSeat.contains(i)) {
-                        statusSeat[i - 1] = 'reserved';
+                    if (usedPenayangan != null) {
+                      List<dynamic> userSeat = usedPenayangan!
+                          .nomor_kursi_terpakai!
+                          .split(',')
+                          .map((seat) => int.parse(seat))
+                          .toList();
+                      for (int i = 1; i <= 100; i++) {
+                        if (userSeat.contains(i)) {
+                          statusSeat[i - 1] = 'reserved';
+                        }
                       }
                     }
 
@@ -192,7 +199,10 @@ class _SelectSeatState extends State<SelectSeat> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => Payment(usedPenayangan: usedPenayangan!, seats: selectedSeats),
+                                builder: (context) => Payment(
+                                    usedPenayangan: usedPenayangan!,
+                                    seats: selectedSeats,
+                                    userData: widget.userData),
                               ),
                             );
                           }
@@ -254,148 +264,168 @@ class _SelectSeatState extends State<SelectSeat> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 150,
-                        height: 310,
-                        child: GridView.count(
-                          crossAxisCount: 5,
-                          mainAxisSpacing: 2,
-                          crossAxisSpacing: 2,
-                          children: List.generate(50, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  // Jika kursi available, ubah menjadi selected
-                                  if (statusSeat[
-                                          (10 * (index ~/ 5) + (index % 5))] ==
-                                      'available') {
-                                    statusSeat[(10 * (index ~/ 5) +
-                                        (index % 5))] = 'selected';
-                                    selectedSeats.add(
-                                        (10 * (index ~/ 5) + (index % 5)) + 1);
-                                  } else if (statusSeat[
-                                          (10 * (index ~/ 5) + (index % 5))] ==
-                                      'selected') {
-                                    // Jika kursi selected, ubah kembali ke available
-                                    statusSeat[(10 * (index ~/ 5) +
-                                        (index % 5))] = 'available';
-                                    selectedSeats.remove(
-                                        (10 * (index ~/ 5) + (index % 5)) + 1);
-                                  }
-                                });
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 13,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: (statusSeat[(10 * (index ~/ 5) +
-                                              (index % 5))] ==
-                                          'available'
-                                      ? (Color.fromARGB(255, 55, 55, 55))
-                                      : (statusSeat[(10 * (index ~/ 5) +
-                                                  (index % 5))] ==
-                                              'reserved'
-                                          ? Color.fromRGBO(243, 198, 49, 0.604)
-                                          : Colors.amber)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Text(
-                                    '${String.fromCharCode(65 + (index ~/ 5))}${(index % 5) + 1}',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: (statusSeat[(10 * (index ~/ 5) +
-                                                  (index % 5))] ==
-                                              'available'
-                                          ? Colors.white
-                                          : Colors.black),
-                                    )),
-                              ),
-                            );
-                          }),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 150,
-                        height: 310,
-                        child: GridView.count(
-                          crossAxisCount: 5,
-                          mainAxisSpacing: 2,
-                          crossAxisSpacing: 2,
-                          children: List.generate(50, (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  // Jika kursi available, ubah menjadi selected
-                                  if (statusSeat[
-                                          (10 * (index ~/ 5) + (index % 5)) +
-                                              5] ==
-                                      'available') {
-                                    statusSeat[
-                                        (10 * (index ~/ 5) + (index % 5)) +
-                                            5] = 'selected';
-                                    selectedSeats.add(
-                                        (10 * (index ~/ 5) + (index % 5)) +
-                                            5 +
-                                            1);
-                                  } else if (statusSeat[
-                                          (10 * (index ~/ 5) + (index % 5)) +
-                                              5] ==
-                                      'selected') {
-                                    // Jika kursi selected, ubah kembali ke available
-                                    statusSeat[
-                                        (10 * (index ~/ 5) + (index % 5)) +
-                                            5] = 'available';
-                                    selectedSeats.remove(
-                                        (10 * (index ~/ 5) + (index % 5)) +
-                                            5 +
-                                            1);
-                                  }
-                                });
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 13,
-                                height: 13,
-                                decoration: BoxDecoration(
-                                  color: (statusSeat[(10 * (index ~/ 5) +
+                  (usedPenayangan != null)
+                      ? (Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: 150,
+                              height: 310,
+                              child: GridView.count(
+                                crossAxisCount: 5,
+                                mainAxisSpacing: 2,
+                                crossAxisSpacing: 2,
+                                children: List.generate(50, (index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        // Jika kursi available, ubah menjadi selected
+                                        if (statusSeat[(10 * (index ~/ 5) +
+                                                (index % 5))] ==
+                                            'available') {
+                                          statusSeat[(10 * (index ~/ 5) +
+                                              (index % 5))] = 'selected';
+                                          selectedSeats.add((10 * (index ~/ 5) +
                                                   (index % 5)) +
-                                              5] ==
-                                          'available'
-                                      ? (Color.fromARGB(255, 55, 55, 55))
-                                      : (statusSeat[(10 * (index ~/ 5) +
+                                              1);
+                                        } else if (statusSeat[
+                                                (10 * (index ~/ 5) +
+                                                    (index % 5))] ==
+                                            'selected') {
+                                          // Jika kursi selected, ubah kembali ke available
+                                          statusSeat[(10 * (index ~/ 5) +
+                                              (index % 5))] = 'available';
+                                          selectedSeats.remove(
+                                              (10 * (index ~/ 5) +
                                                       (index % 5)) +
-                                                  5] ==
-                                              'reserved'
-                                          ? Color.fromRGBO(243, 198, 49, 0.604)
-                                          : Colors.amber)),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Text(
-                                    '${String.fromCharCode(65 + (index ~/ 5))}${(index % 5) + 6}',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: (statusSeat[(10 * (index ~/ 5) +
-                                                      (index % 5)) +
-                                                  5] ==
-                                              'available'
-                                          ? Colors.white
-                                          : Colors.black),
-                                    )),
+                                                  1);
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 13,
+                                      height: 13,
+                                      decoration: BoxDecoration(
+                                        color: (statusSeat[(10 * (index ~/ 5) +
+                                                    (index % 5))] ==
+                                                'available'
+                                            ? (Color.fromARGB(255, 55, 55, 55))
+                                            : (statusSeat[(10 * (index ~/ 5) +
+                                                        (index % 5))] ==
+                                                    'reserved'
+                                                ? Color.fromRGBO(
+                                                    243, 198, 49, 0.604)
+                                                : Colors.amber)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                      ),
+                                      child: Text(
+                                          '${String.fromCharCode(65 + (index ~/ 5))}${(index % 5) + 1}',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: (statusSeat[
+                                                        (10 * (index ~/ 5) +
+                                                            (index % 5))] ==
+                                                    'available'
+                                                ? Colors.white
+                                                : Colors.black),
+                                          )),
+                                    ),
+                                  );
+                                }),
                               ),
-                            );
-                          }),
-                        ),
-                      ),
-                    ],
-                  ),
+                            ),
+                            SizedBox(
+                              width: 150,
+                              height: 310,
+                              child: GridView.count(
+                                crossAxisCount: 5,
+                                mainAxisSpacing: 2,
+                                crossAxisSpacing: 2,
+                                children: List.generate(50, (index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        // Jika kursi available, ubah menjadi selected
+                                        if (statusSeat[(10 * (index ~/ 5) +
+                                                    (index % 5)) +
+                                                5] ==
+                                            'available') {
+                                          statusSeat[(10 * (index ~/ 5) +
+                                                  (index % 5)) +
+                                              5] = 'selected';
+                                          selectedSeats.add((10 * (index ~/ 5) +
+                                                  (index % 5)) +
+                                              5 +
+                                              1);
+                                        } else if (statusSeat[
+                                                (10 * (index ~/ 5) +
+                                                        (index % 5)) +
+                                                    5] ==
+                                            'selected') {
+                                          // Jika kursi selected, ubah kembali ke available
+                                          statusSeat[(10 * (index ~/ 5) +
+                                                  (index % 5)) +
+                                              5] = 'available';
+                                          selectedSeats.remove(
+                                              (10 * (index ~/ 5) +
+                                                      (index % 5)) +
+                                                  5 +
+                                                  1);
+                                        }
+                                      });
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: 13,
+                                      height: 13,
+                                      decoration: BoxDecoration(
+                                        color: (statusSeat[(10 * (index ~/ 5) +
+                                                        (index % 5)) +
+                                                    5] ==
+                                                'available'
+                                            ? (Color.fromARGB(255, 55, 55, 55))
+                                            : (statusSeat[(10 * (index ~/ 5) +
+                                                            (index % 5)) +
+                                                        5] ==
+                                                    'reserved'
+                                                ? Color.fromRGBO(
+                                                    243, 198, 49, 0.604)
+                                                : Colors.amber)),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5)),
+                                      ),
+                                      child: Text(
+                                          '${String.fromCharCode(65 + (index ~/ 5))}${(index % 5) + 6}',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            color: (statusSeat[
+                                                        (10 * (index ~/ 5) +
+                                                                (index % 5)) +
+                                                            5] ==
+                                                    'available'
+                                                ? Colors.white
+                                                : Colors.black),
+                                          )),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ],
+                        ))
+                      : (Center(
+                          child: Text(
+                          'Penayangan sedang tidak tersedia!',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: whiteColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ))),
                   SizedBox(height: 5),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -465,6 +495,8 @@ class _SelectSeatState extends State<SelectSeat> {
                             GestureDetector(
                               onTap: () {
                                 setState(() {
+                                  selectedDate =
+                                      DateTime(2024, 12, 12).add(Duration(days: index));
                                   refreshSeat();
                                   selectedIndexDate = index;
                                 });
@@ -485,7 +517,7 @@ class _SelectSeatState extends State<SelectSeat> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                        "${DateFormat('MMM').format(selectedDate.add(Duration(days: index)))}",
+                                        "${DateFormat('MMM').format(DateTime(2024, 12, 12).add(Duration(days: index)))}",
                                         style: TextStyle(
                                           color: (selectedIndexDate == index
                                               ? Colors.black
@@ -508,7 +540,7 @@ class _SelectSeatState extends State<SelectSeat> {
                                             Radius.circular(100)),
                                       ),
                                       child: Text(
-                                          "${DateFormat('dd').format(selectedDate.add(Duration(days: index)))}",
+                                          "${DateFormat('dd').format(DateTime(2024, 12, 12).add(Duration(days: index)))}",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 15,
@@ -529,7 +561,7 @@ class _SelectSeatState extends State<SelectSeat> {
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: List.generate(8, (index) {
+                      children: List.generate(5, (index) {
                         return Row(
                           children: [
                             GestureDetector(
@@ -551,7 +583,7 @@ class _SelectSeatState extends State<SelectSeat> {
                                       BorderRadius.all(Radius.circular(30)),
                                 ),
                                 child: Text(
-                                    "${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: (index * 2))))} - ${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 7, 0).add(Duration(hours: 2 + (index * 2))))}",
+                                    "${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 9, 30).add(Duration(minutes: 90*index)))} - ${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, 11, 0).add(Duration(minutes: 90*index)))}",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: (selectedIndexTime - 1 == index
@@ -590,7 +622,7 @@ class _SelectSeatState extends State<SelectSeat> {
         "${selectedSeats.toString()} \n"
         "${data.isNotEmpty ? data[widget.film.id_film].tanggal_tayang : 'Tidak ada data'} \n"
         "${statusSeat.toString()} \n" // Antisipasi jika data kosong
-        "${usedPenayangan.toString()} \n"
+        "${usedPenayangan == null ? "null" : usedPenayangan!.id_penayangan} \n"
         "id bioskop : ${id_bioskop} id_film : ${id_film} selected index time : ${selectedIndexTime} selected date : ${selectedDate.toString()}",
 
         style: const TextStyle(
