@@ -55,9 +55,10 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
       final tickets = await TicketClient().fetchOnlyUsers(userId);
 
       for (var ticket in tickets) {
-        if (ticket.penayangan?.status == "Not Available") {
+        if (ticket.penayangan?.status == "Not Available" &&
+            ticket.penayangan?.id_film == widget.film.id_film) {
           setState(() {
-            tiketId = ticket.idTiket; // Update tiketId jika syarat terpenuhi
+            tiketId = ticket.idTiket;
           });
           break;
         }
@@ -109,6 +110,7 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
     return Card(
       elevation: 4,
       margin: const EdgeInsets.only(bottom: 16.0),
+      color: Colors.grey[900], // Warna gelap untuk card
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -125,12 +127,11 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    review.user?.username ??
-                        "Anonymous", // Menampilkan username
+                    review.user?.username ?? "Anonymous", // Menampilkan username
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Colors.white, // Warna teks untuk mode gelap
                     ),
                   ),
                   Row(
@@ -139,7 +140,10 @@ class _RatingsAndReviewsViewState extends State<RatingsAndReviewsView> {
                   const SizedBox(height: 8),
                   Text(
                     review.komentar ?? "No comments provided.",
-                    style: const TextStyle(fontSize: 16, color: Colors.black54),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70, // Warna teks lebih terang
+                    ),
                   ),
                 ],
               ),

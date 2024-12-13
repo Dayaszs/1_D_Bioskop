@@ -28,6 +28,7 @@ class ReviewClient {
 
   Future<bool> postReview(int tiketId, double rating, String komentar) async {
     try {
+      print("Tiket Id: ${tiketId}");
       final response = await http.post(
         Uri.parse('$url$endpoint'),
         headers: {"Content-Type": "application/json"},
