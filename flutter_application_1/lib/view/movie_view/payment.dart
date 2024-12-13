@@ -8,8 +8,9 @@ import 'package:intl/intl.dart';
 class Payment extends StatefulWidget {
   final Penayangan usedPenayangan;
   final List<int> seats;
+  final Map<String, dynamic> userData;
 
-  const Payment({super.key, required this.usedPenayangan, required this.seats});
+  const Payment({super.key, required this.usedPenayangan, required this.seats, required this.userData});
 
   @override
   State<Payment> createState() => _PaymentState();
@@ -186,6 +187,7 @@ class _PaymentState extends State<Payment> {
                                 color: Colors.white,
                                 fontSize: 20,
                               )),
+                          SizedBox(width: 30),
                           Text("2202987203803",
                               style: TextStyle(
                                 color: Colors.white,
@@ -195,6 +197,7 @@ class _PaymentState extends State<Payment> {
                         ],
                       ),
                     ),
+                    SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.all(0),
                       child: Row(
@@ -205,12 +208,20 @@ class _PaymentState extends State<Payment> {
                                 color: Colors.white,
                                 fontSize: 20,
                               )),
-                          Text("${listSeat.toString()}",
+                          SizedBox(width: 30),
+                          Expanded(
+                            child: Text(
+                              "${listSeat.toString()}",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                              )),
+                              ),
+                              softWrap: true, // Properti ini pada widget Text
+                              overflow: TextOverflow.clip,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -436,7 +447,7 @@ class _PaymentState extends State<Payment> {
                               ),
                             ),
                             Text(
-                              "15:00",
+                              "${DateFormat('HH:mm').format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, DateTime.now().hour, DateTime.now().minute).add(Duration(minutes: 15)))}",
                               style: TextStyle(
                                 color: Colors.amber,
                                 fontWeight: FontWeight.bold,
@@ -466,8 +477,12 @@ class _PaymentState extends State<Payment> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => PaymentSuccess(
-                        listSeats: widget.seats,
-                        penayangan: widget.usedPenayangan),
+                        listSeats: listSeat,
+                        penayangan: widget.usedPenayangan,
+                        userData: widget.userData,
+                        seats: widget.seats,
+                        metode_pembayaran: selectedPayment,
+                        nominal_pembayaran: (widget.usedPenayangan.harga_tiket.toDouble()*widget.seats.length),),
                   ),
                 );
               },

@@ -40,4 +40,41 @@ class TicketClient {
       throw Exception("Error fetching ticket: $e");
     }
   }
+
+Future<Map<String, dynamic>> storeTiket({
+  required int idUser,
+  required int? idPenayangan,
+  required String nomorKursi,
+}) async {
+  try {
+    // Body data yang akan dikirim ke API
+    final Map<String, dynamic> bodyData = {
+      "id_user": idUser.toString(), // Pastikan data dikirim sebagai string
+      "id_penayangan": idPenayangan.toString(),
+      "nomor_kursi": nomorKursi, // Jika API mengharapkan string, gabungkan list
+    };
+
+    // Melakukan request POST
+    final response = await http.post(
+      Uri.parse(protocol + url + endpoint),
+      headers: {
+        "Content-Type": "application/json", // Header untuk format JSON
+        "Accept": "application/json", // Menerima response dalam format JSON
+      },
+      body: jsonEncode(bodyData), // Encode body ke JSON
+    );
+
+    // Cek status response
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body); // Mengembalikan hasil dalam bentuk map
+    } else {
+      // Menangani error jika response bukan 200
+      throw Exception("Failed to create tiket: ${response.statusCode}");
+    }
+  } catch (e) {
+    // Menangani error jaringan atau lainnya
+    throw Exception("Error: $e");
+  }
+}
+
 }

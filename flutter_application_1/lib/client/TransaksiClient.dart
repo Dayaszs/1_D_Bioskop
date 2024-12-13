@@ -39,5 +39,42 @@ class Transaksiclient {
       throw Exception('Failed to load transaksis: ${error}');
     }
   }
+
+  Future<Map<String, dynamic>> storeTransaksi({
+    required int idTiket,
+    required String metodePembayaran,
+    required double nominalPembayaran,
+  }) async {
+    try {
+      // Data yang akan dikirim ke API
+      final Map<String, dynamic> bodyData = {
+        "id_tiket": idTiket.toString(), // Konversi ID menjadi string jika perlu
+        "metode_pembayaran": metodePembayaran,
+        "nominal_pembayaran": nominalPembayaran, // Nominal dalam bentuk angka (double)
+      };
+
+      // Lakukan POST request ke API
+      final response = await http.post(
+        Uri.parse(protocol + url + endPoint),
+        headers: {
+          "Content-Type": "application/json", // Format body sebagai JSON
+          "Accept": "application/json", // Response yang diharapkan dalam format JSON
+        },
+        body: jsonEncode(bodyData), // Encode body ke JSON
+      );
+
+      // Cek status response
+      if (response.statusCode == 200) {
+        // Berhasil membuat transaksi, kembalikan data
+        return jsonDecode(response.body);
+      } else {
+        // Jika gagal, lempar error dengan status code
+        throw Exception("Failed to create transaksi: ${response.statusCode}");
+      }
+    } catch (e) {
+      // Menangani error koneksi atau lainnya
+      throw Exception("Error: $e");
+    }
+  }
   
 }

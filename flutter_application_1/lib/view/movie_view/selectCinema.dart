@@ -10,7 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SelectCinema extends StatefulWidget {
   final Film film;
-  const SelectCinema({super.key, required this.film});
+  final Map<String, dynamic> userData;
+  const SelectCinema({super.key, required this.film, required this.userData});
 
   @override
   State<SelectCinema> createState() => _SelectCinemaState();
@@ -171,6 +172,7 @@ class _SelectCinemaState extends State<SelectCinema> {
                       builder: (context) => SelectSeat(
                         film: widget.film, // Akses langsung properti film
                         bioskop: bioskop!,
+                        userData: widget.userData,
                       ),
                     ),
                   );

@@ -8,6 +8,7 @@ class PenayanganClient {
   static final String url = constantURL;
   static final String endpoint = '/api/searchPenayangan';
   static final String endpoint2 = '/api/penayanganbyid';
+  static final String endpoint3 = '/api/penayangans';
 
   Future<Map<String, dynamic>> fetchPenayangan({
     required int id_film,
@@ -54,6 +55,53 @@ class PenayanganClient {
       }
     } catch (e) {
       throw Exception('Error fetching Penayangan: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> updatePenayangan({
+    required int idPenayangan, // ID Penayangan yang akan diupdate
+    int? idFilm,
+    int? idSesi,
+    int? idStudio,
+    String? nomorKursiTerpakai,
+    double? hargaTiket,
+    String? status,
+    String? tanggalTayang, // Format: yyyy-MM-dd
+  }) async {
+    try {
+      // Data yang akan dikirim ke API
+      final Map<String, dynamic> bodyData = {
+        if (idFilm != null) "id_film": idFilm,
+        if (idSesi != null) "id_sesi": idSesi,
+        if (idStudio != null) "id_studio": idStudio,
+        if (nomorKursiTerpakai != null)
+          "nomor_kursi_terpakai": nomorKursiTerpakai,
+        if (hargaTiket != null) "harga_tiket": hargaTiket,
+        if (status != null) "status": status,
+        if (tanggalTayang != null) "tanggal_tayang": tanggalTayang,
+      };
+
+      // Melakukan PUT request
+      final response = await http.put(
+        Uri.parse(protocol + url + endpoint3 + '/$idPenayangan'),
+        headers: {
+          "Content-Type": "application/json", // Header untuk JSON
+          "Accept": "application/json", // Menerima response dalam JSON
+        },
+        body: jsonEncode(bodyData), // Encode body ke JSON
+      );
+
+      // Cek status response
+      if (response.statusCode == 200) {
+        return jsonDecode(
+            response.body); // Mengembalikan hasil dalam bentuk Map
+      } else {
+        // Jika gagal, lemparkan error dengan status code
+        throw Exception("Failed to update penayangan: ${response.statusCode}");
+      }
+    } catch (e) {
+      // Menangkap error jaringan atau lainnya
+      throw Exception("Error: $e");
     }
   }
 }
