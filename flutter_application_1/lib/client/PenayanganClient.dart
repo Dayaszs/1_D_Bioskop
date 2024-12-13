@@ -7,6 +7,7 @@ import 'package:flutter_application_1/setting/client.dart';
 class PenayanganClient {
   static final String url = constantURL;
   static final String endpoint = '/api/searchPenayangan';
+  static final String endpoint2 = '/api/penayanganbyid';
 
   Future<Map<String, dynamic>> fetchPenayangan({
     required int id_film,
@@ -16,7 +17,7 @@ class PenayanganClient {
   }) async {
     try {
       final response = await http.post(
-        Uri.http(url, endpoint),
+        Uri.http(url, '/api/searchPenayangan'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           'id_film': id_film,
@@ -28,15 +29,31 @@ class PenayanganClient {
 
       print(
           "id film : $id_film , id_sesi : $id_sesi , tanggal tayang : $tanggal_tayang , id studio : $id_studio , response ${response.body} , status code : ${response.statusCode}");
+      print("json decode : ${json.decode(response.body)}");
+
+      var data = json.decode(response.body);
+      print("data : $data");
+      return data;
+    } catch (error) {
+      throw Exception('Failed to load penayangan: ${error}');
+    }
+  }
+
+  Future<List<Penayangan>> fetchByFilm(id_film) async {
+    try {
+      final response =
+          await http.get(Uri.parse(protocol + url + endpoint2 + '/${id_film}'));
 
       if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-        return data;
+        List<dynamic> data = json.decode(response.body);
+        return data
+            .map((penayanganJson) => Penayangan.fromJsonFilm(penayanganJson))
+            .toList();
       } else {
-        throw Exception('Failed to load penayangan ${json.decode(response.body)}');
+        throw Exception('Failed to load Penayangan');
       }
-    } catch (error) {
-      throw Exception('Failed to load penayangan: $error');
+    } catch (e) {
+      throw Exception('Error fetching Penayangan: $e');
     }
   }
 }

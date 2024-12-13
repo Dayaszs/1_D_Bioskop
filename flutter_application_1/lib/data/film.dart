@@ -55,6 +55,14 @@ class Film {
       trailer: json["trailer"],
       status: json["status"]);
 
+  factory Film.fromPenayanganJson(Map<String, dynamic> json) => Film(
+        id_film: json["id_film"],
+        judul: json["judul"],
+        genre: json["genre"],
+        tahun_rilis: json["tahun_rilis"],
+        poster_1: json["poster_1"],
+      );
+
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
         "id_film": id_film,

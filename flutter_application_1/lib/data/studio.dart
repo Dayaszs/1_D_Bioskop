@@ -7,15 +7,23 @@ class Studio {
   int? id_bioskop;
   String? nama_studio;
   int? kapasitas;
+  String? nomor_kursi_tersedia;
 
-  Studio({this.id_studio, this.id_bioskop, this.nama_studio, this.kapasitas});
+  Studio(
+      {this.id_studio,
+      this.id_bioskop,
+      this.nama_studio,
+      this.kapasitas,
+      this.nomor_kursi_tersedia});
 
   factory Studio.fromRawJson(String str) => Studio.fromJson(json.decode(str));
   factory Studio.fromJson(Map<String, dynamic> json) => Studio(
-      id_studio: json["id_studio"],
-      id_bioskop: json["id_bioskop"],
-      nama_studio: json["nama_studio"],
-      kapasitas: json["kapasitas"]);
+        id_studio: json["id_studio"],
+        id_bioskop: json["id_bioskop"],
+        nama_studio: json["nama_studio"],
+        kapasitas: json["kapasitas"],
+        nomor_kursi_tersedia: json["nomor_kursi_tersedia"],
+      );
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() => {
@@ -25,5 +33,3 @@ class Studio {
         "kapasitas": kapasitas
       };
 }
-
-

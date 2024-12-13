@@ -18,7 +18,14 @@ class Bioskop {
       namaBioskop: json['nama_bioskop'],
       alamat: json['alamat'],
     );
-  } 
+  }
+
+  factory Bioskop.fromPenayanganJson(Map<String, dynamic> json) {
+    return Bioskop(
+      idBioskop: json['id_bioskop'],
+      namaBioskop: json['nama_bioskop'],
+    );
+  }
 
   String toRawJson() => json.encode(toJson());
   Map<String, dynamic> toJson() {
