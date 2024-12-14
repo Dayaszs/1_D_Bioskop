@@ -102,7 +102,7 @@ class _PaymentState extends State<Payment> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset("${widget.usedPenayangan.film!.poster_1}",
+                          Image.network("${widget.usedPenayangan.film!.poster_1}",
                               width: 100, height: 140),
                           Padding(
                             padding: const EdgeInsets.symmetric(

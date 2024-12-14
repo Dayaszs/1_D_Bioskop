@@ -56,7 +56,7 @@ Future<Map<String, dynamic>> storeTiket({
 
     // Melakukan request POST
     final response = await http.post(
-      Uri.parse(protocol + url + endpoint),
+      Uri.http(url, endpoint),
       headers: {
         "Content-Type": "application/json", // Header untuk format JSON
         "Accept": "application/json", // Menerima response dalam format JSON
