@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
+import 'package:flutter_application_1/view/home_view/listFnB.dart';
 import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
 import 'package:flutter_application_1/view/profile_view/editProfile.dart';
 import 'package:flutter_application_1/view/profile_view/changePassword.dart';
@@ -14,7 +15,7 @@ class ShowProfile extends StatelessWidget {
   Future<String> fetchProfilePicture() async {
     await Future.delayed(
         const Duration(seconds: 2)); // Simulating network delay
-    return 'http://10.0.2.2:8000/storage/profile_pictures/' + data['profile_picture'];
+    return 'https://cinema88.fun/storage/app/public/profile_pictures/' + data['profile_picture'];
   }
 
   @override
@@ -88,8 +89,9 @@ class ShowProfile extends StatelessWidget {
             const SizedBox(height: 30),
             buildOptionButton(context, Icons.confirmation_number, 'My ticket',
                 () {
-              Navigator.pushNamed(context,
-                  '/lib/view/ticket_view/ticketView.dart'); // Navigate to "My Ticket" page
+             MaterialPageRoute(
+                  builder: (context) => ListFnbView(), // Updated constructor parameter
+                );
             }),
             buildOptionButton(context, Icons.edit, 'Edit Profile', () {
               Navigator.push(

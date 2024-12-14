@@ -7,8 +7,8 @@ import 'package:flutter_application_1/setting/client.dart';
 import 'package:flutter_application_1/client/TicketClient.dart';
 
 class ReviewClient {
-  static final String url = "http://10.0.2.2:8000"; // Pastikan ada "http://"
-  static final String endpoint = '/api/reviews';
+  static final String url = "https://cinema88.fun"; // Pastikan ada "http://"
+  static final String endpoint = '/public/api/reviews';
 
   Future<List<Review>> fetchByFilmId(int filmId) async {
     try {

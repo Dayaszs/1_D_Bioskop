@@ -19,8 +19,23 @@ class TicketView extends ConsumerStatefulWidget {
   _TicketViewState createState() => _TicketViewState();
 }
 
+
 class _TicketViewState extends ConsumerState<TicketView> {
   String _filter = 'Available';
+   late int userId;
+   
+   void initState() {
+    super.initState();
+    userId = widget.data['id_user'];
+    _refreshPage(); // Call this method to refresh on access
+  }
+
+  void _refreshPage() {
+    // Assign a unique key to force widget rebuild
+    setState(() {
+      ref.refresh(listTicketProvider(userId));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

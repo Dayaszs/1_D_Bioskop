@@ -1,2 +1,2 @@
-String constantURL = '10.0.2.2:8000';
-String protocol = 'http://';
+String constantURL = 'cinema88.fun';
+String protocol = 'https://';

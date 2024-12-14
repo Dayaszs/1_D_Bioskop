@@ -15,6 +15,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'dart:ui';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/services.dart';
 
 // Provider to fetch films
 final listFilmProvider = FutureProvider<List<Film>>((ref) async {
@@ -48,6 +49,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
     _controller = PersistentTabController(initialIndex: 0);
     _fnbs = Menuclient().fetchMenus();
     _loadLocationFromPreferences();
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.amber, // Warna background status bar
+      statusBarIconBrightness: Brightness.dark, // Warna ikon status bar (dark untuk ikon gelap)
+    ));
   }
 
   // Fungsi untuk mengambil lokasi dari SharedPreferences

@@ -599,7 +599,7 @@ class _SelectSeatState extends State<SelectSeat> {
                       }),
                     ),
                   ),
-                  _debugText(dataPenayangan),
+                  // _debugText(dataPenayangan),
                 ],
               ),
             ),

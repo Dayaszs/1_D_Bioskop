@@ -110,19 +110,19 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "seats : ${widget.listSeats.toString()} \n"
-              "number : ${widget.seats.toString()} \n"
-              "penayangan : ${widget.penayangan.film!.judul} \n"
-              "user data : ${widget.userData['id_user']} \n"
-              "nominal : ${widget.nominal_pembayaran} \n"
-              "metode : ${widget.metode_pembayaran}\n"
-              "list kursi : ${list_kursi!.join(',')}",
-              style: TextStyle(
-                color: Colors.amber,
-                fontSize: 16,
-              ),
-            )
+            // Text(
+            //   "seats : ${widget.listSeats.toString()} \n"
+            //   "number : ${widget.seats.toString()} \n"
+            //   "penayangan : ${widget.penayangan.film!.judul} \n"
+            //   "user data : ${widget.userData['id_user']} \n"
+            //   "nominal : ${widget.nominal_pembayaran} \n"
+            //   "metode : ${widget.metode_pembayaran}\n"
+            //   "list kursi : ${list_kursi!.join(',')}",
+            //   style: TextStyle(
+            //     color: Colors.amber,
+            //     fontSize: 16,
+            //   ),
+            // )
           ],
         ),
       ),
@@ -147,18 +147,18 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Text(
-              "seats : ${widget.listSeats.toString()} \n"
-              "number : ${widget.seats.toString()} \n"
-              "penayangan : ${widget.penayangan.film!.judul} \n"
-              "user data : ${widget.userData['id_user']} \n"
-              "nominal : ${widget.nominal_pembayaran} \n"
-              "metode : ${widget.metode_pembayaran}",
-              style: TextStyle(
-                color: Colors.amber,
-                fontSize: 16,
-              ),
-            )
+            // Text(
+            //   "seats : ${widget.listSeats.toString()} \n"
+            //   "number : ${widget.seats.toString()} \n"
+            //   "penayangan : ${widget.penayangan.film!.judul} \n"
+            //   "user data : ${widget.userData['id_user']} \n"
+            //   "nominal : ${widget.nominal_pembayaran} \n"
+            //   "metode : ${widget.metode_pembayaran}",
+            //   style: TextStyle(
+            //     color: Colors.amber,
+            //     fontSize: 16,
+            //   ),
+            // )
           ],
         ),
       ),
