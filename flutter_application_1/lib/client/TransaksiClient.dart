@@ -42,7 +42,7 @@ class Transaksiclient {
 
   Future<Map<String, dynamic>> storeTransaksi({
     required int idTiket,
-    required String metodePembayaran,
+    required String? metodePembayaran,
     required double nominalPembayaran,
   }) async {
     try {
