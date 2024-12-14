@@ -29,17 +29,12 @@ class PaymentSuccess extends StatefulWidget {
 
 class _PaymentSuccessState extends State<PaymentSuccess> {
   List<Map<String, dynamic>>? listTicket = [];
-  List<Map<String, dynamic>>? listTransaction = [];
 
-  Future<Map<String, dynamic>>? ticket;
-  // Map<String, dynamic>? dataTicket;
-  Future<Map<String, dynamic>>? transaction;
-  // Map<String, dynamic>? dataTransactions;
+  Map<String, dynamic>? ticket;
 
   List<dynamic>? list_kursi;
 
-  void initState() {
-    super.initState();
+  Future<void> initData() async {
     list_kursi = widget.penayangan.nomor_kursi_terpakai!
         .split(',')
         .map((k) => int.parse(k))
@@ -49,17 +44,24 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
       list_kursi!.add(widget.seats[i]);
     }
 
-    PenayanganClient().updatePenayangan(
+    await PenayanganClient().updatePenayangan(
         idPenayangan: widget.penayangan.id_penayangan!,
         nomorKursiTerpakai: list_kursi!.join(','));
 
     for (var i = 0; i < widget.listSeats!.length; i++) {
-      TicketClient().storeTiket(
+      final response = await TicketClient().storeTiket(
           idUser: widget.userData['id_user'],
           idPenayangan: widget.penayangan.id_penayangan,
           nomorKursi: widget.listSeats![i]);
+      listTicket!.add(response);
     }
-    
+  }
+
+  late Future<void> _initDataFuture;
+
+  void initState() {
+    super.initState();
+    _initDataFuture = initData();
   }
 
   @override
@@ -69,50 +71,28 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
           appBar: AppBar(
             backgroundColor: Colors.black,
           ),
-          body: FutureBuilder<Map<String, dynamic>>(
-              future: ticket,
-              builder: (context, ticketSnapshot) {
-                if (ticketSnapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (ticketSnapshot.hasError) {
-                  return Center(
-                      child: Text(
-                    'Error: ${ticketSnapshot.error}',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors
-                          .white, // Asumsikan whiteColor adalah Colors.white
-                    ),
-                    softWrap: true, // Properti ini pada widget Text
-                    overflow: TextOverflow.visible,
-                  ));
-                } else if (ticketSnapshot.hasData) {
-                  final Map<String, dynamic> dataTicket = ticketSnapshot.data!;
-                  listTicket!.add(dataTicket);
-
-                  if (listTicket!.length == widget.listSeats!.length) {
-                    return _successWidget();
-                  } else {
-                    return CircularProgressIndicator();
-                  }
-                } else if (!ticketSnapshot.hasData) {
-                  return Center(
-                      child: Text(
-                    'No data available.',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: whiteColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ));
-                }
-              }),
+          body: FutureBuilder<void>(
+          future: _initDataFuture, // Future yang akan ditunggu
+          builder: (context, snapshot) {
+            // Status loading
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            }
+            // Jika terjadi error
+            else if (snapshot.hasError) {
+              return _failedWidget(snapshot.error);
+            }
+            // Jika selesai dan sukses
+            else {
+              return _successWidget();
+            }
+          },
+        ),
           bottomNavigationBar: _bottomWidget()),
     );
   }
 
-  Widget _failedWidget() {
+  Widget _failedWidget(error) {
     return Container(
       height: MediaQuery.of(context).size.height,
       color: Colors.black,
@@ -122,8 +102,8 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
           children: [
             Icon(Icons.warning_outlined, color: Colors.amber, size: 150),
             const SizedBox(height: 20),
-            const Text(
-              "Payment failed! \n",
+            Text(
+              "Payment failed! \n ${error}",
               style: TextStyle(
                 color: Colors.amber,
                 fontSize: 30,
