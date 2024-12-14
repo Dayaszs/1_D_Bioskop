@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/data/ticket.dart';
 import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/home_view/listFnB.dart';
 import 'package:flutter_application_1/view/loginRegister_view/startPage.dart';
 import 'package:flutter_application_1/view/profile_view/editProfile.dart';
 import 'package:flutter_application_1/view/profile_view/changePassword.dart';
+import 'package:flutter_application_1/view/ticket_view/ticketView.dart';
 
 class ShowProfile extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -89,9 +91,13 @@ class ShowProfile extends StatelessWidget {
             const SizedBox(height: 30),
             buildOptionButton(context, Icons.confirmation_number, 'My ticket',
                 () {
-             MaterialPageRoute(
-                  builder: (context) => ListFnbView(), // Updated constructor parameter
-                );
+             Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TicketView(
+                      data: data), // Updated constructor parameter
+                ),
+              );
             }),
             buildOptionButton(context, Icons.edit, 'Edit Profile', () {
               Navigator.push(
