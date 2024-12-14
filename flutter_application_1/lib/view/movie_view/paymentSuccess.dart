@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/data/penayangan.dart';
+import 'package:flutter_application_1/utilities/constant.dart';
 import 'package:flutter_application_1/view/movie_view/listFilm.dart';
 import 'package:flutter_application_1/client/TicketClient.dart';
 import 'package:flutter_application_1/client/TransaksiClient.dart';
@@ -27,11 +28,13 @@ class PaymentSuccess extends StatefulWidget {
 }
 
 class _PaymentSuccessState extends State<PaymentSuccess> {
-  Future<List<Map<String, dynamic>>>? tickets;
-  Future<List<Map<String, dynamic>>>? transactions;
+  List<Map<String, dynamic>>? listTicket = [];
+  List<Map<String, dynamic>>? listTransaction = [];
 
   Future<Map<String, dynamic>>? ticket;
+  // Map<String, dynamic>? dataTicket;
   Future<Map<String, dynamic>>? transaction;
+  // Map<String, dynamic>? dataTransactions;
 
   List<dynamic>? list_kursi;
 
@@ -50,65 +53,14 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
         idPenayangan: widget.penayangan.id_penayangan!,
         nomorKursiTerpakai: list_kursi!.join(','));
 
-    widget.listSeats!.map((s) => {
-      TicketClient().storeTiket(idUser: widget.userData['id_user'], idPenayangan: widget.penayangan.id_penayangan, nomorKursi: s)
-    });
-
-// Proses membuat tiket dan transaksi
-    // processTicketsAndTransaction();
+    for (var i = 0; i < widget.listSeats!.length; i++) {
+      TicketClient().storeTiket(
+          idUser: widget.userData['id_user'],
+          idPenayangan: widget.penayangan.id_penayangan,
+          nomorKursi: widget.listSeats![i]);
+    }
+    
   }
-
-  // Future<void> processTicketsAndTransaction() async {
-  //   try {
-  //     // 1. Membuat tiket baru untuk setiap kursi
-  //     await createTickets();
-
-  //     // 2. Membuat transaksi setelah semua tiket berhasil dibuat
-  //     if (createdTickets.isNotEmpty) {
-  //       await createTransaction();
-  //     }
-  //   } catch (e) {
-  //     print("Error during processing: $e");
-  //   }
-  // }
-
-  // Fungsi untuk membuat tiket baru
-  // Future<void> createTickets() async {
-  //   for (var i = 0; i < widget.listSeats!.length; i++) {
-  //     try {
-  //       final response = await TicketClient().storeTiket(
-  //         idUser: widget.userData['id_user'],
-  //         idPenayangan: widget.penayangan.id_penayangan!,
-  //         nomorKursi: widget.listSeats![i],
-  //       );
-
-  //       tickets.add(response);
-  //       print("Ticket created: $response");
-  //     } catch (e) {
-  //       print("Failed to create ticket: $e");
-  //     }
-  //   }
-  // }
-
-  // // Fungsi untuk membuat transaksi
-  // Future<void> createTransaction() async {
-  //   try {
-  //     // Mengambil ID dari tiket yang telah dibuat
-  //     final ticketIds = tickets!.map((ticket) => ticket['id']).toList();
-
-  //     for (var ticketId in ticketIds) {
-  //       final response = await TransactionClient().createTransaction(
-  //         idTiket: ticketId, // Menggunakan ID tiket yang baru dibuat
-  //         metodePembayaran: widget.metode_pembayaran,
-  //         nominalPembayaran: widget.nominal_pembayaran,
-  //       );
-
-  //       print("Transaction created: $response");
-  //     }
-  //   } catch (e) {
-  //     print("Failed to create transaction: $e");
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +69,45 @@ class _PaymentSuccessState extends State<PaymentSuccess> {
           appBar: AppBar(
             backgroundColor: Colors.black,
           ),
-          body: _successWidget(),
+          body: FutureBuilder<Map<String, dynamic>>(
+              future: ticket,
+              builder: (context, ticketSnapshot) {
+                if (ticketSnapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (ticketSnapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    'Error: ${ticketSnapshot.error}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors
+                          .white, // Asumsikan whiteColor adalah Colors.white
+                    ),
+                    softWrap: true, // Properti ini pada widget Text
+                    overflow: TextOverflow.visible,
+                  ));
+                } else if (ticketSnapshot.hasData) {
+                  final Map<String, dynamic> dataTicket = ticketSnapshot.data!;
+                  listTicket!.add(dataTicket);
+
+                  if (listTicket!.length == widget.listSeats!.length) {
+                    return _successWidget();
+                  } else {
+                    return CircularProgressIndicator();
+                  }
+                } else if (!ticketSnapshot.hasData) {
+                  return Center(
+                      child: Text(
+                    'No data available.',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: whiteColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ));
+                }
+              }),
           bottomNavigationBar: _bottomWidget()),
     );
   }
