@@ -18,7 +18,7 @@ class PenayanganClient {
   }) async {
     try {
       final response = await http.post(
-        Uri.http(url, '/api/searchPenayangan'),
+        Uri.http(url, '/public/api/searchPenayangan'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           'id_film': id_film,
