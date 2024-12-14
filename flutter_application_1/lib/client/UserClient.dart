@@ -11,7 +11,7 @@ import 'package:flutter_application_1/setting/client.dart';
 
 class UserClient {
   static final String url = constantURL;
-  static final String endpoint = '/api/users';
+  static final String endpoint = '/public/api/users';
 
   // static Future<List<User>> fetchAll() async {
   //   try {
@@ -29,9 +29,9 @@ class UserClient {
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
-      // Mengirim data login
+      
       var response = await http.post(
-        Uri.http(url, '/api/login'),
+        Uri.https(url , '/public/api/login'),
         headers: {"Content-Type": "application/json"},
         body: json.encode({
           'email': email,
@@ -40,6 +40,7 @@ class UserClient {
       );
 
       if (response.statusCode != 200) {
+              print(url);
         throw Exception('Invalid credentials');
       }
 
@@ -69,7 +70,7 @@ class UserClient {
     required File profilePicture,
   }) async {
     try {
-      var uri = Uri.http(url, '/api/register');
+      var uri = Uri.https(protocol + url + '/public/api/register');
 
       var request = http.MultipartRequest('POST', uri)
         ..fields['username'] = username
@@ -121,7 +122,7 @@ class UserClient {
     required File profilePicture, // Profile picture is optional
   }) async {
     try {
-      var uri = Uri.http(url, '/api/users/' + id_user.toString());
+      var uri = Uri.http(url, '/public/api/users/' + id_user.toString());
 
       var request = http.MultipartRequest('POST', uri)
         ..fields['id'] = id_user.toString()
@@ -168,7 +169,7 @@ class UserClient {
 
     // Send the request to update the password
     var response = await http.post(
-      Uri.http(url, '/api/users/' + id_user.toString()),
+      Uri.http(url, '/public/api/users/' + id_user.toString()),
       headers: {"Content-Type": "application/json"},
       body: json.encode({
         'id_user': id_user,

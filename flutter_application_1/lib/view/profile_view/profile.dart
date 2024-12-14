@@ -14,7 +14,7 @@ class ShowProfile extends StatelessWidget {
   Future<String> fetchProfilePicture() async {
     await Future.delayed(
         const Duration(seconds: 2)); // Simulating network delay
-    return 'http://10.0.2.2:8000/storage/profile_pictures/' + data['profile_picture'];
+    return 'https://cinema88.fun/storage/app/public/profile_pictures/' + data['profile_picture'];
   }
 
   @override
